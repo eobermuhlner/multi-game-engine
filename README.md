@@ -64,11 +64,13 @@ Letters `a` to `s` are used to specify both rows and columns.
 
 Examples:
 * `aa` the top left corner
+* `sa` the top right corner of a 19x19 board
+* `as` the bottom left corner of a 19x19 board
 * `ss` the bottom right corner of a 19x19 board
 
 ### Gomoku Move 
 
-Gomoku moves are specified the same way as go moves.
+Gomoku moves are specified the same way as Go moves.
 
 ### Tic Tac Toe Move 
 
