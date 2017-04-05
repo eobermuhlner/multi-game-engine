@@ -18,7 +18,6 @@ public class UciProtocol {
 
 	private final BufferedReader in;
 	private final PrintWriter out;
-	private PrintWriter log;
 	private Engine<?> engine;
 
 	private volatile boolean stop;
@@ -35,12 +34,6 @@ public class UciProtocol {
 		in = new BufferedReader(new InputStreamReader(inputStream));
 		out = new PrintWriter(outputStream, true);
 		
-		try {
-			log = new PrintWriter(new FileWriter("guppy_log.txt"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		this.engine = engine;
 	}
 	
@@ -51,19 +44,13 @@ public class UciProtocol {
 				if (line.isEmpty()) {
 					continue;
 				}
-				if (log != null) {
-					log.println("IN  " + line);
-					log.flush();
-				}
 				
 				String[] args = line.split(" +");
 				if (args.length > 0) {
 					try {
 						execute(args);
 					} catch(Exception ex) {
-						if (log != null) {
-							ex.printStackTrace(log);
-						}
+						ex.printStackTrace();
 					}
 				}
 				
@@ -250,10 +237,6 @@ public class UciProtocol {
 	}
 
 	private void println(String message) {
-		if (log != null) {
-			log.println("OUT " + message);
-			log.flush();
-		}
 		out.println(message);
 	}
 
