@@ -16,8 +16,12 @@ public class RandomEngine<G extends Game<G>> implements Engine<G> {
 	private final Random random;
 
 	public RandomEngine(G game) {
+		this(game, new Random());
+	}
+
+	public RandomEngine(G game, Random random) {
 		this.game = game;
-		random = new Random();
+		this.random = random;
 	}
 
 	@Override
