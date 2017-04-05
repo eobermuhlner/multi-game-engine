@@ -1,5 +1,5 @@
-# multi-game-engine
-Game Engine that supports many different games (chess, go, gomoku, tic tac toe, ...).
+# Multi-Game-Engine
+A Game Engine that supports many different games (chess, go, gomoku, tic tac toe, ...).
 
 ## Engine Algorithm
 
@@ -81,4 +81,39 @@ Examples:
 * `a1` the top left field
 * `a3` the top right field
 * `c3` the bottom right field
+
+### Mill Move
+
+Mill moves specify the start and end point of a move.
+In the case of killing a stone `"x"` and the coordinates of the killed stone are appended.
+
+The coordinates of the mill board use letters to specify the column and numbers to specify the row.
+
+The bottom left corner is `a1`.
+
+```
+a7-------------d7-------------g7
+|              |              |
+|    b6--------d6--------f6   |
+|    |         |         |    |
+|    |    c5---d5---e5   |    |
+|    |    |         |    |    |
+a4---b4---c4        e4---f4---g4
+|    |    |         |    |    |
+|    |    c3---d3---e3   |    |
+|    |         |         |    |
+|    b2--------d2--------f2   |
+|              |              |
+a1 ------------d1-------------g1
+```
+
+Please note that not all coordinates in the grid are valid positions on the Mill board.
+
+Examples:
+* `a7` to set a stone in the top left corner
+* `a7d7` to move the stone from the top left corner to the right
+* `a7d7xg1` to move the stone from the top left corner to the right, killing the enemy stone in the bottom right
+* `a1g7` to jump a stone from the bottom left to the top right corner
+
+
 
