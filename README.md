@@ -76,6 +76,18 @@ Gomoku moves are specified the same way as Go moves.
 
 Tic Tac Toe moves specify the coordinates of the field to play.
 
+The coordinates of the Tic Tac Toe board use letters to specify the column and numbers to specify the row.
+
+```
++----+----+----+
+| a3 | b3 | c3 |
++----+----+----+
+| a2 | b2 | c2 |
++----+----+----+
+| a1 | b1 | c1 |
++----+----+----+
+```
+
 Examples:
 * `b2` the center field
 * `a1` the top left field
@@ -87,7 +99,7 @@ Examples:
 Mill moves specify the start and end point of a move.
 In the case of killing a stone `"x"` and the coordinates of the killed stone are appended.
 
-The coordinates of the mill board use letters to specify the column and numbers to specify the row.
+The coordinates of the Mill board use letters to specify the column and numbers to specify the row.
 
 The bottom left corner is `a1`.
 
