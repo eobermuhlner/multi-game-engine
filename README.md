@@ -19,12 +19,24 @@ The Multi Game Engine uses a Monte-Carlo Tree algorithm to decide the best move 
 The protocol of the Multi Game Engine is an extension of the UCI Protocol used in the communication between Chess Front Ends and Chess engines.
 
 Additional commands are:
-* `game` [`chess` | `go` | `gomoku` | `tictactoe`]
+* `game` *gamename* [*gamevariant*]
 * `validmoves`
-* `move` *ucimove*
+* `move` *move*
 * `d`
 
 The notation of a move depends on the actual game being played.
+
+Valid game names are
+* `chess`
+* `tictactoe`
+* `go`
+* `gomoku`
+
+The game variants depend on the chosen game:
+* `chess` : *no variants supported yet*
+* `tictactoe` : *no variants supported yet*
+* `go` : *size of the board, for example * `13x13`
+* `gomoku` : *no variants supported yet*
 
 ### Chess Move 
 
