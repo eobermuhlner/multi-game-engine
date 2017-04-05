@@ -21,35 +21,28 @@ public class TicTacToe implements Game<TicTacToe> {
 		for (int i = 0; i < board.length; i++) {
 			board[i] = null;
 		}
+		
+		sideToMove = Side.White;
 	}
 	
 	@Override
 	public void setState(String state) {
-		for (int i = 0; i < board.length; i++) {
-			board[i] = null;
-		}
+		setStartPosition();
 		
 		String[] split = state.split(" +");
 		
 		if (split.length > 0) {
 			for (int i = 0; i < split[0].length(); i++) {
 				char c = split[0].charAt(i);
-				switch (c) {
-				case 'X':
-					board[i] = Side.White;
-					break;
-				case 'O':
-					board[i] = Side.Black;
-					break;
-				}
+				board[i] = toSide(c);
 			}
 		}
 		
 		if (split.length > 1) {
-			if (split[1].equals("O")) {
-				sideToMove = Side.Black;
+			Side side = toSide(split[1].charAt(0));
+			if (side != null) {
+				sideToMove = side;
 			}
-			sideToMove = Side.White;
 		}
 	}
 
@@ -92,6 +85,17 @@ public class TicTacToe implements Game<TicTacToe> {
 		return diagram.toString();
 	}
 
+	private Side toSide(char c) {
+		switch (c) {
+		case 'X':
+			return Side.White;
+		case 'O':
+			return Side.Black;
+		}
+		
+		return null;
+	}
+	
 	private String toString(Side side, String defaultString) {
 		if (side == null) {
 			return defaultString;
