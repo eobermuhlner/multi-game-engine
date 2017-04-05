@@ -11,12 +11,11 @@ public class RandomEngine<G extends Game<G>> implements Engine<G> {
 
 	private static final int TRY_RANDOM_MOVE = 5;
 
-	private G game;
+	private final G game;
 
 	private final Random random;
 
 	public RandomEngine(G game) {
-		
 		this.game = game;
 		random = new Random();
 	}
