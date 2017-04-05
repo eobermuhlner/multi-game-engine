@@ -4,15 +4,24 @@ import java.util.Map;
 
 public interface Game<G extends Game<G>> {
 
-	Board<G> createBoard();
+	void setStartPosition();
 	
-	Map<String, Double> getAllMoves(Board<G> board);
+	void setState(String state);
 	
-	boolean isValid(Board<G> board, String move);
+	String getState();
 	
-	boolean isFinished(Board<G> board);
+	Side getSideToMove();
 	
-	boolean isStaleMate(Board<G> board);
+	void move(String move);
 	
-	Side getWinner(Board<G> board);
+	Map<String, Double> getAllMoves();
+	
+	boolean isValid(String move);
+	
+	boolean isFinished();
+	
+	Side getWinner();
+
+	Game<G> clone();
+	
 }

@@ -1,6 +1,6 @@
 package ch.obermuhlner.game;
 
-public interface Output {
+public interface GameLog {
 
 	void info(String message);
 	

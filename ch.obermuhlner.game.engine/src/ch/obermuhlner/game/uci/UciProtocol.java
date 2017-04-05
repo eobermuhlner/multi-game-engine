@@ -135,7 +135,7 @@ public class UciProtocol {
 	}
 
 	private void executeDiagram(String[] args) {
-		println("FEN " + engine.getBoard().getState());
+		println("FEN " + engine.getGame().getState());
 	}
 
 	private void executeGo(String[] args) {
@@ -168,7 +168,7 @@ public class UciProtocol {
 	}
 
 	private void executeMove(String[] args) {
-		engine.move(args[1]);
+		engine.getGame().move(args[1]);
 	}
 	
 	private long calculateThinkingTime(String[] args) {
@@ -206,7 +206,7 @@ public class UciProtocol {
 		}
 		
 		if (whiteTime >= 0 && blackTime >= 0) {
-			boolean whiteToMove = engine.getBoard().getSideToMove() == Side.White;
+			boolean whiteToMove = engine.getGame().getSideToMove() == Side.White;
 			moveTime = whiteToMove ? whiteTime : blackTime;
 			if (movesToGo < 0) {
 				movesToGo = 40;
@@ -226,19 +226,19 @@ public class UciProtocol {
 		while (argIndex < args.length) {
 			switch(args[argIndex]) {
 			case "startpos":
-				engine.getBoard().setStartPosition();
+				engine.getGame().setStartPosition();
 				break;
 			case "fen":
 				String fen = "";
 				for (int i = 0; i < 6; i++) {
 					fen += args[++argIndex] + " ";
 				}
-				engine.getBoard().setState(fen);
+				engine.getGame().setState(fen);
 				break;
 			case "moves":
 				argIndex++;
 				while (argIndex < args.length) {
-					engine.move(args[argIndex++]);
+					engine.getGame().move(args[argIndex++]);
 				}
 				break;
 			default:
