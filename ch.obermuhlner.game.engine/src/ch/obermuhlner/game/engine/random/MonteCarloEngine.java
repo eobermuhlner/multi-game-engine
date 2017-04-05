@@ -32,29 +32,36 @@ public class MonteCarloEngine<G extends Game<G>> implements Engine<G> {
 		Map<String, Integer> moveWin = new HashMap<>();
 		Map<String, Integer> moveLoss = new HashMap<>();
 
-		int playCount = 10;
-		for (int i = 0; i < playCount; i++) {
-			for (Entry<String, Double> entry : validMoves.entrySet()) {
+		int playCount = 10000;
+		for (Entry<String, Double> entry : validMoves.entrySet()) {
+			for (int i = 0; i < playCount; i++) {
 				Side winner = randomPlay(entry.getKey());
 				if (winner == sideToMove) {
-					moveWin.compute(entry.getKey(), (key, value) -> value == null ? 1 : value + 1);
+					int count = moveWin.getOrDefault(entry.getKey(), 0);
+					moveWin.put(entry.getKey(), count + 1);
+					//moveWin.merge(entry.getKey(), 1, (key, value) -> value + 1);
 				}
 				if (winner == sideToMove.otherSide()) {
-					moveLoss.compute(entry.getKey(), (key, value) -> value == null ? 1 : value + 1);
+					int count = moveLoss.getOrDefault(entry.getKey(), 0);
+					moveLoss.put(entry.getKey(), count + 1);
+					//moveLoss.merge(entry.getKey(), 1, (key, value) -> value + 1);
 				}
 			}
 		}
 
 		for (Entry<String, Double> entry : validMoves.entrySet()) {
-			entry.setValue(0.0);
+			int win = moveWin.getOrDefault(entry.getKey(), 0);
+			int loss = moveLoss.getOrDefault(entry.getKey(), 0);
+			entry.setValue((double)(win - loss) / playCount);
 		}
-
+		
+		//System.out.println(validMoves);
 		String bestMove = RandomUtil.pickRandom(random, validMoves);
 		return bestMove;
 	}
 
 	private Side randomPlay(String move) {
-		RandomEngine randomEngine = new RandomEngine(game.clone());
+		RandomEngine randomEngine = new RandomEngine(game.clone(), random);
 		
 		while(!randomEngine.getGame().isFinished()) {
 			randomEngine.getGame().move(randomEngine.bestMove());
