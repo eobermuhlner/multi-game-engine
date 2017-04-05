@@ -20,11 +20,17 @@ The protocol of the Multi Game Engine is an extension of the UCI Protocol used i
 
 Additional commands are:
 * `game` *gamename* [*gamevariant*]
+
+  Choose the game to play.
 * `validmoves`
+
+  List the valid moves with the current board.
 * `move` *move*
+
+  Execute the specified move.
 * `d`
 
-The notation of a move depends on the actual game being played.
+  Print a diagram of the current board.
 
 Valid game names are
 * `chess`
@@ -35,8 +41,10 @@ Valid game names are
 The game variants depend on the chosen game:
 * `chess` : *no variants supported yet*
 * `tictactoe` : *no variants supported yet*
-* `go` : *size of the board, for example * `13x13`
+* `go` : *size of the board, for example* `13x13`
 * `gomoku` : *no variants supported yet*
+
+The notation of a *move* depends on the actual game being played.
 
 ### Chess Move 
 
