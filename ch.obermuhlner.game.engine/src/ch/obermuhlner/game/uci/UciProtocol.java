@@ -1,7 +1,6 @@
 package ch.obermuhlner.game.uci;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,7 +10,7 @@ import java.util.Arrays;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
-import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
 
 public class UciProtocol {
@@ -23,7 +22,7 @@ public class UciProtocol {
 	private volatile boolean stop;
 
 	public UciProtocol() {
-		this(new RandomEngine<>(new TicTacToe()));
+		this(createTicTacToeEngine());
 	}
 	
 	public UciProtocol(Engine<?> engine) {
@@ -109,8 +108,12 @@ public class UciProtocol {
 	private void executeGame(String[] args) {
 		switch(args[1]) {
 		case "tictactoe":
-			engine = new RandomEngine<>(new TicTacToe());
+			engine = createTicTacToeEngine();
 		}
+	}
+
+	private static MonteCarloEngine<TicTacToe> createTicTacToeEngine() {
+		return new MonteCarloEngine<>(new TicTacToe());
 	}
 
 	private void executeUcinewgame(String[] args) {
