@@ -10,6 +10,8 @@ import ch.obermuhlner.game.engine.random.RandomEngine;
 
 public class TicTacToe implements Game<TicTacToe> {
 
+	private static final char[] LETTERS = { 'a', 'b', 'c' }; 
+	
 	private final Side[] board = new Side[9];
 	
 	private Side sideToMove = Side.White;
@@ -81,19 +83,25 @@ public class TicTacToe implements Game<TicTacToe> {
 	
 	@Override
 	public void move(String move) {
-		int x = toCoord(move.charAt(0));
-		int y = toCoord(move.charAt(1));
+		int x = letterToInt(move.charAt(0));
+		int y = Character.getNumericValue(move.charAt(1)) - 1;
 		
 		board[x + y * 3] = sideToMove;
 		sideToMove = sideToMove.otherSide();
 	}
 	
-	public Side getPosition(int x, int y) {
-		return board[x + y*3];
+	private static int letterToInt(char letter) {
+		for (int i = 0; i < LETTERS.length; i++) {
+			if (letter == LETTERS[i]) {
+				return i;
+			}
+		}
+		
+		throw new IllegalArgumentException("Unknown position letter: " + letter);
 	}
 
-	private int toCoord(char c) {
-		return Character.getNumericValue(c);
+	public Side getPosition(int x, int y) {
+		return board[x + y*3];
 	}
 
 	@Override
@@ -185,7 +193,7 @@ public class TicTacToe implements Game<TicTacToe> {
 	}
 
 	public String toMove(int x, int y) {
-		return String.valueOf(x) + String.valueOf(y);
+		return String.valueOf(LETTERS[x]) + String.valueOf(y+1);
 	}
 
 	public static void main(String[] args) {
