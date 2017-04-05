@@ -10,21 +10,21 @@ import ch.obermuhlner.game.engine.random.RandomEngine;
 
 public class TicTacToe implements Game<TicTacToe> {
 
-	private final Side[] data = new Side[9];
+	private final Side[] board = new Side[9];
 	
 	private Side sideToMove = Side.White;
 
 	@Override
 	public void setStartPosition() {
-		for (int i = 0; i < data.length; i++) {
-			data[i] = null;
+		for (int i = 0; i < board.length; i++) {
+			board[i] = null;
 		}
 	}
 	
 	@Override
 	public void setState(String state) {
-		for (int i = 0; i < data.length; i++) {
-			data[i] = null;
+		for (int i = 0; i < board.length; i++) {
+			board[i] = null;
 		}
 		
 		String[] split = state.split(" +");
@@ -34,10 +34,10 @@ public class TicTacToe implements Game<TicTacToe> {
 				char c = split[0].charAt(i);
 				switch (c) {
 				case 'X':
-					data[i] = Side.White;
+					board[i] = Side.White;
 					break;
 				case 'O':
-					data[i] = Side.Black;
+					board[i] = Side.Black;
 					break;
 				}
 			}
@@ -55,8 +55,8 @@ public class TicTacToe implements Game<TicTacToe> {
 	public String getState() {
 		StringBuilder state = new StringBuilder();
 		
-		for (int i = 0; i < data.length; i++) {
-			switch(data[i]) {
+		for (int i = 0; i < board.length; i++) {
+			switch(board[i]) {
 			case White:
 				state.append("X");
 				break;
@@ -84,12 +84,12 @@ public class TicTacToe implements Game<TicTacToe> {
 		int x = toCoord(move.charAt(0));
 		int y = toCoord(move.charAt(1));
 		
-		data[x + y * 3] = sideToMove;
+		board[x + y * 3] = sideToMove;
 		sideToMove = sideToMove.otherSide();
 	}
 	
 	public Side getPosition(int x, int y) {
-		return data[x + y*3];
+		return board[x + y*3];
 	}
 
 	private int toCoord(char c) {
@@ -174,14 +174,14 @@ public class TicTacToe implements Game<TicTacToe> {
 
 	@Override
 	public Game<TicTacToe> clone() {
-		TicTacToe board = new TicTacToe();
+		TicTacToe game = new TicTacToe();
 
-		for (int i = 0; i < this.data.length; i++) {
-			board.data[i] = data[i];
+		for (int i = 0; i < this.board.length; i++) {
+			game.board[i] = board[i];
 		}
-		board.sideToMove = sideToMove;
+		game.sideToMove = sideToMove;
 		
-		return board;
+		return game;
 	}
 
 	public String toMove(int x, int y) {
