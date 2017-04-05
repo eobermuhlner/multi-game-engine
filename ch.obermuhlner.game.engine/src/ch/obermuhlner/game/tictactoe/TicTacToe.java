@@ -57,16 +57,24 @@ public class TicTacToe implements Game<TicTacToe> {
 	public String getState() {
 		StringBuilder state = new StringBuilder();
 		
-		for (int i = 0; i < board.length; i++) {
-			switch(board[i]) {
-			case White:
-				state.append("X");
-				break;
-			case Black:
-				state.append("O");
-				break;
-			default:
-				state.append("-");
+		for (int y = 0; y < 3; y++) {
+			for (int x = 0; x < 3; x++) {
+				Side position = getPosition(x, y);
+				if(position != null) {
+					switch(position) {
+					case White:
+						state.append("X");
+						break;
+					case Black:
+						state.append("O");
+						break;
+					}
+				} else {
+					state.append("-");				
+				}
+			}
+			if (y < 2) {
+				state.append("/");
 			}
 		}
 		
