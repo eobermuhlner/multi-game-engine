@@ -1,5 +1,0 @@
-IN  uci
-OUT id name guppy 0.1
-OUT id author Eric Obermuhlner
-OUT uciok
-IN  d
