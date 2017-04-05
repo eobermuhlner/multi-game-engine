@@ -125,6 +125,7 @@ public class UciProtocol {
 	}
 
 	private void executeDiagram(String[] args) {
+		println(engine.getGame().getDiagram());
 		println("FEN " + engine.getGame().getState());
 	}
 

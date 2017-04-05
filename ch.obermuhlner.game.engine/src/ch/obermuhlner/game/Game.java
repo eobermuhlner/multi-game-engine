@@ -11,6 +11,8 @@ public interface Game<G extends Game<G>> {
 	
 	String getState();
 	
+	String getDiagram();
+	
 	Side getSideToMove();
 	
 	void move(String move);

@@ -60,18 +60,7 @@ public class TicTacToe implements Game<TicTacToe> {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				Side position = getPosition(x, y);
-				if(position != null) {
-					switch(position) {
-					case White:
-						state.append("X");
-						break;
-					case Black:
-						state.append("O");
-						break;
-					}
-				} else {
-					state.append("-");				
-				}
+				state.append(toString(position, "-"));
 			}
 			if (y < 2) {
 				state.append("/");
@@ -83,7 +72,41 @@ public class TicTacToe implements Game<TicTacToe> {
 		
 		return state.toString();
 	}
+	
+	@Override
+	public String getDiagram() {
+		StringBuilder diagram = new StringBuilder();
+		
+		for (int y = 0; y < 3; y++) {
+			diagram.append("+---+---+---+\n");
+			for (int x = 0; x < 3; x++) {
+				Side position = getPosition(x, y);
+				diagram.append("| ");
+				diagram.append(toString(position, " "));
+				diagram.append(" ");
+			}
+			diagram.append("|\n");
+		}
+		diagram.append("+---+---+---+\n");
+		
+		return diagram.toString();
+	}
 
+	private String toString(Side side, String defaultString) {
+		if (side == null) {
+			return defaultString;
+		}
+		
+		switch(side) {
+		case White:
+			return "X";
+		case Black:
+			return "O";
+		}
+		
+		throw new IllegalArgumentException("Unknown side: " + side);
+	}
+	
 	@Override
 	public Side getSideToMove() {
 		return sideToMove;
@@ -135,6 +158,11 @@ public class TicTacToe implements Game<TicTacToe> {
 
 	@Override
 	public boolean isFinished() {
+		Side winner = getWinner();
+		if (winner != null) {
+			return true;
+		}
+		
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
 				if (getPosition(x, y) == null) {
@@ -205,14 +233,16 @@ public class TicTacToe implements Game<TicTacToe> {
 	}
 
 	public static void main(String[] args) {
+		//Engine<TicTacToe> engine = new RandomEngine<>(new TicTacToe());
 		Engine<TicTacToe> engine = new MonteCarloEngine<>(new TicTacToe());
-		
+
 		while (!engine.getGame().isFinished()) {
 			String move = engine.bestMove();
 			System.out.println("MOVE " + move);
 			engine.getGame().move(move);
 		}
-		
+
+		System.out.println(engine.getGame().getDiagram());
 		System.out.println("WINNER " + engine.getGame().getWinner());
 	}
 }
