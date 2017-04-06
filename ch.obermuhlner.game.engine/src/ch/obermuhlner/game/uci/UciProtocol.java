@@ -7,10 +7,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Map;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
 
 public class UciProtocol {
@@ -84,6 +86,9 @@ public class UciProtocol {
 		case "position":
 			executePosition(args);
 			break;
+		case "validmoves":
+			executeValidMoves(args);
+			break;
 		case "go":
 			executeGo(args);
 			break;
@@ -109,11 +114,17 @@ public class UciProtocol {
 		switch(args[1]) {
 		case "tictactoe":
 			engine = createTicTacToeEngine();
+		case "gomoku":
+			engine = createGomokuEngine();
 		}
 	}
 
 	private static MonteCarloEngine<TicTacToe> createTicTacToeEngine() {
 		return new MonteCarloEngine<>(new TicTacToe());
+	}
+
+	private static MonteCarloEngine<Gomoku> createGomokuEngine() {
+		return new MonteCarloEngine<>(new Gomoku());
 	}
 
 	private void executeUcinewgame(String[] args) {
@@ -129,6 +140,19 @@ public class UciProtocol {
 		println("FEN " + engine.getGame().getState());
 	}
 
+	private void executeValidMoves(String[] args) {
+		StringBuilder result = new StringBuilder();
+		result.append("validmoves "); 
+		
+		Map<String, Double> validMoves = engine.getGame().getValidMoves();
+		for (String move : validMoves.keySet()) {
+			result.append(move);
+			result.append(" ");
+		}
+		
+		println(result.toString());
+	}
+	
 	private void executeGo(String[] args) {
 		long thinkingMilliseconds = calculateThinkingTime(args);
 		
