@@ -7,16 +7,16 @@ import ch.obermuhlner.game.engine.random.RandomEngine;
 public class Gomoku extends AbstractStonesInARow {
 	
 	public Gomoku() {
-		this(19, 5, false);
+		this(19, 19, 5, false);
 	}
 
-	public Gomoku(int boardSize, int winCount, boolean exactWin) {
-		super(boardSize, winCount, exactWin);
+	public Gomoku(int boardWidth, int boardHeight, int winCount, boolean exactWin) {
+		super(boardWidth, boardHeight, winCount, exactWin);
 	}
 
 	@Override
 	public Gomoku cloneGame() {
-		return (Gomoku) super.cloneGame(new Gomoku(boardSize, winCount, exactWin));
+		return (Gomoku) super.cloneGame(new Gomoku(boardWidth, boardHeight, winCount, exactWin));
 	}
 
 	public static void main(String[] args) {

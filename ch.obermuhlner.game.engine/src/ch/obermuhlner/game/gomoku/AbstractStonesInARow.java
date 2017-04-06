@@ -10,7 +10,8 @@ public abstract class AbstractStonesInARow implements Game {
 
 	private static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 
-	protected final int boardSize;
+	protected final int boardWidth;
+	protected final int boardHeight;
 	
 	protected final int winCount;
 	protected final boolean exactWin;
@@ -19,11 +20,12 @@ public abstract class AbstractStonesInARow implements Game {
 	
 	protected Side sideToMove = Side.Black;
 
-	public AbstractStonesInARow(int boardSize, int winCount, boolean exactWin) {
-		this.boardSize = boardSize;
+	public AbstractStonesInARow(int boardWidth, int boardHeight, int winCount, boolean exactWin) {
+		this.boardWidth = boardWidth;
+		this.boardHeight = boardHeight;
 		this.winCount = winCount;
 		this.exactWin = exactWin;
-		this.board = new Side[boardSize*boardSize];
+		this.board = new Side[boardWidth*boardHeight];
 		
 		setStartPosition();
 	}
@@ -59,9 +61,9 @@ public abstract class AbstractStonesInARow implements Game {
 	public String getState() {
 		StringBuilder state = new StringBuilder();
 		
-		for (int y = 0; y < boardSize; y++) {
+		for (int y = 0; y < boardHeight; y++) {
 			int emptyCount = 0;
-			for (int x = 0; x < boardSize; x++) {
+			for (int x = 0; x < boardWidth; x++) {
 				Side position = getPosition(x, y);
 				if (position == Side.None) {
 					emptyCount++;
@@ -78,7 +80,7 @@ public abstract class AbstractStonesInARow implements Game {
 				state.append(emptyCount);
 			}
 			
-			if (y < boardSize - 1) {
+			if (y < boardHeight - 1) {
 				state.append("/");
 			}
 		}
@@ -137,19 +139,19 @@ public abstract class AbstractStonesInARow implements Game {
 	}
 
 	protected Side getPosition(int x, int y) {
-		return board[x + y*boardSize];
+		return board[x + y*boardWidth];
 	}
 	
 	protected void setPosition(int x, int y, Side side) {
-		board[x + y * boardSize] = side;
+		board[x + y * boardWidth] = side;
 	}
 
 	@Override
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
 
-		for (int y = 0; y < boardSize; y++) {
-			for (int x = 0; x < boardSize; x++) {
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
 				Side position = getPosition(x, y);
 				diagram.append(toDiagramString(position, "."));
 				diagram.append(" ");
@@ -159,7 +161,7 @@ public abstract class AbstractStonesInARow implements Game {
 			diagram.append("\n");
 		}
 		diagram.append("\n");
-		for (int x = 0; x < boardSize; x++) {
+		for (int x = 0; x < boardWidth; x++) {
 			diagram.append(LETTERS[x]);
 			diagram.append(" ");
 		}
@@ -187,8 +189,8 @@ public abstract class AbstractStonesInARow implements Game {
 	public Map<String, Double> getAllMoves() {
 		Map<String, Double> allMoves = new HashMap<>();
 		
-		for (int y = 0; y < boardSize; y++) {
-			for (int x = 0; x < boardSize; x++) {
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
 				if (getPosition(x, y) != Side.None) {
 					addPositionIfFree(allMoves, x-1, y-1);
 					addPositionIfFree(allMoves, x-1, y+0);
@@ -206,14 +208,14 @@ public abstract class AbstractStonesInARow implements Game {
 		
 		if (allMoves.isEmpty()) {
 			double value = 1.0;
-			allMoves.put(toMove(boardSize/2+1, boardSize/2+1), value);
+			allMoves.put(toMove(boardWidth/2+1, boardHeight/2+1), value);
 		}
 		
 		return allMoves;
 	}
 
 	private void addPositionIfFree(Map<String, Double> allMoves, int x, int y) {
-		if (x < 0 || x >= boardSize || y < 0 || y >= boardSize) {
+		if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight) {
 			return;
 		}
 		
@@ -237,46 +239,56 @@ public abstract class AbstractStonesInARow implements Game {
 	@Override
 	public boolean isFinished() {
 		Side winner = getWinner();
-		return winner != Side.None;
+		if (winner != Side.None) {
+			return true;
+		}
+
+		for (int i = 0; i < board.length; i++) {
+			if (board[i] == Side.None) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public Side getWinner() {
 		Side winner;
 		
-		for (int i = 0; i < boardSize; i++) {
+		for (int x = 0; x < boardWidth; x++) {
 			// horizontal
-			winner = getWinner(i, 0, 1, 0);
+			winner = getWinner(x, 0, 1, 0);
 			if (winner != Side.None) {
 				return winner;
 			}
 			
-			// vertical
-			winner = getWinner(0, i, 0, 1);
-			if (winner != Side.None) {
-				return winner;
-			}
-
-			// diagonal left side going down/right
-			winner = getWinner(0, i, 1, 1);
-			if (winner != Side.None) {
-				return winner;
-			}
-
 			// diagonal top side going down/right
-			winner = getWinner(i, 0, 1, 1);
-			if (winner != Side.None) {
-				return winner;
-			}
-
-			// diagonal left side going up/right
-			winner = getWinner(0, i, 1, -1);
+			winner = getWinner(x, 0, 1, 1);
 			if (winner != Side.None) {
 				return winner;
 			}
 
 			// diagonal bottom side going up/right
-			winner = getWinner(i, boardSize-1, 1, -11);
+			winner = getWinner(x, boardHeight-1, 1, -11);
+			if (winner != Side.None) {
+				return winner;
+			}
+		}
+		for (int y = 0; y < boardHeight; y++) {
+			// vertical
+			winner = getWinner(0, y, 0, 1);
+			if (winner != Side.None) {
+				return winner;
+			}
+
+			// diagonal left side going down/right
+			winner = getWinner(0, y, 1, 1);
+			if (winner != Side.None) {
+				return winner;
+			}
+
+			// diagonal left side going up/right
+			winner = getWinner(0, y, 1, -1);
 			if (winner != Side.None) {
 				return winner;
 			}
@@ -292,7 +304,7 @@ public abstract class AbstractStonesInARow implements Game {
 		int maxWhiteCount = 0;
 		int maxBlackCount = 0;
 
-		while (x >= 0 && x < boardSize && y < boardSize && y >= 0) {
+		while (x >= 0 && x < boardWidth && y < boardHeight && y >= 0) {
 			switch (getPosition(x, y)) {
 			case Black:
 				blackCount++;

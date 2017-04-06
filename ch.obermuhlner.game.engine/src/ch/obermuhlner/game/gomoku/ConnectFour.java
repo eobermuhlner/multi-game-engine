@@ -11,19 +11,19 @@ import ch.obermuhlner.game.engine.random.RandomEngine;
 public class ConnectFour extends AbstractStonesInARow {
 
 	public ConnectFour() {
-		this(7);
+		this(7, 6);
 	}
 
-	public ConnectFour(int boardSize) {
-		super(boardSize, 4, true);
+	public ConnectFour(int boardWidth, int boardHeight) {
+		super(boardWidth, boardHeight, 4, true);
 	}
 
 	@Override
 	public Map<String, Double> getAllMoves() {
 		Map<String, Double> allMoves = new HashMap<>();
 
-		for (int x = 0; x < boardSize; x++) {
-			int y = findFree(x);
+		for (int x = 0; x < boardWidth; x++) {
+			int y = findFreeY(x);
 			if (y >= 0) {
 				double value = 1.0;
 				allMoves.put(toMove(x), value);
@@ -36,7 +36,7 @@ public class ConnectFour extends AbstractStonesInARow {
 	@Override
 	public void move(String move) {
 		int x = Integer.parseInt(move) - 1;
-		int y = findFree(x);
+		int y = findFreeY(x);
 		
 		setPosition(x, y, sideToMove);
 		
@@ -47,8 +47,8 @@ public class ConnectFour extends AbstractStonesInARow {
 		return String.valueOf(x + 1);
 	}
 
-	private int findFree(int x) {
-		for (int y = 0; y < boardSize; y++) {
+	private int findFreeY(int x) {
+		for (int y = 0; y < boardHeight; y++) {
 			if (getPosition(x, y) == Side.None) {
 				return y;
 			}
@@ -61,16 +61,16 @@ public class ConnectFour extends AbstractStonesInARow {
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
 
-		for (int y = 0; y < boardSize; y++) {
-			for (int x = 0; x < boardSize; x++) {
-				Side position = getPosition(x, boardSize - y - 1);
+		for (int y = 0; y < boardHeight; y++) {
+			for (int x = 0; x < boardWidth; x++) {
+				Side position = getPosition(x, boardHeight - y - 1);
 				diagram.append(toDiagramString(position, "."));
 				diagram.append(" ");
 			}
 			diagram.append("\n");
 		}
 		diagram.append("\n");
-		for (int x = 0; x < boardSize; x++) {
+		for (int x = 0; x < boardWidth; x++) {
 			diagram.append(x + 1);
 			diagram.append(" ");
 		}
@@ -81,7 +81,7 @@ public class ConnectFour extends AbstractStonesInARow {
 
 	@Override
 	public Gomoku cloneGame() {
-		return (Gomoku) super.cloneGame(new Gomoku(boardSize, winCount, exactWin));
+		return (Gomoku) super.cloneGame(new Gomoku(boardWidth, boardHeight, winCount, exactWin));
 	}
 
 	public static void main(String[] args) {
