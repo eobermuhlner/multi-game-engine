@@ -8,7 +8,7 @@ import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 
-public class TicTacToe implements Game<TicTacToe> {
+public class TicTacToe implements Game {
 
 	private static final char[] LETTERS = { 'a', 'b', 'c' }; 
 	

@@ -3,7 +3,7 @@ package ch.obermuhlner.game;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public interface Game<G extends Game<G>> {
+public interface Game {
 
 	void setStartPosition();
 	
@@ -31,6 +31,6 @@ public interface Game<G extends Game<G>> {
 	
 	Side getWinner();
 
-	Game<G> clone();
+	Game clone();
 	
 }

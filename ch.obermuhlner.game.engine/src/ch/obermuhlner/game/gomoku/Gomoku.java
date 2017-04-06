@@ -3,13 +3,10 @@ package ch.obermuhlner.game.gomoku;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
-import ch.obermuhlner.game.tictactoe.TicTacToe;
 
-public class Gomoku implements Game<Gomoku> {
+public class Gomoku implements Game {
 
 	private static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 

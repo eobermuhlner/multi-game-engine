@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 
-public class RandomEngine<G extends Game<G>> implements Engine<G> {
+public class RandomEngine<G extends Game> implements Engine<G> {
 
 	private static final int TRY_RANDOM_MOVE = 5;
 

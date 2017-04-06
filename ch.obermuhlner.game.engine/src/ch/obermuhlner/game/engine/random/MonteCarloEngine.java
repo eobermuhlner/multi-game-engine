@@ -9,7 +9,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 
-public class MonteCarloEngine<G extends Game<G>> implements Engine<G> {
+public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 	private final Random random = new Random();
 

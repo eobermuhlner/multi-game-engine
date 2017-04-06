@@ -1,6 +1,6 @@
 package ch.obermuhlner.game;
 
-public interface Engine<G extends Game<G>> {
+public interface Engine<G extends Game> {
 
 	G getGame();
 	
