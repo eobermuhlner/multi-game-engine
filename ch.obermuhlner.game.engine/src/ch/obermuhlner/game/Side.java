@@ -14,7 +14,7 @@ public enum Side {
 		case Black:
 			return Side.White;
 		case White:
-			return Side.White;
+			return Side.Black;
 		case None:
 			return Side.None;
 		}
