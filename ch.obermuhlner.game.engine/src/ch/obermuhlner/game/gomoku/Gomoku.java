@@ -7,7 +7,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.engine.random.RandomEngine;
 
 public class Gomoku implements Game {
 
@@ -29,12 +29,14 @@ public class Gomoku implements Game {
 		this.boardSize = boardSize;
 		this.exactWin = exactWin;
 		this.board = new Side[boardSize*boardSize];
+		
+		setStartPosition();
 	}
 	
 	@Override
 	public void setStartPosition() {
 		for (int i = 0; i < board.length; i++) {
-			board[i] = null;
+			board[i] = Side.None;
 		}
 
 		sideToMove = Side.Black;
@@ -54,10 +56,7 @@ public class Gomoku implements Game {
 		}
 		
 		if (split.length > 1) {
-			Side side = toSide(split[1].charAt(0));
-			if (side != null) {
-				sideToMove = side;
-			}
+			sideToMove = toSide(split[1].charAt(0));
 		}
 	}
 
@@ -69,7 +68,7 @@ public class Gomoku implements Game {
 			int emptyCount = 0;
 			for (int x = 0; x < boardSize; x++) {
 				Side position = getPosition(x, y);
-				if (position == null) {
+				if (position == Side.None) {
 					emptyCount++;
 				} else {
 					if (emptyCount > 0) {
@@ -103,14 +102,10 @@ public class Gomoku implements Game {
 			return Side.Black;
 		}
 		
-		return null;
+		return Side.None;
 	}
 
 	private String toString(Side side, String defaultString) {
-		if (side == null) {
-			return defaultString;
-		}
-		
 		switch(side) {
 		case White:
 			return "w";
@@ -124,10 +119,6 @@ public class Gomoku implements Game {
 	}
 
 	private String toDiagramString(Side side, String defaultString) {
-		if (side == null) {
-			return defaultString;
-		}
-
 		switch(side) {
 		case White:
 			return "X";
@@ -198,8 +189,7 @@ public class Gomoku implements Game {
 		
 		for (int y = 0; y < boardSize; y++) {
 			for (int x = 0; x < boardSize; x++) {
-				Side position = getPosition(x, y);
-				if (position != null) {
+				if (getPosition(x, y) != Side.None) {
 					addPositionIfFree(allMoves, x-1, y-1);
 					addPositionIfFree(allMoves, x-1, y+0);
 					addPositionIfFree(allMoves, x-1, y+1);
@@ -227,7 +217,7 @@ public class Gomoku implements Game {
 			return;
 		}
 		
-		if (getPosition(x, y) != null) {
+		if (getPosition(x, y) != Side.None) {
 			return;
 		}
 		
@@ -247,7 +237,7 @@ public class Gomoku implements Game {
 	@Override
 	public boolean isFinished() {
 		Side winner = getWinner();
-		return winner != null;
+		return winner != Side.None;
 	}
 
 	@Override
@@ -257,42 +247,42 @@ public class Gomoku implements Game {
 		for (int i = 0; i < boardSize; i++) {
 			// horizontal
 			winner = getWinner(i, 0, 1, 0);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 			
 			// vertical
 			winner = getWinner(0, i, 0, 1);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 
 			// diagonal left side going down/right
 			winner = getWinner(0, i, 1, 1);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 
 			// diagonal top side going down/right
 			winner = getWinner(i, 0, 1, 1);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 
 			// diagonal left side going up/right
 			winner = getWinner(0, i, 1, -1);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 
 			// diagonal bottom side going up/right
 			winner = getWinner(i, boardSize-1, 1, -11);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 		}
 		
-		return null;
+		return Side.None;
 	}
 	
 	private Side getWinner(int x, int y, int deltaX, int deltaY) {
@@ -303,33 +293,25 @@ public class Gomoku implements Game {
 		int maxBlackCount = 0;
 
 		while (x >= 0 && x < boardSize && y < boardSize && y >= 0) {
-			Side position = getPosition(x, y);
-			if (position != null) {
-				switch (position) {
-				case Black:
-					blackCount++;
-					maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
-					whiteCount = 0;
-					break;
-				case White:
-					whiteCount++;
-					maxBlackCount = Math.max(blackCount, maxBlackCount);
-					blackCount = 0;
-					break;
-				case None:
-					maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
-					whiteCount = 0;
-					maxBlackCount = Math.max(blackCount, maxBlackCount);
-					blackCount = 0;
-					break;
-				}
-			} else {
+			switch (getPosition(x, y)) {
+			case Black:
+				blackCount++;
+				maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
+				whiteCount = 0;
+				break;
+			case White:
+				whiteCount++;
+				maxBlackCount = Math.max(blackCount, maxBlackCount);
+				blackCount = 0;
+				break;
+			case None:
 				maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
 				whiteCount = 0;
 				maxBlackCount = Math.max(blackCount, maxBlackCount);
 				blackCount = 0;
+				break;
 			}
-			
+		
 			x += deltaX;
 			y += deltaY;
 		}
@@ -349,7 +331,7 @@ public class Gomoku implements Game {
 				return Side.Black;
 			}
 		}
-		return null;
+		return Side.None;
 	}
 	
 	@Override
@@ -370,7 +352,8 @@ public class Gomoku implements Game {
 	}
 
 	public static void main(String[] args) {
-		Engine<Gomoku> engine = new MonteCarloEngine<>(new Gomoku());
+		//Engine<Gomoku> engine = new MonteCarloEngine<>(new Gomoku());
+		Engine<Gomoku> engine = new RandomEngine<>(new Gomoku());
 		GameCommandLine.playGame(engine);
 	}
 }
