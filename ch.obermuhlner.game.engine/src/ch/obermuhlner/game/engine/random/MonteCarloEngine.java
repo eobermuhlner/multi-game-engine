@@ -61,7 +61,10 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 	}
 
 	private Side randomPlay(String move) {
-		RandomEngine randomEngine = new RandomEngine(game.clone(), random);
+		@SuppressWarnings("unchecked")
+		G clone = (G) game.clone();
+		
+		RandomEngine<G> randomEngine = new RandomEngine<>(clone, random);
 		
 		while(!randomEngine.getGame().isFinished()) {
 			randomEngine.getGame().move(randomEngine.bestMove());
