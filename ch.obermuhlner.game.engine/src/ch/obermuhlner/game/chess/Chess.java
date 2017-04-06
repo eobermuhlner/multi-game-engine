@@ -9,7 +9,6 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
 
 public class Chess implements Game {
@@ -392,6 +391,8 @@ public class Chess implements Game {
 			return 1;
 		case Black:
 			return -1;
+		case None:
+			throw new IllegalArgumentException("Side " + side + " not supported");
 		}
 		throw new IllegalArgumentException("Unknown side: " + side);
 	}
@@ -402,6 +403,8 @@ public class Chess implements Game {
 			return 1;
 		case Black:
 			return 6;
+		case None:
+			throw new IllegalArgumentException("Side " + side + " not supported");
 		}
 		throw new IllegalArgumentException("Unknown side: " + side);
 	}
@@ -412,6 +415,8 @@ public class Chess implements Game {
 			return 7;
 		case Black:
 			return 0;
+		case None:
+			throw new IllegalArgumentException("Side " + side + " not supported");
 		}
 		throw new IllegalArgumentException("Unknown side: " + side);
 	}
@@ -431,7 +436,7 @@ public class Chess implements Game {
 	}
 	
 	public static void main(String[] args) {
-		Engine<Chess> engine = new MonteCarloEngine<>(new Chess());
+		Engine<Chess> engine = new RandomEngine<>(new Chess());
 		GameCommandLine.playGame(engine);
 	}
 }

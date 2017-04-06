@@ -82,6 +82,8 @@ public class Analysis {
 			return blackKingInCheck;
 		case White:
 			return whiteKingInCheck;
+		case None:
+			throw new IllegalArgumentException("Side " + side + " not supported");
 		}
 		
 		throw new IllegalArgumentException("Unknown side: " + side);

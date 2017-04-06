@@ -116,6 +116,8 @@ public class Gomoku implements Game {
 			return "w";
 		case Black:
 			return "b";
+		case None:
+			return defaultString;
 		}
 		
 		throw new IllegalArgumentException("Unknown side: " + side);
@@ -131,6 +133,8 @@ public class Gomoku implements Game {
 			return "X";
 		case Black:
 			return "O";
+		case None:
+			return defaultString;
 		}
 		
 		throw new IllegalArgumentException("Unknown side: " + side);
@@ -309,6 +313,12 @@ public class Gomoku implements Game {
 					break;
 				case White:
 					whiteCount++;
+					maxBlackCount = Math.max(blackCount, maxBlackCount);
+					blackCount = 0;
+					break;
+				case None:
+					maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
+					whiteCount = 0;
 					maxBlackCount = Math.max(blackCount, maxBlackCount);
 					blackCount = 0;
 					break;

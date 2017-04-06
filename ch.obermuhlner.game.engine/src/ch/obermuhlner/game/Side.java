@@ -1,6 +1,7 @@
 package ch.obermuhlner.game;
 
 public enum Side {
+	None,
 	White,
 	Black;
 	
@@ -9,10 +10,15 @@ public enum Side {
 	}
 
 	private static Side otherSide(Side side) {
-		if (side == White) {
-			return Black;
-		} else {
-			return White;
+		switch(side) {
+		case Black:
+			return Side.White;
+		case White:
+			return Side.White;
+		case None:
+			return Side.None;
 		}
+		
+		throw new IllegalArgumentException("Unknown side: " + side);
 	}
 }

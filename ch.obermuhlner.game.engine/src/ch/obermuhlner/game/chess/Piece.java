@@ -75,6 +75,8 @@ public enum Piece {
 			return y;
 		case Black:
 			return 7 - y;
+		case None:
+			throw new IllegalArgumentException("Side " + side + " not supported");
 		}
 		throw new IllegalArgumentException("Unknown side: " + side);
 	}

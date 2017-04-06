@@ -107,6 +107,8 @@ public class TicTacToe implements Game {
 			return "X";
 		case Black:
 			return "O";
+		case None:
+			return defaultString;
 		}
 		
 		throw new IllegalArgumentException("Unknown side: " + side);
