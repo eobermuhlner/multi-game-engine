@@ -56,7 +56,20 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		}
 		
 		//System.out.println(validMoves);
-		String bestMove = RandomUtil.pickRandom(random, validMoves);
+		return pickBestMove(validMoves);
+	}
+	
+	private String pickBestMove(Map<String, Double> moves) {
+		String bestMove = null;
+		double maxValue = Double.MIN_VALUE;
+		
+		for (Entry<String, Double> entry : moves.entrySet()) {
+			if (entry.getValue() > maxValue) {
+				maxValue = entry.getValue();
+				bestMove = entry.getKey();
+			}
+		}
+		
 		return bestMove;
 	}
 
