@@ -13,12 +13,21 @@ public class Gomoku implements Game {
 
 	private static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 
-	private int boardSize = 19;
+	private final int boardSize;
 	
-	private final Side[] board = new Side[boardSize*boardSize];
+	private final Side[] board;
 
 	private Side sideToMove = Side.Black;
 
+	public Gomoku() {
+		this(19);
+	}
+	
+	public Gomoku(int boardSize) {
+		this.boardSize = boardSize;
+		this.board = new Side[boardSize*boardSize];
+	}
+	
 	@Override
 	public void setStartPosition() {
 		for (int i = 0; i < board.length; i++) {
@@ -323,9 +332,8 @@ public class Gomoku implements Game {
 	
 	@Override
 	public Gomoku clone() {
-		Gomoku game = new Gomoku();
+		Gomoku game = new Gomoku(boardSize);
 		
-		game.boardSize = boardSize;
 		for (int i = 0; i < this.board.length; i++) {
 			game.board[i] = board[i];
 		}
