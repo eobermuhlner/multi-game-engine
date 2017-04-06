@@ -32,7 +32,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		Map<String, Integer> moveWin = new HashMap<>();
 		Map<String, Integer> moveLoss = new HashMap<>();
 
-		int playCount = 10000;
+		int playCount = 100;
 		for (Entry<String, Double> entry : validMoves.entrySet()) {
 			for (int i = 0; i < playCount; i++) {
 				Side winner = randomPlay(entry.getKey());
@@ -70,9 +70,6 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 			}
 		}
 		
-		if (bestMove == null) {
-			System.out.println("fuck");
-		}
 		return bestMove;
 	}
 
