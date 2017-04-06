@@ -55,13 +55,13 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 			entry.setValue((double)(win - loss) / playCount);
 		}
 		
-		//System.out.println(validMoves);
+		System.out.println(validMoves);
 		return pickBestMove(validMoves);
 	}
 	
 	private String pickBestMove(Map<String, Double> moves) {
 		String bestMove = null;
-		double maxValue = Double.MIN_VALUE;
+		double maxValue = Double.NEGATIVE_INFINITY;
 		
 		for (Entry<String, Double> entry : moves.entrySet()) {
 			if (entry.getValue() > maxValue) {
@@ -70,6 +70,9 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 			}
 		}
 		
+		if (bestMove == null) {
+			System.out.println("fuck");
+		}
 		return bestMove;
 	}
 
