@@ -1,0 +1,1 @@
+java -classpath bin ch.obermuhlner.game.uci.UciProtocol
