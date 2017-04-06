@@ -287,7 +287,7 @@ public class Chess implements Game {
 			return sideToMove.otherSide();
 		}
 
-		return null;
+		return Side.None;
 	}
 
 	public boolean isCheck(Side side) {
