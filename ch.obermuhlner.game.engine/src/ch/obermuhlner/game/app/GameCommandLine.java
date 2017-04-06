@@ -8,8 +8,12 @@ import ch.obermuhlner.game.gomoku.Gomoku;
 public class GameCommandLine {
 
 	public static <G extends Game> void playGame(Engine<G> engine) {
+		int step = 0;
+		
 		while (!engine.getGame().isFinished()) {
+			System.out.println("STEP " + step++);
 			System.out.println(engine.getGame().getDiagram());
+			//System.out.println("VALIDMOVES " + engine.getGame().getValidMoves());
 			String move = engine.bestMove();
 			System.out.println("MOVE " + move);
 			engine.getGame().move(move);

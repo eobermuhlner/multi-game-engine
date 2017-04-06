@@ -32,19 +32,19 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		Map<String, Integer> moveWin = new HashMap<>();
 		Map<String, Integer> moveLoss = new HashMap<>();
 
-		int playCount = 100;
+		int playCount = 10;
 		for (Entry<String, Double> entry : validMoves.entrySet()) {
 			for (int i = 0; i < playCount; i++) {
 				Side winner = randomPlay(entry.getKey());
 				if (winner == sideToMove) {
 					int count = moveWin.getOrDefault(entry.getKey(), 0);
 					moveWin.put(entry.getKey(), count + 1);
-					//moveWin.merge(entry.getKey(), 1, (key, value) -> value + 1);
+					//moveWin.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
 				}
 				if (winner == sideToMove.otherSide()) {
 					int count = moveLoss.getOrDefault(entry.getKey(), 0);
 					moveLoss.put(entry.getKey(), count + 1);
-					//moveLoss.merge(entry.getKey(), 1, (key, value) -> value + 1);
+					//moveLoss.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
 				}
 			}
 		}

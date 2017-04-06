@@ -11,7 +11,9 @@ import java.util.Map;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.chess.Chess;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
 
@@ -24,7 +26,7 @@ public class UciProtocol {
 	private volatile boolean stop;
 
 	public UciProtocol() {
-		this(createTicTacToeEngine());
+		this(createChessEngine());
 	}
 	
 	public UciProtocol(Engine<?> engine) {
@@ -117,6 +119,10 @@ public class UciProtocol {
 		case "gomoku":
 			engine = createGomokuEngine();
 		}
+	}
+
+	private static RandomEngine<Chess> createChessEngine() {
+		return new RandomEngine<>(new Chess());
 	}
 
 	private static MonteCarloEngine<TicTacToe> createTicTacToeEngine() {
