@@ -17,10 +17,14 @@ public class TicTacToe implements Game {
 	
 	private Side sideToMove = Side.White;
 
+	public TicTacToe() {
+		setStartPosition();
+	}
+	
 	@Override
 	public void setStartPosition() {
 		for (int i = 0; i < board.length; i++) {
-			board[i] = null;
+			board[i] = Side.None;
 		}
 		
 		sideToMove = Side.White;
@@ -40,10 +44,7 @@ public class TicTacToe implements Game {
 		}
 		
 		if (split.length > 1) {
-			Side side = toSide(split[1].charAt(0));
-			if (side != null) {
-				sideToMove = side;
-			}
+			sideToMove = toSide(split[1].charAt(0));
 		}
 	}
 
@@ -94,14 +95,10 @@ public class TicTacToe implements Game {
 			return Side.Black;
 		}
 		
-		return null;
+		return Side.None;
 	}
 	
 	private String toString(Side side, String defaultString) {
-		if (side == null) {
-			return defaultString;
-		}
-		
 		switch(side) {
 		case White:
 			return "X";
@@ -148,7 +145,7 @@ public class TicTacToe implements Game {
 		
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				if (getPosition(x, y) == null) {
+				if (getPosition(x, y) == Side.None) {
 					double value = 1.0;
 					moves.put(toMove(x, y), value);
 				}
@@ -166,13 +163,13 @@ public class TicTacToe implements Game {
 	@Override
 	public boolean isFinished() {
 		Side winner = getWinner();
-		if (winner != null) {
+		if (winner != Side.None) {
 			return true;
 		}
 		
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				if (getPosition(x, y) == null) {
+				if (getPosition(x, y) == Side.None) {
 					return false;
 				}
 			}
@@ -187,40 +184,40 @@ public class TicTacToe implements Game {
 		
 		for (int i = 0; i < 3; i++) {
 			winner = getWinner(i, 0, i, 1, i, 2);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 			
 			winner = getWinner(0, i, 1, i, 2, i);
-			if (winner != null) {
+			if (winner != Side.None) {
 				return winner;
 			}
 		}
 		
 		winner = getWinner(0, 0, 1, 1, 2, 2);
-		if (winner != null) {
+		if (winner != Side.None) {
 			return winner;
 		}
 
 		winner = getWinner(0, 2, 1, 1, 2, 0);
-		if (winner != null) {
+		if (winner != Side.None) {
 			return winner;
 		}
 		
-		return null;
+		return Side.None;
 	}
 
 	private Side getWinner(int x1, int y1, int x2, int y2, int x3, int y3) {
 		Side side = getPosition(x1, y1);
-		if (side == null) {
-			return null;
+		if (side == Side.None) {
+			return Side.None;
 		}
 		
 		if (getPosition(x2, y2) == side && getPosition(x3, y3) == side) {
 			return side;
 		}
 		
-		return null;
+		return Side.None;
 	}
 
 	@Override
