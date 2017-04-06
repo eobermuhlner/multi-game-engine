@@ -75,7 +75,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 	private Side randomPlay(String move) {
 		@SuppressWarnings("unchecked")
-		G clone = (G) game.clone();
+		G clone = (G) game.cloneGame();
 		
 		RandomEngine<G> randomEngine = new RandomEngine<>(clone, random);
 		

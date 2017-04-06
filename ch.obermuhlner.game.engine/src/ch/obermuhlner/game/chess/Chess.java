@@ -270,7 +270,7 @@ public class Chess implements Game {
 
 	@Override
 	public boolean isValid(String move) {
-		Chess local = clone();
+		Chess local = cloneGame();
 		local.move(move);
 		
 		return !local.isCheck(sideToMove);
@@ -295,7 +295,7 @@ public class Chess implements Game {
 	}
 	
 	@Override
-	public Chess clone() {
+	public Chess cloneGame() {
 		Chess game = new Chess();
 
 		game.positions.clear();

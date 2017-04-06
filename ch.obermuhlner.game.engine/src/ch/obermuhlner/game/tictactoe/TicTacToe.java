@@ -221,7 +221,7 @@ public class TicTacToe implements Game {
 	}
 
 	@Override
-	public TicTacToe clone() {
+	public TicTacToe cloneGame() {
 		TicTacToe game = new TicTacToe();
 
 		for (int i = 0; i < this.board.length; i++) {

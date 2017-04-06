@@ -31,6 +31,6 @@ public interface Game {
 	
 	Side getWinner();
 
-	Game clone();
+	Game cloneGame();
 	
 }
