@@ -3,8 +3,11 @@ package ch.obermuhlner.game.gomoku;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.app.GameCommandLine;
+import ch.obermuhlner.game.engine.random.RandomEngine;
 
 public class Gomoku implements Game {
 
@@ -145,8 +148,16 @@ public class Gomoku implements Game {
 				diagram.append(toDiagramString(position, "."));
 				diagram.append(" ");
 			}
+			diagram.append(" ");
+			diagram.append(LETTERS[y]);
 			diagram.append("\n");
 		}
+		diagram.append("\n");
+		for (int x = 0; x < boardSize; x++) {
+			diagram.append(LETTERS[x]);
+			diagram.append(" ");
+		}
+		diagram.append("\n");
 		
 		return diagram.toString();
 	}
@@ -275,20 +286,30 @@ public class Gomoku implements Game {
 		int maxWhiteCount = 0;
 		int maxBlackCount = 0;
 
-		while (x < boardSize && y < boardSize) {
+		while (x >= 0 && x < boardSize && y < boardSize && y >= 0) {
 			Side position = getPosition(x, y);
-			switch (position) {
-			case Black:
-				blackCount++;
+			if (position != null) {
+				switch (position) {
+				case Black:
+					blackCount++;
+					maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
+					whiteCount = 0;
+					break;
+				case White:
+					whiteCount++;
+					maxBlackCount = Math.max(blackCount, maxBlackCount);
+					blackCount = 0;
+					break;
+				}
+			} else {
 				maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
 				whiteCount = 0;
-				break;
-			case White:
-				whiteCount++;
 				maxBlackCount = Math.max(blackCount, maxBlackCount);
 				blackCount = 0;
-				break;
 			}
+			
+			x += deltaX;
+			y += deltaY;
 		}
 		
 		if (maxWhiteCount >= 5) {
@@ -316,5 +337,10 @@ public class Gomoku implements Game {
 	@Override
 	public String toString() {
 		return getState();
+	}
+
+	public static void main(String[] args) {
+		Engine<Gomoku> engine = new RandomEngine<>(new Gomoku());
+		GameCommandLine.playGame(engine);
 	}
 }
