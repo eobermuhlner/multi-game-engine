@@ -6,6 +6,7 @@ import java.util.Map;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 
 public class TicTacToe implements Game {
@@ -242,16 +243,7 @@ public class TicTacToe implements Game {
 	}
 
 	public static void main(String[] args) {
-		//Engine<TicTacToe> engine = new RandomEngine<>(new TicTacToe());
 		Engine<TicTacToe> engine = new MonteCarloEngine<>(new TicTacToe());
-
-		while (!engine.getGame().isFinished()) {
-			String move = engine.bestMove();
-			System.out.println("MOVE " + move);
-			engine.getGame().move(move);
-		}
-
-		System.out.println(engine.getGame().getDiagram());
-		System.out.println("WINNER " + engine.getGame().getWinner());
+		GameCommandLine.playGame(engine);
 	}
 }
