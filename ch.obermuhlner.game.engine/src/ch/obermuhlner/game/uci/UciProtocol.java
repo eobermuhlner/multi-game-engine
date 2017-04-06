@@ -14,6 +14,7 @@ import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.chess.Chess;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
 
@@ -118,6 +119,8 @@ public class UciProtocol {
 			engine = createTicTacToeEngine();
 		case "gomoku":
 			engine = createGomokuEngine();
+		case "connectfour":
+			engine = createConnectFourEngine();
 		}
 	}
 
@@ -131,6 +134,10 @@ public class UciProtocol {
 
 	private static MonteCarloEngine<Gomoku> createGomokuEngine() {
 		return new MonteCarloEngine<>(new Gomoku());
+	}
+
+	private static MonteCarloEngine<ConnectFour> createConnectFourEngine() {
+		return new MonteCarloEngine<>(new ConnectFour());
 	}
 
 	private void executeUcinewgame(String[] args) {

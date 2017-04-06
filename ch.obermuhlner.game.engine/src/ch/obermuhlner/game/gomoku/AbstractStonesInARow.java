@@ -15,9 +15,9 @@ public abstract class AbstractStonesInARow implements Game {
 	protected final int winCount;
 	protected final boolean exactWin;
 
-	private final Side[] board;
+	protected final Side[] board;
 	
-	private Side sideToMove = Side.Black;
+	protected Side sideToMove = Side.Black;
 
 	public AbstractStonesInARow(int boardSize, int winCount, boolean exactWin) {
 		this.boardSize = boardSize;
@@ -113,7 +113,7 @@ public abstract class AbstractStonesInARow implements Game {
 		throw new IllegalArgumentException("Unknown side: " + side);
 	}
 
-	private String toDiagramString(Side side, String defaultString) {
+	protected String toDiagramString(Side side, String defaultString) {
 		switch(side) {
 		case White:
 			return "X";
@@ -136,8 +136,12 @@ public abstract class AbstractStonesInARow implements Game {
 		throw new IllegalArgumentException("Unknown position letter: " + letter);
 	}
 
-	private Side getPosition(int x, int y) {
+	protected Side getPosition(int x, int y) {
 		return board[x + y*boardSize];
+	}
+	
+	protected void setPosition(int x, int y, Side side) {
+		board[x + y * boardSize] = side;
 	}
 
 	@Override
@@ -173,8 +177,9 @@ public abstract class AbstractStonesInARow implements Game {
 	public void move(String move) {
 		int x = letterToInt(move.charAt(0));
 		int y = letterToInt(move.charAt(1));
-		
-		board[x + y * boardSize] = sideToMove;
+
+		setPosition(x, y, sideToMove);
+
 		sideToMove = sideToMove.otherSide();
 	}
 
@@ -312,17 +317,17 @@ public abstract class AbstractStonesInARow implements Game {
 		}
 		
 		if (exactWin) {
-			if (maxWhiteCount == 5) {
+			if (maxWhiteCount == winCount) {
 				return Side.White;
 			}
-			if (maxBlackCount == 5) {
+			if (maxBlackCount == winCount) {
 				return Side.Black;
 			}
 		} else {
-			if (maxWhiteCount >= 5) {
+			if (maxWhiteCount >= winCount) {
 				return Side.White;
 			}
-			if (maxBlackCount >= 5) {
+			if (maxBlackCount >= winCount) {
 				return Side.Black;
 			}
 		}
