@@ -7,7 +7,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 
 public class Gomoku implements Game {
 
@@ -360,7 +360,7 @@ public class Gomoku implements Game {
 	}
 
 	public static void main(String[] args) {
-		Engine<Gomoku> engine = new RandomEngine<>(new Gomoku());
+		Engine<Gomoku> engine = new MonteCarloEngine<>(new Gomoku());
 		GameCommandLine.playGame(engine);
 	}
 }
