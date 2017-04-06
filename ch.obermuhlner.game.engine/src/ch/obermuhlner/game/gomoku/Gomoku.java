@@ -16,15 +16,18 @@ public class Gomoku implements Game {
 	private final int boardSize;
 	
 	private final Side[] board;
+	
+	private final boolean exactWin;
 
 	private Side sideToMove = Side.Black;
 
 	public Gomoku() {
-		this(19);
+		this(19, false);
 	}
 	
-	public Gomoku(int boardSize) {
+	public Gomoku(int boardSize, boolean exactWin) {
 		this.boardSize = boardSize;
+		this.exactWin = exactWin;
 		this.board = new Side[boardSize*boardSize];
 	}
 	
@@ -321,18 +324,27 @@ public class Gomoku implements Game {
 			y += deltaY;
 		}
 		
-		if (maxWhiteCount >= 5) {
-			return Side.White;
-		}
-		if (maxBlackCount >= 5) {
-			return Side.Black;
+		if (exactWin) {
+			if (maxWhiteCount == 5) {
+				return Side.White;
+			}
+			if (maxBlackCount == 5) {
+				return Side.Black;
+			}
+		} else {
+			if (maxWhiteCount >= 5) {
+				return Side.White;
+			}
+			if (maxBlackCount >= 5) {
+				return Side.Black;
+			}
 		}
 		return null;
 	}
 	
 	@Override
 	public Gomoku clone() {
-		Gomoku game = new Gomoku(boardSize);
+		Gomoku game = new Gomoku(boardSize, exactWin);
 		
 		for (int i = 0; i < this.board.length; i++) {
 			game.board[i] = board[i];
