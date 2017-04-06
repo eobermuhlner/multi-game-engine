@@ -236,6 +236,11 @@ public class TicTacToe implements Game<TicTacToe> {
 		return String.valueOf(LETTERS[x]) + String.valueOf(y+1);
 	}
 
+	@Override
+	public String toString() {
+		return getState();
+	}
+
 	public static void main(String[] args) {
 		//Engine<TicTacToe> engine = new RandomEngine<>(new TicTacToe());
 		Engine<TicTacToe> engine = new MonteCarloEngine<>(new TicTacToe());
