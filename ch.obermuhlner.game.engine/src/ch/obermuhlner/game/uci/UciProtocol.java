@@ -117,12 +117,18 @@ public class UciProtocol {
 
 	private void executeGame(String[] args) {
 		switch(args[1]) {
+		case "chess":
+			engine = createChessEngine();
+			break;
 		case "tictactoe":
 			engine = createTicTacToeEngine();
+			break;
 		case "gomoku":
 			engine = createGomokuEngine();
+			break;
 		case "connectfour":
 			engine = createConnectFourEngine();
+			break;
 		}
 	}
 
