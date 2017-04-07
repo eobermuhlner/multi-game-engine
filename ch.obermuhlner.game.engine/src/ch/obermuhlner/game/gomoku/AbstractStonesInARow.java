@@ -147,6 +147,12 @@ public abstract class AbstractStonesInARow implements Game {
 	public Side getSideToMove() {
 		return sideToMove;
 	}
+	
+	@Override
+	public double getScore() {
+		// TODO impl score
+		return 0;
+	}
 
 	@Override
 	public boolean isValid(String move) {

@@ -72,6 +72,12 @@ public class TicTacToe implements Game {
 	}
 	
 	@Override
+	public double getScore() {
+		// TODO impl score
+		return 0;
+	}
+	
+	@Override
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
 		

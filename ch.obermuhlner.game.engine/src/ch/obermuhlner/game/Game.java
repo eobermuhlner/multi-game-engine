@@ -15,6 +15,8 @@ public interface Game {
 	
 	Side getSideToMove();
 	
+	double getScore();
+	
 	void move(String move);
 	
 	Map<String, Double> getAllMoves();

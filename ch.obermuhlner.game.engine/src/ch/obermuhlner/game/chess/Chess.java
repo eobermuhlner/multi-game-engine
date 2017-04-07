@@ -142,6 +142,45 @@ public class Chess implements Game {
 	}
 
 	@Override
+	public double getScore() {
+		return getSideValue(Side.White) - getSideValue(Side.Black);
+	}
+	
+	public double getSideValue(Side side) {
+		double value = 0;
+		
+		boolean finished = isFinished();
+		Side winner = getWinner();
+		
+		if (sideToMove == side) {
+			if (finished && winner == sideToMove) {
+				return 100;
+			}
+			if (finished && winner == Side.None) {
+				return 0;
+			}
+
+			if (getAnalysis().isCheck(sideToMove)) {
+				value += 20;
+			} else {
+				value += 0.5;
+			}
+		} else {
+			if (finished) {
+				return 0;
+			}
+		}
+
+		value += positions.stream()
+				.filter(position -> position.getSide() == side)
+				.mapToDouble(position -> getAnalysis().getValue(position))
+				.sum();
+		
+		
+		return value;
+	}
+	
+	@Override
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
 		final int boardSize = 8;
