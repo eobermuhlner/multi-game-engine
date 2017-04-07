@@ -8,7 +8,7 @@ import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
-import ch.obermuhlner.game.tictactoe.TicTacToe;
+import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.util.Tuple2;
 
 public class GameCommandLine {
@@ -124,21 +124,19 @@ public class GameCommandLine {
 		return game.getWinner();
 	}
 	
-	public static <G extends Game> void playTournament(int rounds, long maxThinkMilliseconds, G game) {
+	public static <G extends Game> void playTournament(int rounds, long maxThinkMilliseconds, long stepMilliseconds, G game) {
 		List<Tuple2<String, Engine<G>>> players = new ArrayList<>();
 		
 		players.add(Tuple2.of("Random", new RandomEngine<>(game)));
-		
-		long thinkMilliseconds = 1;
-		while (thinkMilliseconds <= maxThinkMilliseconds) {
+
+		for (long thinkMilliseconds = 0; thinkMilliseconds <= maxThinkMilliseconds; thinkMilliseconds += stepMilliseconds) {
 			players.add(Tuple2.of("Think" + thinkMilliseconds, new MonteCarloEngine<>(game, thinkMilliseconds)));
-			thinkMilliseconds *= 2;
 		}
 		
 		playTournament(rounds, players);
 	}
 
 	public static void main(String[] args) {
-		playTournament(10, 20000, new TicTacToe());
+		playTournament(10, 200, 100, new ConnectFour());
 	}
 }
