@@ -45,22 +45,23 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public StoppableCalculation<String> bestMove(long milliseconds) {
-		TimedCalculation<String> calculation = new TimedCalculation<String>(milliseconds) {
-			private String result;
-
+		StoppableCalculation<String> calculation = new StoppableCalculation<String>() {
 			@Override
-			protected boolean calculateChunk(long remainingMillis) {
-				result = bestMove();
+			public boolean isDone() {
 				return true;
 			}
 
 			@Override
-			protected String calculateResult() {
-				return result;
+			public String get() {
+				return bestMove();
+			}
+
+			@Override
+			public void stop() {
+				// ignore
 			}
 		};
 		
-		new Thread(calculation).start();
 		return calculation;
 	}
 	
