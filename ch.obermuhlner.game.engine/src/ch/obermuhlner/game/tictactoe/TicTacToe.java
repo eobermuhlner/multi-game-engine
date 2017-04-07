@@ -37,9 +37,12 @@ public class TicTacToe implements Game {
 		String[] split = state.split(" +");
 		
 		if (split.length > 0) {
+			int boardIndex = 0;
 			for (int i = 0; i < split[0].length(); i++) {
 				char c = split[0].charAt(i);
-				board[i] = toSide(c);
+				if (c != '/') {
+					board[boardIndex++] = toSide(c);
+				}
 			}
 		}
 		
@@ -63,7 +66,7 @@ public class TicTacToe implements Game {
 		}
 		
 		state.append(" ");
-		state.append(sideToMove);
+		state.append(toString(sideToMove, "-"));
 		
 		return state.toString();
 	}
