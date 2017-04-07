@@ -1,6 +1,5 @@
 package ch.obermuhlner.game.engine.random;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -37,30 +36,40 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		return bestMove(defaultCalculationMilliseconds).get();
 	}
 
+	private static class PlayStatistic {
+		String move;
+		int win;
+		int loss;
+		
+		public PlayStatistic(String move) {
+			this.move = move;
+		}
+	}
+	
 	@Override
 	public StoppableCalculation<String> bestMove(long milliseconds) {
 		TimedCalculation<String> calculation = new TimedCalculation<String>(milliseconds) {
 			private Side sideToMove = game.getSideToMove();
 			private Map<String, Double> validMoves = game.getValidMoves();
 			
-			private Map<String, Integer> moveWin = new HashMap<>();
-			private Map<String, Integer> moveLoss = new HashMap<>();
+			PlayStatistic[] playStatistics = new PlayStatistic[validMoves.size()];
+			{
+				int i = 0;
+				for(String move : validMoves.keySet()) {
+					playStatistics[i++] = new PlayStatistic(move);
+				}
+			}
 			
 			private int playCount = 0;
-
+			
 			@Override
 			protected boolean calculateChunk(long remainingMillis) {
-				for (Entry<String, Double> entry : validMoves.entrySet()) {
-					Side winner = randomPlay(entry.getKey());
+				for (PlayStatistic playStatistic : playStatistics) {
+					Side winner = randomPlay(playStatistic.move);
 					if (winner == sideToMove) {
-						int count = moveWin.getOrDefault(entry.getKey(), 0);
-						moveWin.put(entry.getKey(), count + 1);
-						//moveWin.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
-					}
-					if (winner == sideToMove.otherSide()) {
-						int count = moveLoss.getOrDefault(entry.getKey(), 0);
-						moveLoss.put(entry.getKey(), count + 1);
-						//moveLoss.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
+						playStatistic.win++;
+					} else if (winner == sideToMove.otherSide()) {
+						playStatistic.loss++;
 					}
 				}
 				playCount++;
@@ -69,14 +78,11 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 			@Override
 			protected String calculateResult() {
-				for (Entry<String, Double> entry : validMoves.entrySet()) {
-					int win = moveWin.getOrDefault(entry.getKey(), 0);
-					int loss = moveLoss.getOrDefault(entry.getKey(), 0);
-					entry.setValue((double)(win - loss) / playCount);
-				}
-//				System.out.println("WINS   " + moveWin);
-//				System.out.println("LOSSES " + moveLoss);
-//				System.out.println("VALUES " + validMoves);
+				for (PlayStatistic playStatistic : playStatistics) {
+					int draw = playCount - playStatistic.win - playStatistic.loss;
+					double value = (double)(playStatistic.win * 2 + draw) / playCount;
+					validMoves.put(playStatistic.move, value);
+				}				
 				return pickBestMove(validMoves);
 			}
 		};
