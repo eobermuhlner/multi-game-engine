@@ -2,10 +2,13 @@ package ch.obermuhlner.game.engine.random;
 
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
+import ch.obermuhlner.game.StoppableCalculation;
 
 public class RandomEngine<G extends Game> implements Engine<G> {
 
@@ -14,6 +17,8 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 	private final G game;
 
 	private final Random random;
+
+	private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
 	public RandomEngine(G game) {
 		this(game, new Random());
@@ -42,6 +47,27 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 		return pickRandomMove(allValidMoves);
 	}
 
+	@Override
+	public StoppableCalculation<String> bestMove(long milliseconds) {
+		TimedCalculation<String> calculation = new TimedCalculation<String>(milliseconds) {
+			private String result;
+
+			@Override
+			protected boolean calculateChunk(long remainingMillis) {
+				result = bestMove();
+				return true;
+			}
+
+			@Override
+			protected String calculateResult() {
+				return result;
+			}
+		};
+		
+		executor.submit(calculation);
+		return calculation;
+	}
+	
 	private String pickRandomMove(Map<String, Double> allMoves) {
 		return RandomUtil.pickRandom(random, allMoves);
 	}

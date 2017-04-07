@@ -4,16 +4,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.StoppableCalculation;
 
 public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 	private final Random random = new Random();
 
 	private G game;
+	
+	private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
 	public MonteCarloEngine(G game) {
 		this.game = game;
@@ -26,37 +31,53 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public String bestMove() {
-		Side sideToMove = game.getSideToMove();
-		Map<String, Double> validMoves = game.getValidMoves();
-		
-		Map<String, Integer> moveWin = new HashMap<>();
-		Map<String, Integer> moveLoss = new HashMap<>();
+		return bestMove(100).get();
+	}
 
-		int playCount = 10;
-		for (Entry<String, Double> entry : validMoves.entrySet()) {
-			for (int i = 0; i < playCount; i++) {
-				Side winner = randomPlay(entry.getKey());
-				if (winner == sideToMove) {
-					int count = moveWin.getOrDefault(entry.getKey(), 0);
-					moveWin.put(entry.getKey(), count + 1);
-					//moveWin.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
+	@Override
+	public StoppableCalculation<String> bestMove(long milliseconds) {
+		TimedCalculation<String> calculation = new TimedCalculation<String>(milliseconds) {
+			private Side sideToMove = game.getSideToMove();
+			private Map<String, Double> validMoves = game.getValidMoves();
+			
+			private Map<String, Integer> moveWin = new HashMap<>();
+			private Map<String, Integer> moveLoss = new HashMap<>();
+			
+			private int playCount = 0;
+
+			@Override
+			protected boolean calculateChunk(long remainingMillis) {
+				for (Entry<String, Double> entry : validMoves.entrySet()) {
+					Side winner = randomPlay(entry.getKey());
+					if (winner == sideToMove) {
+						int count = moveWin.getOrDefault(entry.getKey(), 0);
+						moveWin.put(entry.getKey(), count + 1);
+						//moveWin.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
+					}
+					if (winner == sideToMove.otherSide()) {
+						int count = moveLoss.getOrDefault(entry.getKey(), 0);
+						moveLoss.put(entry.getKey(), count + 1);
+						//moveLoss.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
+					}
 				}
-				if (winner == sideToMove.otherSide()) {
-					int count = moveLoss.getOrDefault(entry.getKey(), 0);
-					moveLoss.put(entry.getKey(), count + 1);
-					//moveLoss.merge(entry.getKey(), 1, (oldValue, delta) -> oldValue + delta);
-				}
+				playCount++;
+				return false;
 			}
-		}
 
-		for (Entry<String, Double> entry : validMoves.entrySet()) {
-			int win = moveWin.getOrDefault(entry.getKey(), 0);
-			int loss = moveLoss.getOrDefault(entry.getKey(), 0);
-			entry.setValue((double)(win - loss) / playCount);
-		}
+			@Override
+			protected String calculateResult() {
+				for (Entry<String, Double> entry : validMoves.entrySet()) {
+					int win = moveWin.getOrDefault(entry.getKey(), 0);
+					int loss = moveLoss.getOrDefault(entry.getKey(), 0);
+					entry.setValue((double)(win - loss) / playCount);
+				}
+
+				return pickBestMove(validMoves);
+			}
+		};
 		
-		System.out.println(validMoves);
-		return pickBestMove(validMoves);
+		executor.submit(calculation);
+		return calculation;
 	}
 	
 	private String pickBestMove(Map<String, Double> moves) {

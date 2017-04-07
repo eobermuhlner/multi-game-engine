@@ -11,9 +11,9 @@ import java.util.Map;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.game.chess.Chess;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
-import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
@@ -24,7 +24,7 @@ public class UciProtocol {
 	private final PrintWriter out;
 	private Engine<?> engine;
 
-	private volatile boolean stop;
+	private StoppableCalculation<String> bestMoveCalculation;
 
 	public UciProtocol() {
 		this(createChessEngine());
@@ -72,7 +72,9 @@ public class UciProtocol {
 			break;
 		case "stop":
 			System.out.println("Stopping");
-			stop = true;
+			if (bestMoveCalculation != null) {
+				bestMoveCalculation.stop();
+			}
 			break;
 		case "uci":
 			executeUci(args);
@@ -124,8 +126,8 @@ public class UciProtocol {
 		}
 	}
 
-	private static RandomEngine<Chess> createChessEngine() {
-		return new RandomEngine<>(new Chess());
+	private static MonteCarloEngine<Chess> createChessEngine() {
+		return new MonteCarloEngine<>(new Chess());
 	}
 
 	private static MonteCarloEngine<TicTacToe> createTicTacToeEngine() {
@@ -168,31 +170,12 @@ public class UciProtocol {
 	
 	private void executeGo(String[] args) {
 		long thinkingMilliseconds = calculateThinkingTime(args);
-		
-		if (thinkingMilliseconds == 0) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				// ignore
-			}
-		}
-		
-		stop = false;
-		println("bestmove " + engine.bestMove());
-		/*
-		CalculationState<String> calculateBestMove = chessEngine.bestMove(thinkingMilliseconds);
+
+		bestMoveCalculation = engine.bestMove(thinkingMilliseconds);
 		new Thread(() -> {
-			while (!calculateBestMove.isFinished() && !stop) {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// ignore
-				}
-			}
-			String bestMove = calculateBestMove.getResult();
+			String bestMove = bestMoveCalculation.get();
 			println("bestmove " + bestMove);
 		}).start();
-		*/
 	}
 
 	private void executeMove(String[] args) {

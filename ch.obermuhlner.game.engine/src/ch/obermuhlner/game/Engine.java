@@ -5,5 +5,7 @@ public interface Engine<G extends Game> {
 	G getGame();
 	
 	String bestMove();
-	
+
+	StoppableCalculation<String> bestMove(long milliseconds);
+
 }
