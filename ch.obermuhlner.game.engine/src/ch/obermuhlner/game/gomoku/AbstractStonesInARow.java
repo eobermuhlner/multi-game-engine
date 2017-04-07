@@ -1,14 +1,11 @@
 package ch.obermuhlner.game.gomoku;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 
 public abstract class AbstractStonesInARow implements Game {
 
-	private static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
+	protected static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 
 	protected final int boardWidth;
 	protected final int boardHeight;
@@ -128,7 +125,7 @@ public abstract class AbstractStonesInARow implements Game {
 		throw new IllegalArgumentException("Unknown side: " + side);
 	}
 
-	private static int letterToInt(char letter) {
+	protected static int letterToInt(char letter) {
 		for (int i = 0; i < LETTERS.length; i++) {
 			if (letter == LETTERS[i]) {
 				return i;
@@ -147,88 +144,8 @@ public abstract class AbstractStonesInARow implements Game {
 	}
 
 	@Override
-	public String getDiagram() {
-		StringBuilder diagram = new StringBuilder();
-
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				Side position = getPosition(x, y);
-				diagram.append(toDiagramString(position, "."));
-				diagram.append(" ");
-			}
-			diagram.append(" ");
-			diagram.append(LETTERS[y]);
-			diagram.append("\n");
-		}
-		diagram.append("\n");
-		for (int x = 0; x < boardWidth; x++) {
-			diagram.append(LETTERS[x]);
-			diagram.append(" ");
-		}
-		diagram.append("\n");
-		
-		return diagram.toString();
-	}
-
-	@Override
 	public Side getSideToMove() {
 		return sideToMove;
-	}
-
-	@Override
-	public void move(String move) {
-		int x = letterToInt(move.charAt(0));
-		int y = letterToInt(move.charAt(1));
-
-		setPosition(x, y, sideToMove);
-
-		sideToMove = sideToMove.otherSide();
-	}
-
-	@Override
-	public Map<String, Double> getAllMoves() {
-		Map<String, Double> allMoves = new HashMap<>();
-		
-		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardWidth; x++) {
-				if (getPosition(x, y) != Side.None) {
-					addPositionIfFree(allMoves, x-1, y-1);
-					addPositionIfFree(allMoves, x-1, y+0);
-					addPositionIfFree(allMoves, x-1, y+1);
-
-					addPositionIfFree(allMoves, x+0, y-1);
-					addPositionIfFree(allMoves, x+0, y+1);
-
-					addPositionIfFree(allMoves, x+1, y-1);
-					addPositionIfFree(allMoves, x+1, y+0);
-					addPositionIfFree(allMoves, x+1, y+1);
-				}
-			}
-		}
-		
-		if (allMoves.isEmpty()) {
-			double value = 1.0;
-			allMoves.put(toMove(boardWidth/2+1, boardHeight/2+1), value);
-		}
-		
-		return allMoves;
-	}
-
-	private void addPositionIfFree(Map<String, Double> allMoves, int x, int y) {
-		if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight) {
-			return;
-		}
-		
-		if (getPosition(x, y) != Side.None) {
-			return;
-		}
-		
-		double value = 1.0;
-		allMoves.put(toMove(x, y), value);
-	}
-
-	private String toMove(int x, int y) {
-		return String.valueOf(LETTERS[x]) + String.valueOf(LETTERS[y]);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 	private final long defaultCalculationMilliseconds;
 
 	public MonteCarloEngine(G game) {
-		this(game, 1000);
+		this(game, 200);
 	}
 	
 	public MonteCarloEngine(G game, long defaultCalculationMilliseconds) {
