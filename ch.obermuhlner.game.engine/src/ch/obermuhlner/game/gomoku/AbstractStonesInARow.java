@@ -16,6 +16,9 @@ public abstract class AbstractStonesInARow implements Game {
 	protected final Side[] board;
 	
 	protected Side sideToMove = Side.Black;
+	
+	private int lastMoveX;
+	private int lastMoveY;
 
 	public AbstractStonesInARow(int boardWidth, int boardHeight, int winCount, boolean exactWin) {
 		this.boardWidth = boardWidth;
@@ -158,6 +161,15 @@ public abstract class AbstractStonesInARow implements Game {
 	public boolean isValid(String move) {
 		return true;
 	}
+	
+	protected void move(int x, int y) {
+		lastMoveX = x;
+		lastMoveY = y;
+		
+		setPosition(x, y, sideToMove);
+		
+		sideToMove = sideToMove.otherSide();
+	}
 
 	@Override
 	public boolean isFinished() {
@@ -176,6 +188,14 @@ public abstract class AbstractStonesInARow implements Game {
 
 	@Override
 	public Side getWinner() {
+		if (lastMoveX >= 0 && lastMoveY >= 0) {
+			return getWinnerSearchLastMove();
+		}
+
+		return getWinnerSearchFull();
+	}
+
+	private Side getWinnerSearchFull() {
 		Side winner;
 		
 		for (int x = 0; x < boardWidth; x++) {
@@ -217,6 +237,40 @@ public abstract class AbstractStonesInARow implements Game {
 			}
 		}
 		
+		return Side.None;
+	}
+	
+	private Side getWinnerSearchLastMove() {
+		Side winner;
+		
+		// horizontal
+		winner = getWinner(0, lastMoveY, 1, 0);
+		if (winner != Side.None) {
+			return winner;
+		}
+		
+		// vertical
+		winner = getWinner(lastMoveX, 0, 0, 1);
+		if (winner != Side.None) {
+			return winner;
+		}
+
+		// diagonal going down/right
+		int diagonalStartX = lastMoveX - Math.min(lastMoveX, lastMoveY);
+		int diagonalStartY = lastMoveY - Math.min(lastMoveX, lastMoveY);
+		winner = getWinner(diagonalStartX, diagonalStartY, 1, 1);
+		if (winner != Side.None) {
+			return winner;
+		}
+		
+		// diagonal left side going up/right
+		diagonalStartX = lastMoveX - Math.min(lastMoveX, boardHeight - lastMoveY - 1);
+		diagonalStartY = lastMoveY + Math.min(lastMoveX, boardHeight - lastMoveY - 1);
+		winner = getWinner(diagonalStartX, diagonalStartY, 1, -1);
+		if (winner != Side.None) {
+			return winner;
+		}
+
 		return Side.None;
 	}
 	

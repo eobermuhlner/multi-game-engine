@@ -69,9 +69,7 @@ public class Gomoku extends AbstractStonesInARow {
 		int x = letterToInt(move.charAt(0));
 		int y = letterToInt(move.charAt(1));
 
-		setPosition(x, y, sideToMove);
-
-		sideToMove = sideToMove.otherSide();
+		move(x, y);
 	}
 
 	@Override

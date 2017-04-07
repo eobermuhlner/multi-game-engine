@@ -38,9 +38,7 @@ public class ConnectFour extends AbstractStonesInARow {
 		int x = Integer.parseInt(move) - 1;
 		int y = findFreeY(x);
 		
-		setPosition(x, y, sideToMove);
-		
-		sideToMove = sideToMove.otherSide();
+		move(x, y);
 	}
 	
 	private String toMove(int x) {
