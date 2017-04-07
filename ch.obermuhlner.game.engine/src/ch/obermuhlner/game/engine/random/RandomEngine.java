@@ -2,8 +2,6 @@ package ch.obermuhlner.game.engine.random;
 
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import ch.obermuhlner.game.Engine;
@@ -17,8 +15,6 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 	private final G game;
 
 	private final Random random;
-
-	private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
 	public RandomEngine(G game) {
 		this(game, new Random());
@@ -64,7 +60,7 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 			}
 		};
 		
-		executor.submit(calculation);
+		new Thread(calculation).start();
 		return calculation;
 	}
 	

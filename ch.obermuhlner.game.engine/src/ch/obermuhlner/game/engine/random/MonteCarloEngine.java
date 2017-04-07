@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
@@ -18,12 +16,10 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 	private G game;
 	
-	private final ExecutorService executor = Executors.newFixedThreadPool(1);
-
 	private final long defaultCalculationMilliseconds;
 
 	public MonteCarloEngine(G game) {
-		this(game, 500);
+		this(game, 1000);
 	}
 	
 	public MonteCarloEngine(G game, long defaultCalculationMilliseconds) {
@@ -85,7 +81,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 			}
 		};
 		
-		executor.submit(calculation);
+		new Thread(calculation).start();
 		return calculation;
 	}
 	
