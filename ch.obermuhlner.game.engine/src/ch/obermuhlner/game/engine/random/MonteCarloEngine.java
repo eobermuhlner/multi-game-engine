@@ -20,8 +20,15 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 	
 	private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
+	private final long defaultCalculationMilliseconds;
+
 	public MonteCarloEngine(G game) {
+		this(game, 500);
+	}
+	
+	public MonteCarloEngine(G game, long defaultCalculationMilliseconds) {
 		this.game = game;
+		this.defaultCalculationMilliseconds = defaultCalculationMilliseconds;
 	}
 	
 	@Override
@@ -31,7 +38,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public String bestMove() {
-		return bestMove(100).get();
+		return bestMove(defaultCalculationMilliseconds).get();
 	}
 
 	@Override
@@ -71,7 +78,9 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 					int loss = moveLoss.getOrDefault(entry.getKey(), 0);
 					entry.setValue((double)(win - loss) / playCount);
 				}
-
+//				System.out.println("WINS   " + moveWin);
+//				System.out.println("LOSSES " + moveLoss);
+//				System.out.println("VALUES " + validMoves);
 				return pickBestMove(validMoves);
 			}
 		};
@@ -97,6 +106,8 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 	private Side randomPlay(String move) {
 		@SuppressWarnings("unchecked")
 		G clone = (G) game.cloneGame();
+		
+		clone.move(move);
 		
 		RandomEngine<G> randomEngine = new RandomEngine<>(clone, random);
 		
