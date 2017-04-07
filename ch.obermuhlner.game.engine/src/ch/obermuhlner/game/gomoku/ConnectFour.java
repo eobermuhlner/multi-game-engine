@@ -6,7 +6,7 @@ import java.util.Map;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 
 public class ConnectFour extends AbstractStonesInARow {
 
@@ -80,13 +80,13 @@ public class ConnectFour extends AbstractStonesInARow {
 	}
 
 	@Override
-	public Gomoku cloneGame() {
-		return (Gomoku) super.cloneGame(new Gomoku(boardWidth, boardHeight, winCount, exactWin));
+	public ConnectFour cloneGame() {
+		return (ConnectFour) super.cloneGame(new ConnectFour(boardWidth, boardHeight));
 	}
 
 	public static void main(String[] args) {
-		//Engine<FourWins> engine = new MonteCarloEngine<>(new FourWins());
-		Engine<ConnectFour> engine = new RandomEngine<>(new ConnectFour());
+		Engine<ConnectFour> engine = new MonteCarloEngine<>(new ConnectFour());
+		//Engine<ConnectFour> engine = new RandomEngine<>(new ConnectFour());
 		GameCommandLine.playGame(engine);
 	}
 }
