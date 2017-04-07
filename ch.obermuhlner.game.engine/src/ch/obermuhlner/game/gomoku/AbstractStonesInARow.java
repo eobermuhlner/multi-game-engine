@@ -256,8 +256,8 @@ public abstract class AbstractStonesInARow implements Game {
 		Side winner;
 		
 		for (int x = 0; x < boardWidth; x++) {
-			// horizontal
-			winner = getWinner(x, 0, 1, 0);
+			// vertical
+			winner = getWinner(x, 0, 0, 1);
 			if (winner != Side.None) {
 				return winner;
 			}
@@ -269,14 +269,14 @@ public abstract class AbstractStonesInARow implements Game {
 			}
 
 			// diagonal bottom side going up/right
-			winner = getWinner(x, boardHeight-1, 1, -11);
+			winner = getWinner(x, boardHeight-1, 1, -1);
 			if (winner != Side.None) {
 				return winner;
 			}
 		}
 		for (int y = 0; y < boardHeight; y++) {
-			// vertical
-			winner = getWinner(0, y, 0, 1);
+			// horizontal
+			winner = getWinner(0, y, 1, 0);
 			if (winner != Side.None) {
 				return winner;
 			}
