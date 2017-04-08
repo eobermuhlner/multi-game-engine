@@ -14,8 +14,10 @@ import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.game.chess.Chess;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
+import ch.obermuhlner.game.mill.Mill;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
 
 public class UciProtocol {
@@ -135,6 +137,9 @@ public class UciProtocol {
 		case "connectfour":
 			engine = createConnectFourEngine();
 			break;
+		case "mill":
+			engine = createMillEngine();
+			break;
 		}
 	}
 
@@ -152,6 +157,10 @@ public class UciProtocol {
 
 	private static MonteCarloEngine<ConnectFour> createConnectFourEngine() {
 		return new MonteCarloEngine<>(new ConnectFour());
+	}
+
+	private static RandomEngine<Mill> createMillEngine() {
+		return new RandomEngine<>(new Mill());
 	}
 
 	private void executeUcinewgame(String[] args) {
