@@ -101,8 +101,26 @@ public class Mill implements Game {
 
 	@Override
 	public String getState() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder state = new StringBuilder();
+		
+		int validIndex = 0;
+		for (int index = board.length - 1; index > 0 ; index--) {
+			if (isValidPosition(index)) {
+				state.append(toString(board[index], "-"));
+				validIndex++;
+				if (validIndex % 3 == 0 && validIndex < 24) {
+					state.append("/");
+				}
+			}
+		}
+		
+		state.append(" ");
+		state.append(toString(sideToMove, "-"));
+
+		state.append(" ");
+		state.append(moveCount);
+
+		return state.toString();
 	}
 
 	@Override
@@ -125,14 +143,6 @@ public class Mill implements Game {
 		return diagram.toString();
 	}
 
-	private String getPositionString(String position) {
-		int x = letterToInt(position.charAt(0));
-		int y = Character.getNumericValue(position.charAt(1)) - 1;
-		int index = toIndex(x, y);
-		
-		return toString(board[index], "+");
-	}
-	
 	private String toBoardString(int index) {
 		return toString(board[index], "+");
 	}
@@ -281,8 +291,8 @@ public class Mill implements Game {
 	}
 	
 	private String toMove(int index) {
-		int x = index / 7;
-		int y = index % 7;
+		int x = index % 7;
+		int y = index / 7;
 		return String.valueOf(LETTERS[x]) + (y+1); 
 	}
 	
@@ -327,6 +337,9 @@ public class Mill implements Game {
 		if (countBlack < 3) {
 			return Side.Black;
 		}
+		
+		// TODO loss if cannot move
+		
 		return Side.None;
 	}
 
