@@ -11,8 +11,6 @@ import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 
 public class TicTacToe implements Game {
 
-	private static final char[] LETTERS = { 'a', 'b', 'c' }; 
-	
 	private final Side[] board = new Side[9];
 	
 	private Side sideToMove = Side.White;
@@ -54,13 +52,11 @@ public class TicTacToe implements Game {
 	@Override
 	public String getState() {
 		StringBuilder state = new StringBuilder();
-		
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				Side position = getPosition(x, y);
-				state.append(toString(position, "-"));
-			}
-			if (y < 2) {
+
+		for (int index = 0; index < board.length; index++) {
+			Side position = board[index];
+			state.append(toString(position, "-"));
+			if (index == 2 || index == 5) {
 				state.append("/");
 			}
 		}
@@ -127,23 +123,12 @@ public class TicTacToe implements Game {
 	
 	@Override
 	public void move(String move) {
-		int x = letterToInt(move.charAt(0));
-		int y = Character.getNumericValue(move.charAt(1)) - 1;
+		int index = Integer.parseInt(move) - 1;
 		
-		board[x + y * 3] = sideToMove;
+		board[index] = sideToMove;
 		sideToMove = sideToMove.otherSide();
 	}
 	
-	private static int letterToInt(char letter) {
-		for (int i = 0; i < LETTERS.length; i++) {
-			if (letter == LETTERS[i]) {
-				return i;
-			}
-		}
-		
-		throw new IllegalArgumentException("Unknown position letter: " + letter);
-	}
-
 	public Side getPosition(int x, int y) {
 		return board[x + y*3];
 	}
@@ -152,12 +137,11 @@ public class TicTacToe implements Game {
 	public Map<String, Double> getAllMoves() {
 		Map<String, Double> moves = new HashMap<>();
 		
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				if (getPosition(x, y) == Side.None) {
-					double value = 1.0;
-					moves.put(toMove(x, y), value);
-				}
+		for (int index = 0; index < board.length; index++) {
+			Side position = board[index];
+			if (position == Side.None) {
+				double value = 1.0;
+				moves.put(toMove(index), value);
 			}
 		}
 
@@ -175,12 +159,10 @@ public class TicTacToe implements Game {
 		if (winner != Side.None) {
 			return true;
 		}
-		
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				if (getPosition(x, y) == Side.None) {
-					return false;
-				}
+
+		for (int index = 0; index < board.length; index++) {
+			if (board[index] == Side.None) {
+				return false;
 			}
 		}
 
@@ -241,8 +223,8 @@ public class TicTacToe implements Game {
 		return game;
 	}
 
-	public String toMove(int x, int y) {
-		return String.valueOf(LETTERS[x]) + String.valueOf(y+1);
+	public String toMove(int index) {
+		return String.valueOf(index + 1);
 	}
 
 	@Override
