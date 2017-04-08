@@ -1,5 +1,5 @@
 # Multi-Game-Engine
-A Game Engine that supports many different games (chess, go, gomoku, tic tac toe, ...).
+A Game Engine that supports many different games (chess, go, gomoku, connect four, tic tac toe, ...).
 
 ## Engine Algorithm
 
@@ -10,8 +10,10 @@ The Multi Game Engine uses a Monte-Carlo Tree algorithm to decide the best move 
 
 * Chess
 * Tic Tac Toe
+* Gomoku
+* Connect Four
+* Mill Game (= Nine Men Morris) (in development)
 * Go (in development)
-* Gomoku (in development)
 * ...
 
 ## Protocol (Communication with GUI Front End)
@@ -34,15 +36,17 @@ Additional commands are:
 
 Valid game names are
 * `chess`
+* `gomoku`
+* `connectfour`
 * `tictactoe`
 * `go`
-* `gomoku`
 
 The game variants depend on the chosen game:
 * `chess` : *no variants supported yet*
-* `tictactoe` : *no variants supported yet*
-* `go` : *size of the board, for example* `13x13`
 * `gomoku` : *no variants supported yet*
+* `tictactoe` : *no variants supported yet*
+* `connectfour` : *no variants supported yet*
+* `go` : *size of the board, for example* `13x13`
 
 The notation of a *move* depends on the actual game being played.
 
@@ -76,23 +80,23 @@ Gomoku moves are specified the same way as Go moves.
 
 Tic Tac Toe moves specify the coordinates of the field to play.
 
-The coordinates of the Tic Tac Toe board use letters to specify the column and numbers to specify the row.
+The coordinates of the Tic Tac Toe board use index counting from the top left, starting at 1.
 
 ```
-+----+----+----+
-| a3 | b3 | c3 |
-+----+----+----+
-| a2 | b2 | c2 |
-+----+----+----+
-| a1 | b1 | c1 |
-+----+----+----+
++---+---+---+
+| 1 | 2 | 3 |
++---+---+---+
+| 4 | 5 | 6 |
++---+---+---+
+| 7 | 8 | 9 |
++---+---+---+
 ```
 
 Examples:
-* `b2` the center field
-* `a1` the top left field
-* `a3` the top right field
-* `c3` the bottom right field
+* `5` the center field
+* `1` the top left field
+* `3` the top right field
+* `9` the bottom right field
 
 ### Mill Move
 
