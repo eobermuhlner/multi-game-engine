@@ -45,7 +45,9 @@ public class Mill implements Game {
 	private static final int G7 = toIndex("g7");
 
 	private static final int[][] VALID_MOVES = new int[7*7][];
-	
+
+	private static final int[][][] MILLS = new int[7*7][][];
+
 	static {
 		VALID_MOVES[A7] = new int[] { A4, D7 };
 		VALID_MOVES[D7] = new int[] { A7, G7, D6 };
@@ -71,6 +73,31 @@ public class Mill implements Game {
 		VALID_MOVES[A1] = new int[] { A4, D1 };
 		VALID_MOVES[D1] = new int[] { D2, A1, G1 };
 		VALID_MOVES[G1] = new int[] { G4, D1 };
+		
+		MILLS[A7] = new int[][] { { D7, G7 }, { A4, A1} };
+		MILLS[D7] = new int[][] { { A7, G7 }, { D6, D5 } };
+		MILLS[G7] = new int[][] { { D7, A7 }, { G4, G1 } };
+		MILLS[B6] = new int[][] { { D6, F6 }, { B4, B2 } };
+		MILLS[D6] = new int[][] { { D7, D5 }, { B6, F6 } };
+		MILLS[F6] = new int[][] { { D6, B6 }, { F4, F2 } };
+		MILLS[C5] = new int[][] { { D5, E5 }, { C4, C3 } };
+		MILLS[D5] = new int[][] { { D6, D7 }, { C5, E5 } };
+		MILLS[E5] = new int[][] { { D5, C5 }, { E4, E3 } };
+		MILLS[A4] = new int[][] { { A7, A1 }, { B4, C4 } };
+		MILLS[B4] = new int[][] { { A4, C4 }, { B6, B2 } };
+		MILLS[C4] = new int[][] { { B4, A4 }, { C5, C3 } };
+		MILLS[E4] = new int[][] { { E5, E3 }, { F4, G4 } };
+		MILLS[F4] = new int[][] { { F6, F2 }, { E4, G4 } };
+		MILLS[G4] = new int[][] { { F4, E4 }, { G7, G1 } };
+		MILLS[C3] = new int[][] { { C4, C5 }, { D3, E3 } };
+		MILLS[D3] = new int[][] { { C3, E3 }, { D2, D1 } };
+		MILLS[E3] = new int[][] { { D3, C3 }, { E4, E5 } };
+		MILLS[B2] = new int[][] { { B4, B6 }, { D2, F2 } };
+		MILLS[D2] = new int[][] { { B2, F2 }, { D3, D1 } };
+		MILLS[F2] = new int[][] { { D2, B2 }, { F4, F6 } };
+		MILLS[A1] = new int[][] { { A4, A7 }, { D1, G1 } };
+		MILLS[D1] = new int[][] { { A1, G1 }, { D2, D3 } };
+		MILLS[G1] = new int[][] { { D1, A1 }, { G4, G7 } };
 	}
 	
 	private Side[] board = new Side[7 * 7]; 
@@ -173,45 +200,44 @@ public class Mill implements Game {
 
 	@Override
 	public void move(String move) {
-		int sourceIndex = toIndex(move.charAt(0), move.charAt(1));
+		int firstIndex = toIndex(move.charAt(0), move.charAt(1));
 
-		if (move.length() > 2) {
-			int targetIndex = toIndex(move.charAt(2), move.charAt(3));
-
-			if (move.length() > 5) {
-				// charAt(4) should be 'x'
-				int killIndex = toIndex(move.charAt(5), move.charAt(6));
+		int sourceIndex;
+		int targetIndex;
+		int killIndex;
+		
+		if (move.length() <= 2) {
+			sourceIndex = -1;
+			targetIndex = firstIndex;
+			killIndex = -1;
+		} else {
+			if (move.charAt(2) == 'x') {
+				sourceIndex = -1;
+				targetIndex = firstIndex;
+				killIndex = toIndex(move.charAt(3), move.charAt(4));
+			} else {
+				sourceIndex = firstIndex;
+				targetIndex = toIndex(move.charAt(2), move.charAt(3));
+				killIndex = -1;
 				
-				move(sourceIndex, targetIndex, killIndex);
-				return;
+				if (move.length() > 5) {
+					// charAt(4) should be 'x'
+					killIndex = toIndex(move.charAt(5), move.charAt(6));
+				}
 			}
-
-			move(sourceIndex, targetIndex);
-			return;
 		}
 		
-		move(sourceIndex);
+		move(sourceIndex, targetIndex, killIndex);
 	}
 	
-	private void move(int index) {
-		board[index] = sideToMove;
-		
-		sideToMove = sideToMove.otherSide();
-		moveCount++;
-	}
-
-	private void move(int sourceIndex, int targetIndex) {
-		board[targetIndex] = board[sourceIndex];
-		board[sourceIndex] = Side.None;
-		
-		sideToMove = sideToMove.otherSide();
-		moveCount++;
-	}
-
 	private void move(int sourceIndex, int targetIndex, int killIndex) {
-		board[targetIndex] = board[sourceIndex];
-		board[sourceIndex] = Side.None;
-		board[killIndex] = Side.None;
+		if (sourceIndex >= 0) {
+			board[sourceIndex] = Side.None;
+		}
+		board[targetIndex] = sideToMove;
+		if (killIndex >= 0) {
+			board[killIndex] = Side.None;
+		}
 		
 		sideToMove = sideToMove.otherSide();
 		moveCount++;
@@ -260,9 +286,18 @@ public class Mill implements Game {
 			if (jumpMode) {
 				for (int index = 0; index < board.length; index++) {
 					if (board[index] == Side.None && isValidPosition(index)) {
-						double value = 1.0;
-						allMoves.put(toMove(index), value);
-						// TODO recognize mills!!! -> kill
+						if (isInMill(index, sideToMove)) {
+							double value = 2.0;
+							Side otherSide = sideToMove.otherSide();
+							for (int killIndex = 0; killIndex < board.length; killIndex++) {
+								if (board[killIndex] == sideToMove.otherSide() && !isInMill(killIndex, otherSide)) {
+									allMoves.put(toKillingMove(index, killIndex), value);
+								}
+							}							
+						} else {
+							double value = 1.0;
+							allMoves.put(toMove(index), value);
+						}
 					}
 				}
 			} else {
@@ -280,10 +315,38 @@ public class Mill implements Game {
 	private void addAllSourceTargetMoves(Map<String, Double> allMoves, int source) {
 		for (int target : VALID_MOVES[source]) {
 			if (board[target] == Side.None) {
-				double value = 1.0;
-				allMoves.put(toMove(source, target), value);
+				if (isInMill(target, sideToMove)) {
+					double value = 2.0;
+					Side otherSide = sideToMove.otherSide();
+					for (int killIndex = 0; killIndex < board.length; killIndex++) {
+						if (board[killIndex] == otherSide && !isInMill(killIndex, otherSide)) {
+							allMoves.put(toKillingMove(source, target, killIndex), value);
+						}
+					}							
+				} else {
+					double value = 1.0;
+					allMoves.put(toMove(source, target), value);
+				}
 			}
 		}
+	}
+
+	private boolean isInMill(int index, Side side) {
+		for (int[] millCheck : MILLS[index]) {
+			if (!isInMill(millCheck, side)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean isInMill(int[] millCheck, Side side) {
+		for (int millIndex : millCheck) {
+			if (board[millIndex] != side) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean isSetMode() {
@@ -295,11 +358,19 @@ public class Mill implements Game {
 		int y = index / 7;
 		return String.valueOf(LETTERS[x]) + (y+1); 
 	}
+
+	private String toKillingMove(int index, int killIndex) {
+		return toMove(index) + "x" + toMove(killIndex);
+	}
 	
 	private String toMove(int sourceIndex, int targetIndex) {
 		return toMove(sourceIndex) + toMove(targetIndex);
 	}
 
+	private String toKillingMove(int sourceIndex, int targetIndex, int killIndex) {
+		return toMove(sourceIndex, targetIndex) + "x" + toMove(killIndex);
+	}
+	
 	@Override
 	public boolean isValid(String move) {
 		return true;
