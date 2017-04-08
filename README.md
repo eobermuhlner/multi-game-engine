@@ -102,7 +102,9 @@ Examples:
 
 ### Mill Move
 
-Mill moves specify the start and end point of a move.
+In the first phase of the game (setting phase) only the target coordinate is given.
+In the second and third phase of the game (moving and jumping phase) Mill moves specify the start and end coordinates of a move.
+
 In the case of killing a stone `"x"` and the coordinates of the killed stone are appended.
 
 The coordinates of the Mill board use letters to specify the column and numbers to specify the row.
