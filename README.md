@@ -12,7 +12,7 @@ The Multi Game Engine uses a Monte-Carlo Tree algorithm to decide the best move 
 * Tic Tac Toe
 * Gomoku
 * Connect Four
-* Mill Game (= Nine Men Morris) (in development)
+* Mill (= Nine Men's Morris) (in development)
 * Go (in development)
 * ...
 
@@ -38,6 +38,7 @@ Valid game names are
 * `chess`
 * `gomoku`
 * `connectfour`
+* `mill`
 * `tictactoe`
 * `go`
 
@@ -46,6 +47,7 @@ The game variants depend on the chosen game:
 * `gomoku` : *no variants supported yet*
 * `tictactoe` : *no variants supported yet*
 * `connectfour` : *no variants supported yet*
+* `mill` : *no variants supported yet*
 * `go` : *size of the board, for example* `13x13`
 
 The notation of a *move* depends on the actual game being played.
@@ -80,7 +82,7 @@ Gomoku moves are specified the same way as Go moves.
 
 Tic Tac Toe moves specify the coordinates of the field to play.
 
-The coordinates of the Tic Tac Toe board use index counting from the top left, starting at 1.
+The coordinates of the Tic Tac Toe board use counting from the top left, starting at 1.
 
 ```
 +---+---+---+
@@ -127,6 +129,7 @@ Please note that not all coordinates in the grid are valid positions on the Mill
 
 Examples:
 * `a7` to set a stone in the top left corner
+* `a7xg1` to set a stone in the top left corner, killing the enemy stone in the bottom right
 * `a7d7` to move the stone from the top left corner to the right
 * `a7d7xg1` to move the stone from the top left corner to the right, killing the enemy stone in the bottom right
 * `a1g7` to jump a stone from the bottom left to the top right corner
