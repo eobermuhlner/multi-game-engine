@@ -100,6 +100,12 @@ public class UciProtocol {
 		case "move":
 			executeMove(args);
 			break;
+		case "finished":
+			executeFinished(args);
+			break;
+		case "winner":
+			executeWinner(args);
+			break;
 		case "d":
 		case "diagram":
 			executeDiagram(args);
@@ -180,12 +186,27 @@ public class UciProtocol {
 		bestMoveCalculation = engine.bestMove(thinkingMilliseconds);
 		new Thread(() -> {
 			String bestMove = bestMoveCalculation.get();
+			if (bestMove == null) {
+				bestMove = "(none)";
+			}
 			println("bestmove " + bestMove);
+			
+			engine.getGame().move(bestMove);
 		}).start();
 	}
 
 	private void executeMove(String[] args) {
 		engine.getGame().move(args[1]);
+	}
+	
+	private void executeFinished(String[] args) {
+		boolean finished = engine.getGame().isFinished();
+		println("finished " + finished);
+	}
+	
+	private void executeWinner(String[] args) {
+		Side winner = engine.getGame().getWinner();
+		println("winner " + winner);
 	}
 	
 	private long calculateThinkingTime(String[] args) {
