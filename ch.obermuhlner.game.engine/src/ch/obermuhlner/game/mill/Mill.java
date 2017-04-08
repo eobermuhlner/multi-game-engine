@@ -108,20 +108,20 @@ public class Mill implements Game {
 	@Override
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
-		diagram.append(String.format("%s--------------%s--------------%s 7\n", getPositionString("a7"), getPositionString("d7"), getPositionString("g7")));
-		diagram.append(String.format("|              |              |\n"));
-		diagram.append(String.format("|    %s---------%s---------%s    | 6\n", getPositionString("b6"), getPositionString("d6"), getPositionString("f6")));
-		diagram.append(String.format("|    |         |         |    |\n"));
-		diagram.append(String.format("|    |    %s----%s----%s    |    | 5\n", getPositionString("c5"), getPositionString("d5"), getPositionString("e5")));
-		diagram.append(String.format("|    |    |         |    |    |\n"));
-		diagram.append(String.format("%s----%s----%s         %s----%s----%s 4\n", getPositionString("a4"), getPositionString("b4"), getPositionString("c4"), getPositionString("e4"), getPositionString("f4"), getPositionString("g4")));
-		diagram.append(String.format("|    |    |         |    |    |\n"));
-		diagram.append(String.format("|    |    %s----%s----%s    |    | 3\n", getPositionString("c3"), getPositionString("d3"), getPositionString("e3")));
-		diagram.append(String.format("|    |         |         |    |\n"));
-		diagram.append(String.format("|    %s---------%s---------%s    | 2\n", getPositionString("b2"), getPositionString("d2"), getPositionString("f2")));
-		diagram.append(String.format("|              |              |\n"));
-		diagram.append(String.format("%s--------------%s--------------%s 1\n", getPositionString("a1"), getPositionString("d1"), getPositionString("g1")));
-		diagram.append(String.format("a    b    c    d    e    f    g\n"));
+		diagram.append(String.format("%s-----------%s-----------%s 7\n", getPositionString("a7"), getPositionString("d7"), getPositionString("g7")));
+		diagram.append(String.format("|           |           |\n"));
+		diagram.append(String.format("|   %s-------%s-------%s   | 6\n", getPositionString("b6"), getPositionString("d6"), getPositionString("f6")));
+		diagram.append(String.format("|   |       |       |   |\n"));
+		diagram.append(String.format("|   |   %s---%s---%s   |   | 5\n", getPositionString("c5"), getPositionString("d5"), getPositionString("e5")));
+		diagram.append(String.format("|   |   |       |   |   |\n"));
+		diagram.append(String.format("%s---%s---%s       %s---%s---%s 4\n", getPositionString("a4"), getPositionString("b4"), getPositionString("c4"), getPositionString("e4"), getPositionString("f4"), getPositionString("g4")));
+		diagram.append(String.format("|   |   |       |   |   |\n"));
+		diagram.append(String.format("|   |   %s---%s---%s   |   | 3\n", getPositionString("c3"), getPositionString("d3"), getPositionString("e3")));
+		diagram.append(String.format("|   |       |       |   |\n"));
+		diagram.append(String.format("|   %s-------%s-------%s   | 2\n", getPositionString("b2"), getPositionString("d2"), getPositionString("f2")));
+		diagram.append(String.format("|           |           |\n"));
+		diagram.append(String.format("%s-----------%s-----------%s 1\n", getPositionString("a1"), getPositionString("d1"), getPositionString("g1")));
+		diagram.append(String.format("a   b   c   d   e   f   g\n"));
 		return diagram.toString();
 	}
 
