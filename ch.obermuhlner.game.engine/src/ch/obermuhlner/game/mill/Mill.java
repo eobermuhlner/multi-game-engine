@@ -108,19 +108,19 @@ public class Mill implements Game {
 	@Override
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
-		diagram.append(String.format("%s-----------%s-----------%s 7\n", getPositionString("a7"), getPositionString("d7"), getPositionString("g7")));
+		diagram.append(String.format("%s-----------%s-----------%s 7\n", toBoardString(A7), toBoardString(D7), toBoardString(G7)));
 		diagram.append(String.format("|           |           |\n"));
-		diagram.append(String.format("|   %s-------%s-------%s   | 6\n", getPositionString("b6"), getPositionString("d6"), getPositionString("f6")));
+		diagram.append(String.format("|   %s-------%s-------%s   | 6\n", toBoardString(B6), toBoardString(D6), toBoardString(F6)));
 		diagram.append(String.format("|   |       |       |   |\n"));
-		diagram.append(String.format("|   |   %s---%s---%s   |   | 5\n", getPositionString("c5"), getPositionString("d5"), getPositionString("e5")));
+		diagram.append(String.format("|   |   %s---%s---%s   |   | 5\n", toBoardString(C5), toBoardString(D5), toBoardString(E5)));
 		diagram.append(String.format("|   |   |       |   |   |\n"));
-		diagram.append(String.format("%s---%s---%s       %s---%s---%s 4\n", getPositionString("a4"), getPositionString("b4"), getPositionString("c4"), getPositionString("e4"), getPositionString("f4"), getPositionString("g4")));
+		diagram.append(String.format("%s---%s---%s       %s---%s---%s 4\n", toBoardString(A4), toBoardString(B4), toBoardString(C4), toBoardString(E4), toBoardString(F4), toBoardString(G4)));
 		diagram.append(String.format("|   |   |       |   |   |\n"));
-		diagram.append(String.format("|   |   %s---%s---%s   |   | 3\n", getPositionString("c3"), getPositionString("d3"), getPositionString("e3")));
+		diagram.append(String.format("|   |   %s---%s---%s   |   | 3\n", toBoardString(C3), toBoardString(D3), toBoardString(E3)));
 		diagram.append(String.format("|   |       |       |   |\n"));
-		diagram.append(String.format("|   %s-------%s-------%s   | 2\n", getPositionString("b2"), getPositionString("d2"), getPositionString("f2")));
+		diagram.append(String.format("|   %s-------%s-------%s   | 2\n", toBoardString(B2), toBoardString(D2), toBoardString(F2)));
 		diagram.append(String.format("|           |           |\n"));
-		diagram.append(String.format("%s-----------%s-----------%s 1\n", getPositionString("a1"), getPositionString("d1"), getPositionString("g1")));
+		diagram.append(String.format("%s-----------%s-----------%s 1\n", toBoardString(A1), toBoardString(D1), toBoardString(G1)));
 		diagram.append(String.format("a   b   c   d   e   f   g\n"));
 		return diagram.toString();
 	}
@@ -130,6 +130,10 @@ public class Mill implements Game {
 		int y = Character.getNumericValue(position.charAt(1)) - 1;
 		int index = toIndex(x, y);
 		
+		return toString(board[index], "+");
+	}
+	
+	private String toBoardString(int index) {
 		return toString(board[index], "+");
 	}
 
