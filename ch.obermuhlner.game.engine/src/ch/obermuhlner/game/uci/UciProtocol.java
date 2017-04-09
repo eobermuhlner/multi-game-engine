@@ -144,23 +144,23 @@ public class UciProtocol {
 		}
 	}
 
-	private static MonteCarloEngine<Chess> createChessEngine() {
+	private static Engine<Chess> createChessEngine() {
 		return new MonteCarloEngine<>(new Chess());
 	}
 
-	private static MonteCarloEngine<TicTacToe> createTicTacToeEngine() {
+	private static Engine<TicTacToe> createTicTacToeEngine() {
 		return new MonteCarloEngine<>(new TicTacToe());
 	}
 
-	private static MonteCarloEngine<Gomoku> createGomokuEngine() {
+	private static Engine<Gomoku> createGomokuEngine() {
 		return new MonteCarloEngine<>(new Gomoku());
 	}
 
-	private static MonteCarloEngine<ConnectFour> createConnectFourEngine() {
+	private static Engine<ConnectFour> createConnectFourEngine() {
 		return new MonteCarloEngine<>(new ConnectFour());
 	}
 
-	private static RandomEngine<Mill> createMillEngine() {
+	private static Engine<Mill> createMillEngine() {
 		return new RandomEngine<>(new Mill());
 	}
 
