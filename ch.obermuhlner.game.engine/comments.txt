@@ -1,0 +1,251 @@
+== TicTacToe
+
+TOTAL
+Random     :  5 wins, 247 losses,  8 draws
+Think0     : 28 wins, 195 losses, 37 draws
+Think100   : 109 wins, 58 losses, 93 draws
+Think200   : 108 wins, 66 losses, 86 draws
+Think300   : 104 wins, 71 losses, 85 draws
+Think400   : 96 wins, 66 losses, 98 draws
+Think500   : 110 wins, 60 losses, 90 draws
+Think600   : 100 wins, 66 losses, 94 draws
+Think700   : 88 wins, 76 losses, 96 draws
+Think800   : 94 wins, 62 losses, 104 draws
+Think900   : 96 wins, 53 losses, 111 draws
+Think1000  : 91 wins, 71 losses, 98 draws
+Think2000  : 83 wins, 59 losses, 118 draws
+Think3000  : 100 wins, 62 losses, 98 draws
+
+Random     Think0     :  4 wins, 14 losses,  2 draws
+Random     Think100   :  0 wins, 20 losses,  0 draws
+Random     Think200   :  0 wins, 20 losses,  0 draws
+Random     Think300   :  0 wins, 19 losses,  1 draws
+Random     Think400   :  0 wins, 20 losses,  0 draws
+Random     Think500   :  0 wins, 20 losses,  0 draws
+Random     Think600   :  0 wins, 19 losses,  1 draws
+Random     Think700   :  0 wins, 20 losses,  0 draws
+Random     Think800   :  0 wins, 17 losses,  3 draws
+Random     Think900   :  0 wins, 20 losses,  0 draws
+Random     Think1000  :  1 wins, 18 losses,  1 draws
+Random     Think2000  :  0 wins, 20 losses,  0 draws
+Random     Think3000  :  0 wins, 20 losses,  0 draws
+Think0     Random     : 14 wins,  4 losses,  2 draws
+Think0     Think100   :  1 wins, 17 losses,  2 draws
+Think0     Think200   :  1 wins, 16 losses,  3 draws
+Think0     Think300   :  1 wins, 14 losses,  5 draws
+Think0     Think400   :  2 wins, 13 losses,  5 draws
+Think0     Think500   :  1 wins, 18 losses,  1 draws
+Think0     Think600   :  2 wins, 17 losses,  1 draws
+Think0     Think700   :  0 wins, 16 losses,  4 draws
+Think0     Think800   :  0 wins, 16 losses,  4 draws
+Think0     Think900   :  1 wins, 13 losses,  6 draws
+Think0     Think1000  :  1 wins, 18 losses,  1 draws
+Think0     Think2000  :  4 wins, 16 losses,  0 draws
+Think0     Think3000  :  0 wins, 17 losses,  3 draws
+Think100   Random     : 20 wins,  0 losses,  0 draws
+Think100   Think0     : 17 wins,  1 losses,  2 draws
+Think100   Think200   :  8 wins,  4 losses,  8 draws
+Think100   Think300   :  8 wins,  8 losses,  4 draws
+Think100   Think400   :  5 wins,  5 losses, 10 draws
+Think100   Think500   :  5 wins,  7 losses,  8 draws
+Think100   Think600   : 10 wins,  5 losses,  5 draws
+Think100   Think700   :  8 wins,  5 losses,  7 draws
+Think100   Think800   :  3 wins,  5 losses, 12 draws
+Think100   Think900   :  4 wins,  6 losses, 10 draws
+Think100   Think1000  :  8 wins,  4 losses,  8 draws
+Think100   Think2000  :  6 wins,  2 losses, 12 draws
+Think100   Think3000  :  7 wins,  6 losses,  7 draws
+Think200   Random     : 20 wins,  0 losses,  0 draws
+Think200   Think0     : 16 wins,  1 losses,  3 draws
+Think200   Think100   :  4 wins,  8 losses,  8 draws
+Think200   Think300   :  8 wins,  8 losses,  4 draws
+Think200   Think400   :  7 wins,  6 losses,  7 draws
+Think200   Think500   :  8 wins,  7 losses,  5 draws
+Think200   Think600   :  7 wins,  8 losses,  5 draws
+Think200   Think700   :  7 wins,  5 losses,  8 draws
+Think200   Think800   :  8 wins,  4 losses,  8 draws
+Think200   Think900   :  4 wins,  8 losses,  8 draws
+Think200   Think1000  :  3 wins,  4 losses, 13 draws
+Think200   Think2000  :  7 wins,  2 losses, 11 draws
+Think200   Think3000  :  9 wins,  5 losses,  6 draws
+Think300   Random     : 19 wins,  0 losses,  1 draws
+Think300   Think0     : 14 wins,  1 losses,  5 draws
+Think300   Think100   :  8 wins,  8 losses,  4 draws
+Think300   Think200   :  8 wins,  8 losses,  4 draws
+Think300   Think400   :  6 wins,  7 losses,  7 draws
+Think300   Think500   :  5 wins,  6 losses,  9 draws
+Think300   Think600   :  8 wins,  8 losses,  4 draws
+Think300   Think700   :  5 wins,  5 losses, 10 draws
+Think300   Think800   :  6 wins,  5 losses,  9 draws
+Think300   Think900   :  5 wins,  6 losses,  9 draws
+Think300   Think1000  :  5 wins,  6 losses,  9 draws
+Think300   Think2000  :  7 wins,  4 losses,  9 draws
+Think300   Think3000  :  8 wins,  7 losses,  5 draws
+Think400   Random     : 20 wins,  0 losses,  0 draws
+Think400   Think0     : 13 wins,  2 losses,  5 draws
+Think400   Think100   :  5 wins,  5 losses, 10 draws
+Think400   Think200   :  6 wins,  7 losses,  7 draws
+Think400   Think300   :  7 wins,  6 losses,  7 draws
+Think400   Think500   :  6 wins,  8 losses,  6 draws
+Think400   Think600   :  4 wins,  7 losses,  9 draws
+Think400   Think700   :  7 wins,  3 losses, 10 draws
+Think400   Think800   :  5 wins,  5 losses, 10 draws
+Think400   Think900   :  4 wins,  7 losses,  9 draws
+Think400   Think1000  :  8 wins,  7 losses,  5 draws
+Think400   Think2000  :  5 wins,  4 losses, 11 draws
+Think400   Think3000  :  6 wins,  5 losses,  9 draws
+Think500   Random     : 20 wins,  0 losses,  0 draws
+Think500   Think0     : 18 wins,  1 losses,  1 draws
+Think500   Think100   :  7 wins,  5 losses,  8 draws
+Think500   Think200   :  7 wins,  8 losses,  5 draws
+Think500   Think300   :  6 wins,  5 losses,  9 draws
+Think500   Think400   :  8 wins,  6 losses,  6 draws
+Think500   Think600   :  7 wins,  5 losses,  8 draws
+Think500   Think700   :  6 wins,  4 losses, 10 draws
+Think500   Think800   :  8 wins,  8 losses,  4 draws
+Think500   Think900   :  7 wins,  5 losses,  8 draws
+Think500   Think1000  :  6 wins,  6 losses,  8 draws
+Think500   Think2000  :  5 wins,  3 losses, 12 draws
+Think500   Think3000  :  5 wins,  4 losses, 11 draws
+Think600   Random     : 19 wins,  0 losses,  1 draws
+Think600   Think0     : 17 wins,  2 losses,  1 draws
+Think600   Think100   :  5 wins, 10 losses,  5 draws
+Think600   Think200   :  8 wins,  7 losses,  5 draws
+Think600   Think300   :  8 wins,  8 losses,  4 draws
+Think600   Think400   :  7 wins,  4 losses,  9 draws
+Think600   Think500   :  5 wins,  7 losses,  8 draws
+Think600   Think700   :  5 wins,  5 losses, 10 draws
+Think600   Think800   :  7 wins,  5 losses,  8 draws
+Think600   Think900   :  4 wins,  4 losses, 12 draws
+Think600   Think1000  :  6 wins,  4 losses, 10 draws
+Think600   Think2000  :  4 wins,  4 losses, 12 draws
+Think600   Think3000  :  5 wins,  6 losses,  9 draws
+Think700   Random     : 20 wins,  0 losses,  0 draws
+Think700   Think0     : 16 wins,  0 losses,  4 draws
+Think700   Think100   :  5 wins,  8 losses,  7 draws
+Think700   Think200   :  5 wins,  7 losses,  8 draws
+Think700   Think300   :  5 wins,  5 losses, 10 draws
+Think700   Think400   :  3 wins,  7 losses, 10 draws
+Think700   Think500   :  4 wins,  6 losses, 10 draws
+Think700   Think600   :  5 wins,  5 losses, 10 draws
+Think700   Think800   :  5 wins,  7 losses,  8 draws
+Think700   Think900   :  4 wins,  5 losses, 11 draws
+Think700   Think1000  :  7 wins,  8 losses,  5 draws
+Think700   Think2000  :  2 wins,  9 losses,  9 draws
+Think700   Think3000  :  7 wins,  9 losses,  4 draws
+Think800   Random     : 17 wins,  0 losses,  3 draws
+Think800   Think0     : 16 wins,  0 losses,  4 draws
+Think800   Think100   :  5 wins,  3 losses, 12 draws
+Think800   Think200   :  4 wins,  8 losses,  8 draws
+Think800   Think300   :  5 wins,  6 losses,  9 draws
+Think800   Think400   :  5 wins,  5 losses, 10 draws
+Think800   Think500   :  8 wins,  8 losses,  4 draws
+Think800   Think600   :  5 wins,  7 losses,  8 draws
+Think800   Think700   :  7 wins,  5 losses,  8 draws
+Think800   Think900   :  3 wins,  7 losses, 10 draws
+Think800   Think1000  :  8 wins,  2 losses, 10 draws
+Think800   Think2000  :  6 wins,  5 losses,  9 draws
+Think800   Think3000  :  5 wins,  6 losses,  9 draws
+Think900   Random     : 20 wins,  0 losses,  0 draws
+Think900   Think0     : 13 wins,  1 losses,  6 draws
+Think900   Think100   :  6 wins,  4 losses, 10 draws
+Think900   Think200   :  8 wins,  4 losses,  8 draws
+Think900   Think300   :  6 wins,  5 losses,  9 draws
+Think900   Think400   :  7 wins,  4 losses,  9 draws
+Think900   Think500   :  5 wins,  7 losses,  8 draws
+Think900   Think600   :  4 wins,  4 losses, 12 draws
+Think900   Think700   :  5 wins,  4 losses, 11 draws
+Think900   Think800   :  7 wins,  3 losses, 10 draws
+Think900   Think1000  :  7 wins,  7 losses,  6 draws
+Think900   Think2000  :  5 wins,  4 losses, 11 draws
+Think900   Think3000  :  3 wins,  6 losses, 11 draws
+Think1000  Random     : 18 wins,  1 losses,  1 draws
+Think1000  Think0     : 18 wins,  1 losses,  1 draws
+Think1000  Think100   :  4 wins,  8 losses,  8 draws
+Think1000  Think200   :  4 wins,  3 losses, 13 draws
+Think1000  Think300   :  6 wins,  5 losses,  9 draws
+Think1000  Think400   :  7 wins,  8 losses,  5 draws
+Think1000  Think500   :  6 wins,  6 losses,  8 draws
+Think1000  Think600   :  4 wins,  6 losses, 10 draws
+Think1000  Think700   :  8 wins,  7 losses,  5 draws
+Think1000  Think800   :  2 wins,  8 losses, 10 draws
+Think1000  Think900   :  7 wins,  7 losses,  6 draws
+Think1000  Think2000  :  4 wins,  6 losses, 10 draws
+Think1000  Think3000  :  3 wins,  5 losses, 12 draws
+Think2000  Random     : 20 wins,  0 losses,  0 draws
+Think2000  Think0     : 16 wins,  4 losses,  0 draws
+Think2000  Think100   :  2 wins,  6 losses, 12 draws
+Think2000  Think200   :  2 wins,  7 losses, 11 draws
+Think2000  Think300   :  4 wins,  7 losses,  9 draws
+Think2000  Think400   :  4 wins,  5 losses, 11 draws
+Think2000  Think500   :  3 wins,  5 losses, 12 draws
+Think2000  Think600   :  4 wins,  4 losses, 12 draws
+Think2000  Think700   :  9 wins,  2 losses,  9 draws
+Think2000  Think800   :  5 wins,  6 losses,  9 draws
+Think2000  Think900   :  4 wins,  5 losses, 11 draws
+Think2000  Think1000  :  6 wins,  4 losses, 10 draws
+Think2000  Think3000  :  4 wins,  4 losses, 12 draws
+Think3000  Random     : 20 wins,  0 losses,  0 draws
+Think3000  Think0     : 17 wins,  0 losses,  3 draws
+Think3000  Think100   :  6 wins,  7 losses,  7 draws
+Think3000  Think200   :  5 wins,  9 losses,  6 draws
+Think3000  Think300   :  7 wins,  8 losses,  5 draws
+Think3000  Think400   :  5 wins,  6 losses,  9 draws
+Think3000  Think500   :  4 wins,  5 losses, 11 draws
+Think3000  Think600   :  6 wins,  5 losses,  9 draws
+Think3000  Think700   :  9 wins,  7 losses,  4 draws
+Think3000  Think800   :  6 wins,  5 losses,  9 draws
+Think3000  Think900   :  6 wins,  3 losses, 11 draws
+Think3000  Think1000  :  5 wins,  3 losses, 12 draws
+Think3000  Think2000  :  4 wins,  4 losses, 12 draws
+
+1006 first move wins, 206 first move loses, 608 draws
+
+
+== TicTacToe with better play statistics value function
+					int draw = playCount - playStatistic.win - playStatistic.loss;
+					double value = (double)(playStatistic.win * 2 + draw) / playCount;
+
+
+Think2000  Think1500  : White
+
+TOTAL
+Random     :  3 wins, 91 losses,  6 draws
+Think0     : 24 wins, 65 losses, 11 draws
+Think500   : 49 wins, 15 losses, 36 draws
+Think1000  : 47 wins, 19 losses, 34 draws
+Think1500  : 46 wins, 18 losses, 36 draws
+Think2000  : 54 wins, 15 losses, 31 draws
+
+Random     Think0     :  1 wins, 18 losses,  1 draws
+Random     Think500   :  0 wins, 20 losses,  0 draws
+Random     Think1000  :  2 wins, 17 losses,  1 draws
+Random     Think1500  :  0 wins, 18 losses,  2 draws
+Random     Think2000  :  0 wins, 18 losses,  2 draws
+Think0     Random     : 18 wins,  1 losses,  1 draws
+Think0     Think500   :  1 wins, 17 losses,  2 draws
+Think0     Think1000  :  1 wins, 17 losses,  2 draws
+Think0     Think1500  :  2 wins, 14 losses,  4 draws
+Think0     Think2000  :  2 wins, 16 losses,  2 draws
+Think500   Random     : 20 wins,  0 losses,  0 draws
+Think500   Think0     : 17 wins,  1 losses,  2 draws
+Think500   Think1000  :  4 wins,  4 losses, 12 draws
+Think500   Think1500  :  5 wins,  3 losses, 12 draws
+Think500   Think2000  :  3 wins,  7 losses, 10 draws
+Think1000  Random     : 17 wins,  2 losses,  1 draws
+Think1000  Think0     : 17 wins,  1 losses,  2 draws
+Think1000  Think500   :  4 wins,  4 losses, 12 draws
+Think1000  Think1500  :  4 wins,  6 losses, 10 draws
+Think1000  Think2000  :  5 wins,  6 losses,  9 draws
+Think1500  Random     : 18 wins,  0 losses,  2 draws
+Think1500  Think0     : 14 wins,  2 losses,  4 draws
+Think1500  Think500   :  3 wins,  5 losses, 12 draws
+Think1500  Think1000  :  6 wins,  4 losses, 10 draws
+Think1500  Think2000  :  5 wins,  7 losses,  8 draws
+Think2000  Random     : 18 wins,  0 losses,  2 draws
+Think2000  Think0     : 16 wins,  2 losses,  2 draws
+Think2000  Think500   :  7 wins,  3 losses, 10 draws
+Think2000  Think1000  :  6 wins,  5 losses,  9 draws
+Think2000  Think1500  :  7 wins,  5 losses,  8 draws
+
+151 first move wins, 72 first move loses, 77 draws
