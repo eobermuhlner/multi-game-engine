@@ -7,7 +7,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.util.CheckArgument;
 
 public class Mill implements Game {
@@ -137,9 +137,7 @@ public class Mill implements Game {
 	private static final double KILL_VALUE = 10.0;
 
 	private Side[] board = new Side[CELL_COUNT]; 
-
 	private Side sideToMove;
-	
 	private int moveCount;
 	
 	public Mill() {
@@ -495,6 +493,7 @@ public class Mill implements Game {
 			game.board[i] = board[i];
 		}
 		game.sideToMove = sideToMove;
+		game.moveCount = moveCount;
 		
 		return game;
 	}
@@ -520,8 +519,8 @@ public class Mill implements Game {
 	}
 
 	public static void main(String[] args) {
-		//Engine<Mill> engine = new MonteCarloEngine<>(new Mill());
-		Engine<Mill> engine = new RandomEngine<>(new Mill());
+		Engine<Mill> engine = new MonteCarloEngine<>(new Mill());
+		//Engine<Mill> engine = new RandomEngine<>(new Mill());
 		GameCommandLine.playGame(engine);
 	}
 }
