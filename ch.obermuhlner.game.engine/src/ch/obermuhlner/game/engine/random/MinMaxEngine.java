@@ -1,11 +1,13 @@
 package ch.obermuhlner.game.engine.random;
 
 import java.awt.JobAttributes.SidesType;
+import java.util.List;
 import java.util.Map;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.StoppableCalculation;
+import ch.obermuhlner.util.Tuple2;
 
 public class MinMaxEngine<G extends Game> implements Engine<G> {
 
@@ -31,7 +33,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public String bestMove() {
-		Map<String, Double> validMoves = game.getValidMoves();
+		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
 		double value = minimax(game, targetDepth);
 		return null;
 	}

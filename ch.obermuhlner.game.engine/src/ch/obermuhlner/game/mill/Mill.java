@@ -1,7 +1,7 @@
 package ch.obermuhlner.game.mill;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
@@ -9,6 +9,7 @@ import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.util.CheckArgument;
+import ch.obermuhlner.util.Tuple2;
 
 public class Mill implements Game {
 
@@ -311,8 +312,8 @@ public class Mill implements Game {
 	}
 
 	@Override
-	public Map<String, Double> getAllMoves() {
-		Map<String, Double> allMoves = new HashMap<>();
+	public List<Tuple2<String, Double>> getAllMoves() {
+		List<Tuple2<String, Double>> allMoves = new ArrayList<>();
 		
 		if (isSetMode()) {
 			// still in set-stones mode
@@ -323,12 +324,12 @@ public class Mill implements Game {
 						Side otherSide = sideToMove.otherSide();
 						for (int killIndex = 0; killIndex < board.length; killIndex++) {
 							if (board[killIndex] == sideToMove.otherSide() && !isInMill(killIndex, otherSide)) {
-								allMoves.put(toKillingMove(target, killIndex), value);
+								allMoves.add(Tuple2.of(toKillingMove(target, killIndex), value));
 							}
 						}							
 					} else {
 						double value = MOVE_VALUE;
-						allMoves.put(toMove(target), value);
+						allMoves.add(Tuple2.of(toMove(target), value));
 					}
 				}
 			}
@@ -367,7 +368,7 @@ public class Mill implements Game {
 		return allMoves;
 	}
 
-	private void addAllJumpMoves(Map<String, Double> allMoves, int source) {
+	private void addAllJumpMoves(List<Tuple2<String, Double>> allMoves, int source) {
 		for (int target = 0; target < board.length; target++) {
 			if (board[target] == Side.None) {
 				if (willBeInMill(source, target, sideToMove)) {
@@ -375,18 +376,18 @@ public class Mill implements Game {
 					Side otherSide = sideToMove.otherSide();
 					for (int killIndex = 0; killIndex < board.length; killIndex++) {
 						if (board[killIndex] == sideToMove.otherSide() && !isInMill(killIndex, otherSide)) {
-							allMoves.put(toKillingMove(source, target, killIndex), value);
+							allMoves.add(Tuple2.of(toKillingMove(source, target, killIndex), value));
 						}
 					}							
 				} else {
 					double value = MOVE_VALUE;
-					allMoves.put(toMove(source, target), value);
+					allMoves.add(Tuple2.of(toMove(source, target), value));
 				}
 			}
 		}
 	}
 
-	private void addAllSourceTargetMoves(Map<String, Double> allMoves, int source) {
+	private void addAllSourceTargetMoves(List<Tuple2<String, Double>> allMoves, int source) {
 		for (int target : VALID_MOVES[source]) {
 			if (board[target] == Side.None) {
 				if (willBeInMill(source, target, sideToMove)) {
@@ -394,12 +395,12 @@ public class Mill implements Game {
 					Side otherSide = sideToMove.otherSide();
 					for (int killIndex = 0; killIndex < board.length; killIndex++) {
 						if (board[killIndex] == otherSide && !isInMill(killIndex, otherSide)) {
-							allMoves.put(toKillingMove(source, target, killIndex), value);
+							allMoves.add(Tuple2.of(toKillingMove(source, target, killIndex), value));
 						}
 					}							
 				} else {
 					double value = MOVE_VALUE;
-					allMoves.put(toMove(source, target), value);
+					allMoves.add(Tuple2.of(toMove(source, target), value));
 				}
 			}
 		}

@@ -1,7 +1,9 @@
 package ch.obermuhlner.game;
 
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import ch.obermuhlner.util.Tuple2;
 
 public interface Game {
 
@@ -19,14 +21,14 @@ public interface Game {
 	
 	void move(String move);
 	
-	Map<String, Double> getAllMoves();
+	List<Tuple2<String, Double>> getAllMoves();
 	
 	boolean isValid(String move);
 	
-	default Map<String, Double> getValidMoves() {
-		return getAllMoves().entrySet().stream()
-				.filter(entry -> isValid(entry.getKey()))
-				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+	default List<Tuple2<String, Double>> getValidMoves() {
+		return getAllMoves().stream()
+				.filter(moveAndValue -> isValid(moveAndValue.getValue1()))
+				.collect(Collectors.toList());
 	}
 	
 	boolean isFinished();

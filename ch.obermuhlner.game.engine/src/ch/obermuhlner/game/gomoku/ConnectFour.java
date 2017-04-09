@@ -1,12 +1,13 @@
 package ch.obermuhlner.game.gomoku;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.util.Tuple2;
 
 public class ConnectFour extends AbstractStonesInARow {
 
@@ -19,14 +20,14 @@ public class ConnectFour extends AbstractStonesInARow {
 	}
 
 	@Override
-	public Map<String, Double> getAllMoves() {
-		Map<String, Double> allMoves = new HashMap<>();
+	public List<Tuple2<String, Double>> getAllMoves() {
+		List<Tuple2<String, Double>> allMoves = new ArrayList<>();
 
 		for (int x = 0; x < boardWidth; x++) {
 			int y = findFreeY(x);
 			if (y >= 0) {
 				double value = 1.0;
-				allMoves.put(toMove(x), value);
+				allMoves.add(Tuple2.of(toMove(x), value));
 			}
 		}
 		

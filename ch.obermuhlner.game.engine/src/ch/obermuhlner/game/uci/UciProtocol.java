@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
@@ -19,6 +19,7 @@ import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.mill.Mill;
 import ch.obermuhlner.game.tictactoe.TicTacToe;
+import ch.obermuhlner.util.Tuple2;
 
 public class UciProtocol {
 
@@ -180,9 +181,9 @@ public class UciProtocol {
 		StringBuilder result = new StringBuilder();
 		result.append("validmoves "); 
 		
-		Map<String, Double> validMoves = engine.getGame().getValidMoves();
-		for (String move : validMoves.keySet()) {
-			result.append(move);
+		List<Tuple2<String, Double>> validMoves = engine.getGame().getValidMoves();
+		for (Tuple2<String, Double> moveWithValue : validMoves) {
+			result.append(moveWithValue.getValue1());
 			result.append(" ");
 		}
 		

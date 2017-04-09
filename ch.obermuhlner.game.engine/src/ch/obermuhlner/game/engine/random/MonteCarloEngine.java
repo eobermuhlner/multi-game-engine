@@ -1,14 +1,16 @@
 package ch.obermuhlner.game.engine.random;
 
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.util.CheckArgument;
+import ch.obermuhlner.util.Tuple2;
 
 public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
@@ -51,13 +53,13 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 	public StoppableCalculation<String> bestMove(long milliseconds) {
 		TimedCalculation<String> calculation = new TimedCalculation<String>(milliseconds) {
 			private Side sideToMove = game.getSideToMove();
-			private Map<String, Double> validMoves = game.getValidMoves();
+			private List<Tuple2<String, Double>> validMoves = game.getValidMoves();
 			
 			PlayStatistic[] playStatistics = new PlayStatistic[validMoves.size()];
 			{
 				int i = 0;
-				for(String move : validMoves.keySet()) {
-					playStatistics[i++] = new PlayStatistic(move);
+				for(Tuple2<String, Double> moveWithValue : validMoves) {
+					playStatistics[i++] = new PlayStatistic(moveWithValue.getValue1());
 				}
 			}
 			
@@ -79,12 +81,14 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
 			@Override
 			protected String calculateResult() {
-				for (PlayStatistic playStatistic : playStatistics) {
-					int draw = playCount - playStatistic.win - playStatistic.loss;
-					double value = (double)(playStatistic.win * 2 + draw) / playCount;
-					validMoves.put(playStatistic.move, value);
-				}				
-				return pickBestMove(validMoves);
+				List<Tuple2<String, Double>> calculatedMoves = Arrays.stream(playStatistics)
+					.map(playStatistic -> {
+						int draw = playCount - playStatistic.win - playStatistic.loss;
+						double value = (double)(playStatistic.win * 2 + draw) / playCount;
+						return Tuple2.of(playStatistic.move, value);
+					})
+					.collect(Collectors.toList());
+				return pickBestMove(calculatedMoves);
 			}
 		};
 		
@@ -92,14 +96,14 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		return calculation;
 	}
 	
-	private String pickBestMove(Map<String, Double> moves) {
+	private String pickBestMove(List<Tuple2<String, Double>> moves) {
 		String bestMove = null;
 		double maxValue = Double.NEGATIVE_INFINITY;
 		
-		for (Entry<String, Double> entry : moves.entrySet()) {
-			if (entry.getValue() > maxValue) {
-				maxValue = entry.getValue();
-				bestMove = entry.getKey();
+		for (Tuple2<String, Double> entry : moves) {
+			if (entry.getValue2() > maxValue) {
+				maxValue = entry.getValue2();
+				bestMove = entry.getValue1();
 			}
 		}
 		

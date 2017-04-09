@@ -1,12 +1,13 @@
 package ch.obermuhlner.game.gomoku;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.util.Tuple2;
 
 public class Gomoku extends AbstractStonesInARow {
 	
@@ -19,8 +20,8 @@ public class Gomoku extends AbstractStonesInARow {
 	}
 
 	@Override
-	public Map<String, Double> getAllMoves() {
-		Map<String, Double> allMoves = new HashMap<>();
+	public List<Tuple2<String, Double>> getAllMoves() {
+		List<Tuple2<String, Double>> allMoves = new ArrayList<>();
 		
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
@@ -41,13 +42,13 @@ public class Gomoku extends AbstractStonesInARow {
 		
 		if (allMoves.isEmpty()) {
 			double value = 1.0;
-			allMoves.put(toMove(boardWidth/2+1, boardHeight/2+1), value);
+			allMoves.add(Tuple2.of(toMove(boardWidth/2+1, boardHeight/2+1), value));
 		}
 		
 		return allMoves;
 	}
 
-	private void addPositionIfFree(Map<String, Double> allMoves, int x, int y) {
+	private void addPositionIfFree(List<Tuple2<String, Double>> allMoves, int x, int y) {
 		if (x < 0 || x >= boardWidth || y < 0 || y >= boardHeight) {
 			return;
 		}
@@ -57,7 +58,7 @@ public class Gomoku extends AbstractStonesInARow {
 		}
 		
 		double value = 1.0;
-		allMoves.put(toMove(x, y), value);
+		allMoves.add(Tuple2.of(toMove(x, y), value));
 	}
 
 	private String toMove(int x, int y) {

@@ -1,13 +1,14 @@
 package ch.obermuhlner.game.tictactoe;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.util.Tuple2;
 
 public class TicTacToe implements Game {
 
@@ -174,18 +175,18 @@ public class TicTacToe implements Game {
 	}
 
 	@Override
-	public Map<String, Double> getAllMoves() {
-		Map<String, Double> moves = new HashMap<>();
+	public List<Tuple2<String, Double>> getAllMoves() {
+		List<Tuple2<String, Double>> allMoves = new ArrayList<>();
 		
 		for (int index = 0; index < board.length; index++) {
 			Side position = board[index];
 			if (position == Side.None) {
 				double value = 1.0;
-				moves.put(toMove(index), value);
+				allMoves.add(Tuple2.of(toMove(index), value));
 			}
 		}
 
-		return moves;
+		return allMoves;
 	}
 
 	@Override

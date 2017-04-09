@@ -2,7 +2,6 @@ package ch.obermuhlner.game.chess;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import ch.obermuhlner.game.Engine;
@@ -10,6 +9,7 @@ import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.util.Tuple2;
 
 public class Chess implements Game {
 
@@ -297,14 +297,12 @@ public class Chess implements Game {
 	}
 
 	@Override
-	public Map<String, Double> getAllMoves() {
+	public List<Tuple2<String, Double>> getAllMoves() {
 		return positions.stream()
 				.filter(position -> position.getSide() == sideToMove)
 				.flatMap(position -> getAnalysis().getMoves(position).stream())
-				.collect(Collectors.toMap(
-						move -> move.toUciString(),
-						move -> move.getValue()
-						));
+				.map(move -> Tuple2.of(move.toUciString(), move.getValue()))
+				.collect(Collectors.toList());
 	}
 
 	@Override

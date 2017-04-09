@@ -1,6 +1,6 @@
 package ch.obermuhlner.game.engine.random;
 
-import java.util.Map;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -8,6 +8,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.util.CheckArgument;
+import ch.obermuhlner.util.Tuple2;
 
 public class RandomEngine<G extends Game> implements Engine<G> {
 
@@ -28,24 +29,24 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public String bestMove() {
-		Map<String, Double> allMoves = game.getAllMoves();
+		List<Tuple2<String, Double>> allMoves = game.getAllMoves();
 
 		CheckArgument.isTrue(!allMoves.isEmpty(), () -> "No possible moves found: " + game.getState());
 
 		for (int i = 0; i < TRY_RANDOM_MOVE; i++) {
-			String randomMove = pickRandomMove(allMoves);
+			String randomMove = RandomUtil.pickRandom(random, allMoves);
 			if (game.isValid(randomMove)) {
 				return randomMove;
 			}
 		}
 		
-		Map<String, Double> allValidMoves = allMoves.entrySet().stream()
-				.filter(entry -> game.isValid(entry.getKey()))
-				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+		List<Tuple2<String, Double>> allValidMoves = allMoves.stream()
+				.filter(moveWithValue -> game.isValid(moveWithValue.getValue1()))
+				.collect(Collectors.toList());
 
 		CheckArgument.isTrue(!allValidMoves.isEmpty(), () -> "No valid moves found: " + game.getState());
 
-		return pickRandomMove(allValidMoves);
+		return RandomUtil.pickRandom(random, allValidMoves);
 	}
 
 	@Override
@@ -53,10 +54,6 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 		return new TrivialCalculation<>(() -> bestMove());
 	}
 	
-	private String pickRandomMove(Map<String, Double> allMoves) {
-		return RandomUtil.pickRandom(random, allMoves);
-	}
-
 	@Override
 	public G getGame() {
 		return game;
