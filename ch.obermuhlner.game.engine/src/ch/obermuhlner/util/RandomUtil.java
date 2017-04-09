@@ -1,9 +1,7 @@
-package ch.obermuhlner.game.engine.random;
+package ch.obermuhlner.util;
 
 import java.util.List;
 import java.util.Random;
-
-import ch.obermuhlner.util.Tuple2;
 
 public class RandomUtil {
 	

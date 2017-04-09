@@ -8,6 +8,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
+import ch.obermuhlner.util.RandomUtil;
 import ch.obermuhlner.util.Tuple2;
 
 public class MinMaxEngine<G extends Game> implements Engine<G> {
