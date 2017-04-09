@@ -8,6 +8,7 @@ import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.util.CheckArgument;
 
 public class Mill implements Game {
 
@@ -99,7 +100,10 @@ public class Mill implements Game {
 		MILLS[D1] = new int[][] { { A1, G1 }, { D2, D3 } };
 		MILLS[G1] = new int[][] { { D1, A1 }, { G4, G7 } };
 	}
-	
+
+	private static final double MOVE_VALUE = 1.0;
+	private static final double KILL_VALUE = 10.0;
+
 	private Side[] board = new Side[7 * 7]; 
 
 	private Side sideToMove;
@@ -131,7 +135,7 @@ public class Mill implements Game {
 		StringBuilder state = new StringBuilder();
 		
 		int validIndex = 0;
-		for (int index = board.length - 1; index > 0 ; index--) {
+		for (int index = board.length - 1; index >= 0 ; index--) {
 			if (isValidPosition(index)) {
 				state.append(toString(board[index], "-"));
 				validIndex++;
@@ -232,10 +236,16 @@ public class Mill implements Game {
 	
 	private void move(int sourceIndex, int targetIndex, int killIndex) {
 		if (sourceIndex >= 0) {
+			CheckArgument.isTrue(board[sourceIndex] == sideToMove, () -> "Cannot be move source " + board[sourceIndex] + " : " + toMove(sourceIndex, targetIndex, killIndex));
 			board[sourceIndex] = Side.None;
 		}
+		
+		CheckArgument.isTrue(board[targetIndex] == Side.None, () -> "Cannot be move target " + board[targetIndex] + " : " + toMove(sourceIndex, targetIndex, killIndex));
 		board[targetIndex] = sideToMove;
+		
 		if (killIndex >= 0) {
+			CheckArgument.isTrue(board[killIndex] == sideToMove.otherSide(), () -> "Cannot kill " + board[killIndex] + " : " + toMove(sourceIndex, targetIndex, killIndex));
+			CheckArgument.isTrue(isInMill(targetIndex, sideToMove), () -> "Cannot kill if not in mill : " + toMove(sourceIndex, targetIndex, killIndex) + " : " + getState());
 			board[killIndex] = Side.None;
 		}
 		
@@ -259,11 +269,20 @@ public class Mill implements Game {
 		
 		if (isSetMode()) {
 			// still in set-stones mode
-			for (int index = 0; index < board.length; index++) {
-				if (board[index] == Side.None && isValidPosition(index)) {
-					double value = 1.0;
-					allMoves.put(toMove(index), value);
-					// TODO recognize mills!!! -> kill
+			for (int target = 0; target < board.length; target++) {
+				if (board[target] == Side.None && isValidPosition(target)) {
+					if (isInMill(target, sideToMove)) {
+						double value = KILL_VALUE;
+						Side otherSide = sideToMove.otherSide();
+						for (int killIndex = 0; killIndex < board.length; killIndex++) {
+							if (board[killIndex] == sideToMove.otherSide() && !isInMill(killIndex, otherSide)) {
+								allMoves.put(toKillingMove(target, killIndex), value);
+							}
+						}							
+					} else {
+						double value = MOVE_VALUE;
+						allMoves.put(toMove(target), value);
+					}
 				}
 			}
 		} else {
@@ -284,20 +303,9 @@ public class Mill implements Game {
 			
 			boolean jumpMode = sideToMove == Side.White ? countWhite == 3 : countBlack == 3;
 			if (jumpMode) {
-				for (int index = 0; index < board.length; index++) {
-					if (board[index] == Side.None && isValidPosition(index)) {
-						if (isInMill(index, sideToMove)) {
-							double value = 2.0;
-							Side otherSide = sideToMove.otherSide();
-							for (int killIndex = 0; killIndex < board.length; killIndex++) {
-								if (board[killIndex] == sideToMove.otherSide() && !isInMill(killIndex, otherSide)) {
-									allMoves.put(toKillingMove(index, killIndex), value);
-								}
-							}							
-						} else {
-							double value = 1.0;
-							allMoves.put(toMove(index), value);
-						}
+				for (int source = 0; source < board.length; source++) {
+					if (board[source] == sideToMove) {
+						addAllJumpMoves(allMoves, source);
 					}
 				}
 			} else {
@@ -312,11 +320,30 @@ public class Mill implements Game {
 		return allMoves;
 	}
 
+	private void addAllJumpMoves(Map<String, Double> allMoves, int source) {
+		for (int target = 0; target < board.length; target++) {
+			if (board[target] == Side.None && isValidPosition(target)) {
+				if (willBeInMill(source, target, sideToMove)) {
+					double value = KILL_VALUE;
+					Side otherSide = sideToMove.otherSide();
+					for (int killIndex = 0; killIndex < board.length; killIndex++) {
+						if (board[killIndex] == sideToMove.otherSide() && !isInMill(killIndex, otherSide)) {
+							allMoves.put(toKillingMove(source, target, killIndex), value);
+						}
+					}							
+				} else {
+					double value = MOVE_VALUE;
+					allMoves.put(toMove(source, target), value);
+				}
+			}
+		}
+	}
+
 	private void addAllSourceTargetMoves(Map<String, Double> allMoves, int source) {
 		for (int target : VALID_MOVES[source]) {
 			if (board[target] == Side.None) {
-				if (isInMill(target, sideToMove)) {
-					double value = 2.0;
+				if (willBeInMill(source, target, sideToMove)) {
+					double value = KILL_VALUE;
 					Side otherSide = sideToMove.otherSide();
 					for (int killIndex = 0; killIndex < board.length; killIndex++) {
 						if (board[killIndex] == otherSide && !isInMill(killIndex, otherSide)) {
@@ -324,20 +351,27 @@ public class Mill implements Game {
 						}
 					}							
 				} else {
-					double value = 1.0;
+					double value = MOVE_VALUE;
 					allMoves.put(toMove(source, target), value);
 				}
 			}
 		}
 	}
 
+	private boolean willBeInMill(int source, int target, Side side) {
+		// make sure it is correct with stone moving from X-X to the left (becoming XX- but might return true!)
+		Mill local = cloneGame();
+		local.move(source, target, -1);
+		return local.isInMill(target, side);
+	}
+	
 	private boolean isInMill(int index, Side side) {
 		for (int[] millCheck : MILLS[index]) {
-			if (!isInMill(millCheck, side)) {
-				return false;
+			if (isInMill(millCheck, side)) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	private boolean isInMill(int[] millCheck, Side side) {
@@ -352,15 +386,22 @@ public class Mill implements Game {
 	private boolean isSetMode() {
 		return moveCount < 9 * 2;
 	}
+
+	private String toMove(int sourceIndex, int targetIndex, int killIndex) {
+		return toKillingMove(sourceIndex, targetIndex, killIndex);
+	}
 	
 	private String toMove(int index) {
+		if (index < 0) {
+			return "-";
+		}
 		int x = index % 7;
 		int y = index / 7;
 		return String.valueOf(LETTERS[x]) + (y+1); 
 	}
 
-	private String toKillingMove(int index, int killIndex) {
-		return toMove(index) + "x" + toMove(killIndex);
+	private String toKillingMove(int targetIndex, int killIndex) {
+		return toMove(targetIndex) + "x" + toMove(killIndex);
 	}
 	
 	private String toMove(int sourceIndex, int targetIndex) {
@@ -409,7 +450,9 @@ public class Mill implements Game {
 			return Side.Black;
 		}
 		
-		// TODO loss if cannot move
+		if (getAllMoves().isEmpty()) {
+			return sideToMove.otherSide();
+		}
 		
 		return Side.None;
 	}
@@ -426,10 +469,15 @@ public class Mill implements Game {
 		return game;
 	}
 
+	@Override
+	public String toString() {
+		return getState();
+	}
+	
 	private boolean isValidPosition(int index) {
 		return VALID_MOVES[index] != null;
 	}
-	
+
 	private static int toIndex(String xy) {
 		return toIndex(xy.charAt(0), xy.charAt(1));
 	}
@@ -446,6 +494,7 @@ public class Mill implements Game {
 	}
 
 	public static void main(String[] args) {
+		//Engine<Mill> engine = new MonteCarloEngine<>(new Mill());
 		Engine<Mill> engine = new RandomEngine<>(new Mill());
 		GameCommandLine.playGame(engine);
 	}
