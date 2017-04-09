@@ -9,6 +9,7 @@ import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
+import ch.obermuhlner.game.mill.Mill;
 import ch.obermuhlner.util.Tuple2;
 
 public class GameCommandLine {
@@ -20,6 +21,7 @@ public class GameCommandLine {
 			System.out.println("STEP " + step++);
 			System.out.println(engine.getGame().getDiagram());
 			System.out.println("STATE " + engine.getGame().getState());
+			System.out.println("SCORE " + engine.getGame().getScore());
 			System.out.println("VALIDMOVES " + engine.getGame().getValidMoves());
 			String move = engine.bestMove();
 			System.out.println("MOVE " + move);
@@ -138,7 +140,8 @@ public class GameCommandLine {
 	}
 
 	public static void main(String[] args) {
-		playTournament(10, new ConnectFour(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
+		playTournament(10, new Mill(), 0, 10, 20);
+		//playTournament(10, new ConnectFour(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
 		//playTournament(10, new TicTacToe(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000);
 	}
 }
