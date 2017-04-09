@@ -50,24 +50,7 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public StoppableCalculation<String> bestMove(long milliseconds) {
-		StoppableCalculation<String> calculation = new StoppableCalculation<String>() {
-			@Override
-			public boolean isDone() {
-				return true;
-			}
-
-			@Override
-			public String get() {
-				return bestMove();
-			}
-
-			@Override
-			public void stop() {
-				// ignore
-			}
-		};
-		
-		return calculation;
+		return new TrivialCalculation<>(() -> bestMove());
 	}
 	
 	private String pickRandomMove(Map<String, Double> allMoves) {
