@@ -19,7 +19,8 @@ public class GameCommandLine {
 		while (!engine.getGame().isFinished()) {
 			System.out.println("STEP " + step++);
 			System.out.println(engine.getGame().getDiagram());
-			//System.out.println("VALIDMOVES " + engine.getGame().getValidMoves());
+			System.out.println("STATE " + engine.getGame().getState());
+			System.out.println("VALIDMOVES " + engine.getGame().getValidMoves());
 			String move = engine.bestMove();
 			System.out.println("MOVE " + move);
 			engine.getGame().move(move);
@@ -124,19 +125,20 @@ public class GameCommandLine {
 		return game.getWinner();
 	}
 	
-	public static <G extends Game> void playTournament(int rounds, long maxThinkMilliseconds, long stepMilliseconds, G game) {
+	public static <G extends Game> void playTournament(int rounds, G game, long... thinkMilliseconds) {
 		List<Tuple2<String, Engine<G>>> players = new ArrayList<>();
 		
 		players.add(Tuple2.of("Random", new RandomEngine<>(game)));
 
-		for (long thinkMilliseconds = 0; thinkMilliseconds <= maxThinkMilliseconds; thinkMilliseconds += stepMilliseconds) {
-			players.add(Tuple2.of("Think" + thinkMilliseconds, new MonteCarloEngine<>(game, thinkMilliseconds)));
+		for (long think : thinkMilliseconds) {
+			players.add(Tuple2.of("Think" + think, new MonteCarloEngine<>(game, think)));
 		}
 		
 		playTournament(rounds, players);
 	}
 
 	public static void main(String[] args) {
-		playTournament(10, 200, 100, new ConnectFour());
+		playTournament(10, new ConnectFour(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
+		//playTournament(10, new TicTacToe(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000);
 	}
 }
