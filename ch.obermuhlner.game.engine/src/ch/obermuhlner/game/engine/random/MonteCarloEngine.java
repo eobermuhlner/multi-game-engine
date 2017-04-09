@@ -8,6 +8,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
+import ch.obermuhlner.util.CheckArgument;
 
 public class MonteCarloEngine<G extends Game> implements Engine<G> {
 
@@ -114,7 +115,9 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		RandomEngine<G> randomEngine = new RandomEngine<>(clone, random);
 		
 		while(!randomEngine.getGame().isFinished()) {
-			randomEngine.getGame().move(randomEngine.bestMove());
+			String bestMove = randomEngine.bestMove();
+			CheckArgument.isNotNull(bestMove, () -> "Best move cannot be null");
+			randomEngine.getGame().move(bestMove);
 		}
 		
 		return randomEngine.getGame().getWinner();
