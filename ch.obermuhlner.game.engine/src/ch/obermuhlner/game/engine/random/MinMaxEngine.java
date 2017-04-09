@@ -8,7 +8,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
-import ch.obermuhlner.util.RandomUtil;
+import ch.obermuhlner.util.GameUtil;
 import ch.obermuhlner.util.Tuple2;
 
 public class MinMaxEngine<G extends Game> implements Engine<G> {
@@ -48,7 +48,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 			.collect(Collectors.toList());
 
 		System.out.println(calculatedMoves);
-		return RandomUtil.pickRandom(random, calculatedMoves);
+		return GameUtil.pickRandom(random, calculatedMoves);
 	}
 
 	private Tuple2<String, Double> minimax(G game, String move) {

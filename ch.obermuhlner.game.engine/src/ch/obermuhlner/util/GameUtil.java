@@ -3,7 +3,7 @@ package ch.obermuhlner.util;
 import java.util.List;
 import java.util.Random;
 
-public class RandomUtil {
+public class GameUtil {
 	
 	public static <E> E pickRandom(Random random, List<Tuple2<E, Double>> allEntitiesWithValue) {
 		if (allEntitiesWithValue.isEmpty()) {

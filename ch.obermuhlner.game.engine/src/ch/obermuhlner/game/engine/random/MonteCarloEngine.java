@@ -10,7 +10,7 @@ import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.util.CheckArgument;
-import ch.obermuhlner.util.RandomUtil;
+import ch.obermuhlner.util.GameUtil;
 import ch.obermuhlner.util.Tuple2;
 
 public class MonteCarloEngine<G extends Game> implements Engine<G> {
@@ -89,7 +89,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 						return Tuple2.of(playStatistic.move, value);
 					})
 					.collect(Collectors.toList());
-				return RandomUtil.findMax(calculatedMoves);
+				return GameUtil.findMax(calculatedMoves);
 			}
 		};
 		

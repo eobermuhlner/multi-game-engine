@@ -8,7 +8,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.util.CheckArgument;
-import ch.obermuhlner.util.RandomUtil;
+import ch.obermuhlner.util.GameUtil;
 import ch.obermuhlner.util.Tuple2;
 
 public class RandomEngine<G extends Game> implements Engine<G> {
@@ -35,7 +35,7 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 		CheckArgument.isTrue(!allMoves.isEmpty(), () -> "No possible moves found: " + game.getState());
 
 		for (int i = 0; i < TRY_RANDOM_MOVE; i++) {
-			String randomMove = RandomUtil.pickRandom(random, allMoves);
+			String randomMove = GameUtil.pickRandom(random, allMoves);
 			if (game.isValid(randomMove)) {
 				return randomMove;
 			}
@@ -47,7 +47,7 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 
 		CheckArgument.isTrue(!allValidMoves.isEmpty(), () -> "No valid moves found: " + game.getState());
 
-		return RandomUtil.pickRandom(random, allValidMoves);
+		return GameUtil.pickRandom(random, allValidMoves);
 	}
 
 	@Override
