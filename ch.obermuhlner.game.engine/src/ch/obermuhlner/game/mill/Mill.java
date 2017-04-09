@@ -14,42 +14,74 @@ public class Mill implements Game {
 
 	private static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
 	
-	private static final int A1 = toIndex("a1");
-	private static final int D1 = toIndex("d1");
-	private static final int G1 = toIndex("g1");
+	private static final int A1 = 0;
+	private static final int D1 = 1;
+	private static final int G1 = 2;
 
-	private static final int B2 = toIndex("b2");
-	private static final int D2 = toIndex("d2");
-	private static final int F2 = toIndex("f2");
+	private static final int B2 = 3;
+	private static final int D2 = 4;
+	private static final int F2 = 5;
 	
-	private static final int C3 = toIndex("c3");
-	private static final int D3 = toIndex("d3");
-	private static final int E3 = toIndex("e3");
+	private static final int C3 = 6;
+	private static final int D3 = 7;
+	private static final int E3 = 8;
 	
-	private static final int A4 = toIndex("a4");
-	private static final int B4 = toIndex("b4");
-	private static final int C4 = toIndex("c4");
-	private static final int E4 = toIndex("e4");
-	private static final int F4 = toIndex("f4");
-	private static final int G4 = toIndex("g4");
+	private static final int A4 = 9;
+	private static final int B4 = 10;
+	private static final int C4 = 11;
+	private static final int E4 = 12;
+	private static final int F4 = 13;
+	private static final int G4 = 14;
 
-	private static final int C5 = toIndex("c5");
-	private static final int D5 = toIndex("d5");
-	private static final int E5 = toIndex("e5");
+	private static final int C5 = 15;
+	private static final int D5 = 16;
+	private static final int E5 = 17;
 
-	private static final int B6 = toIndex("b6");
-	private static final int D6 = toIndex("d6");
-	private static final int F6 = toIndex("f6");
+	private static final int B6 = 18;
+	private static final int D6 = 19;
+	private static final int F6 = 20;
 	
-	private static final int A7 = toIndex("a7");
-	private static final int D7 = toIndex("d7");
-	private static final int G7 = toIndex("g7");
+	private static final int A7 = 21;
+	private static final int D7 = 22;
+	private static final int G7 = 23;
 
-	private static final int[][] VALID_MOVES = new int[7*7][];
+	private static final int CELL_COUNT = 24;
 
-	private static final int[][][] MILLS = new int[7*7][][];
+	private static final int[] GRID_TO_MOVES = new int[7*7];
+
+	private static final int[][] VALID_MOVES = new int[CELL_COUNT][];
+
+	private static final int[][][] MILLS = new int[CELL_COUNT][][];
 
 	static {
+		for (int i = 0; i < GRID_TO_MOVES.length; i++) {
+			GRID_TO_MOVES[i] = -1;
+		}
+		GRID_TO_MOVES[toIndex("a7")] = A7;
+		GRID_TO_MOVES[toIndex("d7")] = D7;
+		GRID_TO_MOVES[toIndex("g7")] = G7;
+		GRID_TO_MOVES[toIndex("b6")] = B6;
+		GRID_TO_MOVES[toIndex("d6")] = D6;
+		GRID_TO_MOVES[toIndex("f6")] = F6;
+		GRID_TO_MOVES[toIndex("c5")] = C5;
+		GRID_TO_MOVES[toIndex("d5")] = D5;
+		GRID_TO_MOVES[toIndex("e5")] = E5;
+		GRID_TO_MOVES[toIndex("a4")] = A4;
+		GRID_TO_MOVES[toIndex("b4")] = B4;
+		GRID_TO_MOVES[toIndex("c4")] = C4;
+		GRID_TO_MOVES[toIndex("e4")] = E4;
+		GRID_TO_MOVES[toIndex("f4")] = F4;
+		GRID_TO_MOVES[toIndex("g4")] = G4;
+		GRID_TO_MOVES[toIndex("c3")] = C3;
+		GRID_TO_MOVES[toIndex("d3")] = D3;
+		GRID_TO_MOVES[toIndex("e3")] = E3;
+		GRID_TO_MOVES[toIndex("b2")] = B2;
+		GRID_TO_MOVES[toIndex("d2")] = D2;
+		GRID_TO_MOVES[toIndex("f2")] = F2;
+		GRID_TO_MOVES[toIndex("a1")] = A1;
+		GRID_TO_MOVES[toIndex("d1")] = D1;
+		GRID_TO_MOVES[toIndex("g1")] = G1;
+
 		VALID_MOVES[A7] = new int[] { A4, D7 };
 		VALID_MOVES[D7] = new int[] { A7, G7, D6 };
 		VALID_MOVES[G7] = new int[] { D7, G4 };
@@ -104,7 +136,7 @@ public class Mill implements Game {
 	private static final double MOVE_VALUE = 1.0;
 	private static final double KILL_VALUE = 10.0;
 
-	private Side[] board = new Side[7 * 7]; 
+	private Side[] board = new Side[CELL_COUNT]; 
 
 	private Side sideToMove;
 	
@@ -135,13 +167,11 @@ public class Mill implements Game {
 		StringBuilder state = new StringBuilder();
 		
 		int validIndex = 0;
-		for (int index = board.length - 1; index >= 0 ; index--) {
-			if (isValidPosition(index)) {
-				state.append(toString(board[index], "-"));
-				validIndex++;
-				if (validIndex % 3 == 0 && validIndex < 24) {
-					state.append("/");
-				}
+		for (int index = 0; index < CELL_COUNT; index++) {
+			state.append(toString(board[index], "-"));
+			validIndex++;
+			if (validIndex % 3 == 0 && validIndex < CELL_COUNT) {
+				state.append("/");
 			}
 		}
 		
@@ -270,7 +300,7 @@ public class Mill implements Game {
 		if (isSetMode()) {
 			// still in set-stones mode
 			for (int target = 0; target < board.length; target++) {
-				if (board[target] == Side.None && isValidPosition(target)) {
+				if (board[target] == Side.None) {
 					if (isInMill(target, sideToMove)) {
 						double value = KILL_VALUE;
 						Side otherSide = sideToMove.otherSide();
@@ -322,7 +352,7 @@ public class Mill implements Game {
 
 	private void addAllJumpMoves(Map<String, Double> allMoves, int source) {
 		for (int target = 0; target < board.length; target++) {
-			if (board[target] == Side.None && isValidPosition(target)) {
+			if (board[target] == Side.None) {
 				if (willBeInMill(source, target, sideToMove)) {
 					double value = KILL_VALUE;
 					Side otherSide = sideToMove.otherSide();
@@ -474,10 +504,6 @@ public class Mill implements Game {
 		return getState();
 	}
 	
-	private boolean isValidPosition(int index) {
-		return VALID_MOVES[index] != null;
-	}
-
 	private static int toIndex(String xy) {
 		return toIndex(xy.charAt(0), xy.charAt(1));
 	}
