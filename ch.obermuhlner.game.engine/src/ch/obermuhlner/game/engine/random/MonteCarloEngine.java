@@ -116,7 +116,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		
 		while(!randomEngine.getGame().isFinished()) {
 			String bestMove = randomEngine.bestMove();
-			CheckArgument.isNotNull(bestMove, () -> "Best move cannot be null");
+			CheckArgument.isNotNull(bestMove, () -> "Best random move must exist");
 			randomEngine.getGame().move(bestMove);
 		}
 		
