@@ -134,7 +134,7 @@ public class Mill implements Game {
 	}
 
 	private static final double MOVE_VALUE = 1.0;
-	private static final double KILL_VALUE = 10.0;
+	private static final double KILL_VALUE = 100.0;
 
 	private Side[] board = new Side[CELL_COUNT]; 
 	private Side sideToMove;
@@ -226,8 +226,27 @@ public class Mill implements Game {
 
 	@Override
 	public double getScore() {
-		// TODO Auto-generated method stub
-		return 0;
+		double score = 0;
+		if (sideToMove == Side.Black) {
+			score -= 1;
+		}
+		for (int index = 0; index < CELL_COUNT; index++) {
+			score += getScore(index);
+		}
+		return score;
+	}
+
+	private double getScore(int index) {
+		switch(board[index]) {
+		case White:
+			return 1;
+		case Black:
+			return -1;
+		case None:
+			return 0;
+		}
+		
+		throw new IllegalArgumentException("Unknown side " + board[index] + " at index " + index);
 	}
 
 	@Override
