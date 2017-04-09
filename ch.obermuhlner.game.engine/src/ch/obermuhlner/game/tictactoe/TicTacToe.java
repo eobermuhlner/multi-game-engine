@@ -11,6 +11,24 @@ import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 
 public class TicTacToe implements Game {
 
+	private static final int[][] THREE_IN_A_ROW = {
+			{ 0, 1, 2 },
+			{ 3, 4, 5 },
+			{ 6, 7, 8 },
+			{ 0, 3, 6 },
+			{ 1, 4, 7 },
+			{ 2, 5, 8 },
+			{ 0, 4, 8 },
+			{ 2, 4, 6 }
+	};
+	
+	private static final int[][] HEURISTIC_SCORE = {
+			{    0, -10, -100, -1000 },
+			{   10,   0,    0,     0 },
+			{  100,   0,    0,     0 },
+			{ 1000,   0,    0,     0 }
+	};
+	
 	private final Side[] board = new Side[9];
 	
 	private Side sideToMove = Side.White;
@@ -69,8 +87,30 @@ public class TicTacToe implements Game {
 	
 	@Override
 	public double getScore() {
-		// TODO impl score
-		return 0;
+		// https://kartikkukreja.wordpress.com/2013/03/30/heuristic-function-for-tic-tac-toe/
+		double score = 0;
+
+		for (int i = 0; i < THREE_IN_A_ROW.length; i++) {
+			int whiteCount = 0;
+			int blackCount = 0;
+			for (int j = 0; j < 3; j++) {
+				Side side = board[THREE_IN_A_ROW[i][j]];
+				switch(side) {
+				case White:
+					whiteCount++;
+					break;
+				case Black:
+					blackCount++;
+					break;
+				case None:
+					// nothing
+					break;
+				}
+			}
+			score += HEURISTIC_SCORE[whiteCount][blackCount];
+		}
+		
+		return score;
 	}
 	
 	@Override
