@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.StoppableCalculation;
+import ch.obermuhlner.util.CheckArgument;
 
 public class RandomEngine<G extends Game> implements Engine<G> {
 
@@ -29,16 +30,20 @@ public class RandomEngine<G extends Game> implements Engine<G> {
 	public String bestMove() {
 		Map<String, Double> allMoves = game.getAllMoves();
 
+		CheckArgument.isTrue(!allMoves.isEmpty(), () -> "No possible moves found: " + game.getState());
+
 		for (int i = 0; i < TRY_RANDOM_MOVE; i++) {
-			String move = pickRandomMove(allMoves);
-			if (game.isValid(move)) {
-				return move;
+			String randomMove = pickRandomMove(allMoves);
+			if (game.isValid(randomMove)) {
+				return randomMove;
 			}
 		}
 		
 		Map<String, Double> allValidMoves = allMoves.entrySet().stream()
 				.filter(entry -> game.isValid(entry.getKey()))
 				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
+
+		CheckArgument.isTrue(!allValidMoves.isEmpty(), () -> "No valid moves found: " + game.getState());
 
 		return pickRandomMove(allValidMoves);
 	}
