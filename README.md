@@ -12,7 +12,7 @@ The Multi Game Engine uses a Monte-Carlo Tree algorithm to decide the best move 
 * Tic Tac Toe
 * Gomoku
 * Connect Four
-* Mill (= Nine Men's Morris) (in development)
+* Mill (= Nine Men's Morris)
 * Go (in development)
 * ...
 
@@ -26,13 +26,19 @@ Additional commands are:
   Choose the game to play.
 * `validmoves`
 
-  List the valid moves with the current board.
+  List the valid moves with the current board (for game specific move notations see chapter below).
 * `move` *move*
 
-  Execute the specified move.
+  Execute the specified move (for game specific move notations see chapter below).
 * `d`
 
   Print a diagram of the current board.
+* `finished`
+
+  Returns whether the game is finished (message `finished true`) or not (message `finished false`).
+* `winner`
+
+  Returns who is the winner of the finished game. (messages `winner White`, `winner Black` or `winner None`).
 
 Valid game names are
 * `chess`
