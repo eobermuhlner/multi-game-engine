@@ -37,4 +37,32 @@ public class RandomUtil {
 		return allEntitiesWithValue.get(0).getValue1();
 	}
 
+	public static <E> E findMax(List<Tuple2<E, Double>> allEntitiesWithValue) {
+		E best = null;
+		double maxValue = Double.NEGATIVE_INFINITY;
+		
+		for (Tuple2<E, Double> entry : allEntitiesWithValue) {
+			if (entry.getValue2() > maxValue) {
+				maxValue = entry.getValue2();
+				best = entry.getValue1();
+			}
+		}
+		
+		return best;
+	}
+
+	public static <E> E findMin(List<Tuple2<E, Double>> allEntitiesWithValue) {
+		E best = null;
+		double maxValue = Double.POSITIVE_INFINITY;
+		
+		for (Tuple2<E, Double> entry : allEntitiesWithValue) {
+			if (entry.getValue2() < maxValue) {
+				maxValue = entry.getValue2();
+				best = entry.getValue1();
+			}
+		}
+		
+		return best;
+	}
+
 }

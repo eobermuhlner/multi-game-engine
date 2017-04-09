@@ -88,7 +88,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 						return Tuple2.of(playStatistic.move, value);
 					})
 					.collect(Collectors.toList());
-				return pickBestMove(calculatedMoves);
+				return RandomUtil.findMax(calculatedMoves);
 			}
 		};
 		
@@ -96,19 +96,6 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 		return calculation;
 	}
 	
-	private String pickBestMove(List<Tuple2<String, Double>> moves) {
-		String bestMove = null;
-		double maxValue = Double.NEGATIVE_INFINITY;
-		
-		for (Tuple2<String, Double> entry : moves) {
-			if (entry.getValue2() > maxValue) {
-				maxValue = entry.getValue2();
-				bestMove = entry.getValue1();
-			}
-		}
-		
-		return bestMove;
-	}
 
 	private Side randomPlay(String move) {
 		@SuppressWarnings("unchecked")
