@@ -57,24 +57,14 @@ public class GameUtil {
 				best = entry.getValue1();
 			}
 		}
-		
-		return best;
-	}
 
-	public static <E> E findMin(List<Tuple2<E, Double>> allEntitiesWithValue) {
-		E best = null;
-		double minValue = Double.POSITIVE_INFINITY;
-		
-		for (Tuple2<E, Double> entry : allEntitiesWithValue) {
-			if (entry.getValue2() < minValue) {
-				minValue = entry.getValue2();
-				best = entry.getValue1();
-			}
+		if (best == null) {
+			best = allEntitiesWithValue.get(0).getValue1();
 		}
 		
 		return best;
 	}
-	
+
 	public static <E> void sort(List<Tuple2<E, Double>> allEntitiesWithValue) {
 		Collections.sort(allEntitiesWithValue, new Comparator<Tuple2<E, Double>>() {
 			@Override
