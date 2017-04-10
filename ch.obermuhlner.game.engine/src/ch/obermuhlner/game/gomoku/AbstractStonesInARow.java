@@ -7,6 +7,9 @@ public abstract class AbstractStonesInARow implements Game {
 
 	protected static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 
+	private static final double[] SEMI_OPEN_SCORE = { 1E0, 1E6, 1E10, 1E14, 1E18};
+	private static final double[] FULL_OPEN_SCORE = { 1E4, 1E8, 1E12, 1E16, 1E20};
+
 	protected final int boardWidth;
 	protected final int boardHeight;
 	
@@ -153,8 +156,93 @@ public abstract class AbstractStonesInARow implements Game {
 	
 	@Override
 	public double getScore() {
-		// TODO impl score
-		return 0;
+		double score = 0;
+		
+		for (int x = 0; x < boardWidth; x++) {
+			// vertical
+			score += getScore(x, 0, 0, 1);
+			
+			// diagonal top side going down/right
+			score += getScore(x, 0, 1, 1);
+
+			// diagonal bottom side going up/right
+			score += getScore(x, boardHeight-1, 1, -1);
+		}
+
+		for (int y = 0; y < boardHeight; y++) {
+			// horizontal
+			score += getScore(0, y, 1, 0);
+			
+			// diagonal left side going down/right
+			score += getScore(0, y, 1, 1);
+
+			// diagonal left side going up/right
+			score += getScore(0, y, 1, -1);
+		}
+		
+		return score;
+	}
+
+	private double getScore(int x, int y, int deltaX, int deltaY) {
+		double score = 0;
+
+		boolean leftOpen = false;
+		Side lastPosition = null;
+		int whiteCount = 0;
+		int blackCount = 0;
+		while (x >= 0 && x < boardWidth && y < boardHeight && y >= 0) {
+			Side position = getPosition(x, y);
+			
+			switch(position) {
+			case White:
+				if (lastPosition == Side.Black) {
+					leftOpen = false;
+				} else if (lastPosition == Side.None) {
+					leftOpen = true;
+				}
+				score -= calculateScore(blackCount, leftOpen, false);
+				blackCount = 0;
+				whiteCount++;
+				break;
+			case Black:
+				if (lastPosition == Side.White) {
+					leftOpen = false;
+				} else if (lastPosition == Side.None) {
+					leftOpen = true;
+				}
+				score += calculateScore(whiteCount, leftOpen, false);
+				whiteCount = 0;
+				blackCount++;
+				break;
+			case None:
+				score -= calculateScore(blackCount, leftOpen, true);
+				score += calculateScore(whiteCount, leftOpen, true);
+				whiteCount = 0;
+				blackCount = 0;
+				break;
+			}
+			
+			lastPosition = position;
+			
+			x += deltaX;
+			y += deltaY;
+		}
+		
+		return score;
+	}
+
+	private double calculateScore(int count, boolean leftOpen, boolean rightOpen) {
+		if (count >= winCount) {
+			return Double.POSITIVE_INFINITY;
+		}
+		if (!leftOpen && !rightOpen) {
+			return 0;
+		}
+		
+		if (leftOpen && rightOpen) {
+			return FULL_OPEN_SCORE[count];
+		}
+		return SEMI_OPEN_SCORE[count];
 	}
 
 	@Override
