@@ -21,17 +21,15 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 
 	private final G game;
 
-	private final long defaultCalculationMilliseconds;
-	
-	private final int targetDepth = 3;
+	private final int targetDepth;
 
 	public MinMaxEngine(G game) {
-		this(game, 200);
+		this(game, 3);
 	}
 
-	public MinMaxEngine(G game, long defaultCalculationMilliseconds) {
+	public MinMaxEngine(G game, int targetDepth) {
 		this.game = game;
-		this.defaultCalculationMilliseconds = defaultCalculationMilliseconds;
+		this.targetDepth = targetDepth;
 	}
 
 	@Override
@@ -47,9 +45,9 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 			.map(moveWithValue -> minimax(game, moveWithValue.getValue1()))
 			.collect(Collectors.toList());
 
-		GameUtil.sort(calculatedMoves);
-		System.out.println(game.getState());
-		System.out.println(calculatedMoves);
+		//System.out.println(game.getState());
+		//GameUtil.sort(calculatedMoves);
+		System.out.println("MINMAXVALUES " + calculatedMoves);
 		//return GameUtil.pickRandom(random, calculatedMoves);
 		return GameUtil.findMax(calculatedMoves);
 	}
@@ -59,7 +57,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		local.move(move);
 		
 		double value = minimax(local, 1, targetDepth, MIN_VALUE, MAX_VALUE, false);
-		System.out.println("MINMAX " + printLevel(0) + " " + move + " " + value + " " + "max");
+		//System.out.println("MINMAX " + printLevel(0) + " " + move + " " + value + " " + "max");
 		return Tuple2.of(move, value);
 	}
 	
