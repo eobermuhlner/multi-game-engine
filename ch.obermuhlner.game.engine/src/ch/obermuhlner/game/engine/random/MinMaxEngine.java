@@ -13,9 +13,9 @@ import ch.obermuhlner.util.Tuple2;
 
 public class MinMaxEngine<G extends Game> implements Engine<G> {
 
-	private static final double WIN_VALUE = 100000;
+	private static final double MAX_VALUE = 100000;
 
-	private static final double LOSS_VALUE = -WIN_VALUE;
+	private static final double MIN_VALUE = -MAX_VALUE;
 
 	private final Random random = new Random();
 
@@ -23,7 +23,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 
 	private final long defaultCalculationMilliseconds;
 	
-	private final int targetDepth = 2;
+	private final int targetDepth = 3;
 
 	public MinMaxEngine(G game) {
 		this(game, 200);
@@ -47,50 +47,49 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 			.map(moveWithValue -> minimax(game, moveWithValue.getValue1()))
 			.collect(Collectors.toList());
 
+		GameUtil.sort(calculatedMoves);
+		System.out.println(game.getState());
 		System.out.println(calculatedMoves);
-		return GameUtil.pickRandom(random, calculatedMoves);
+		//return GameUtil.pickRandom(random, calculatedMoves);
+		return GameUtil.findMax(calculatedMoves);
 	}
 
 	private Tuple2<String, Double> minimax(G game, String move) {
 		Game local = game.cloneGame();
 		local.move(move);
 		
-		return Tuple2.of(move, minimax(local, targetDepth, LOSS_VALUE, WIN_VALUE, false));
+		double value = minimax(local, 1, targetDepth, MIN_VALUE, MAX_VALUE, false);
+		System.out.println("MINMAX " + printLevel(0) + " " + move + " " + value + " " + "max");
+		return Tuple2.of(move, value);
 	}
 	
-	private static <G extends Game> double minimax(G game, int depth, double alpha, double beta, boolean maximizePlayer) {
-		Side sideToMove = game.getSideToMove();
-
-		if (game.isFinished()) {
-			Side winner = game.getWinner();
-			if (winner == sideToMove) {
-				return WIN_VALUE;
-			} else if (winner == sideToMove.otherSide()) {
-				return LOSS_VALUE;
-			} else {
-				return 0.0;
+	private static <G extends Game> double minimax(G game, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer) {
+		if (game.isFinished() || depth == targetDepth) {
+			double score = game.getScore();
+			if (game.getSideToMove() == Side.Black) {
+				score = -score;
 			}
-		}
-		
-		if (depth == 0) {
-			return game.getScore();
+			return score;
 		}
 
-		double bestValue = maximizePlayer ? LOSS_VALUE : WIN_VALUE;
+		double bestValue = maximizePlayer ? MIN_VALUE : MAX_VALUE;
 
 		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
+		GameUtil.sort(validMoves);
+		
 		for (Tuple2<String, Double> moveWithValue : validMoves) {
 			String move = moveWithValue.getValue1();
 
 			Game local = game.cloneGame();
 			local.move(move);
-			double value = minimax(local, depth - 1, alpha, beta, !maximizePlayer);
+			double value = minimax(local, depth + 1, targetDepth, alpha, beta, !maximizePlayer);
+			//System.out.println("MINMAX " + printLevel(depth) + " " + move + " " + value + " " + (maximizePlayer?"max":"min"));
 			if (maximizePlayer) {
 				bestValue = Math.max(bestValue, value);
-				alpha = Math.max(alpha, value);
+				alpha = Math.max(alpha, bestValue);
 			} else {
 				bestValue = Math.min(bestValue, value);
-				beta = Math.min(beta, value);
+				beta = Math.min(beta, bestValue);
 			}
 			if (beta <= alpha) {
 				break;
@@ -98,6 +97,14 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		}
 		
 		return bestValue;
+	}
+
+	private static String printLevel(int depth) {
+		String s = "";
+		for (int i = 0; i < depth; i++) {
+			s += "| ";
+		}
+		return s;
 	}
 
 	@Override
