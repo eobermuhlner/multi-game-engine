@@ -42,7 +42,7 @@ public class Gomoku extends AbstractStonesInARow {
 		
 		if (allMoves.isEmpty()) {
 			double value = 1.0;
-			allMoves.add(Tuple2.of(toMove(boardWidth/2+1, boardHeight/2+1), value));
+			allMoves.add(Tuple2.of(toMove(boardWidth/2, boardHeight/2), value));
 		}
 		
 		return allMoves;
