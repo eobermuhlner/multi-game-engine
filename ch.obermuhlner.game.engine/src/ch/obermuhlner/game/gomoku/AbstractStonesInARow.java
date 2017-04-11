@@ -7,8 +7,9 @@ public abstract class AbstractStonesInARow implements Game {
 
 	protected static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 
-	private static final double[] SEMI_OPEN_SCORE = { 1E0, 1E2, 1E4, 1E6, 1E8};
-	private static final double[] FULL_OPEN_SCORE = { 1E1, 1E3, 1E5, 1E7, 1E9};
+	private static final double MAX_SCORE = 1E12;
+	private static final double[] SEMI_OPEN_SCORE = { 0, 1E0, 1E2, 1E4, 1E6, 1E8};
+	private static final double[] FULL_OPEN_SCORE = { 0, 1E1, 1E3, 1E5, 1E7, 1E9};
 
 	protected final int boardWidth;
 	protected final int boardHeight;
@@ -48,10 +49,13 @@ public abstract class AbstractStonesInARow implements Game {
 		
 		String[] split = state.split(" +");
 		
+		int index = 0;
 		if (split.length > 0) {
 			for (int i = 0; i < split[0].length(); i++) {
 				char c = split[0].charAt(i);
-				board[i] = toSide(c);
+				if (c != '/') {
+					board[index++] = toSide(c);
+				}
 			}
 		}
 		
@@ -142,7 +146,7 @@ public abstract class AbstractStonesInARow implements Game {
 	}
 
 	protected Side getPosition(int x, int y) {
-		return board[x + y*boardWidth];
+		return board[x + y * boardWidth];
 	}
 	
 	protected void setPosition(int x, int y, Side side) {
@@ -187,12 +191,13 @@ public abstract class AbstractStonesInARow implements Game {
 		double score = 0;
 
 		boolean leftOpen = false;
+		Side position = null;
 		Side lastPosition = null;
 		int whiteCount = 0;
 		int blackCount = 0;
-		while (x >= 0 && x < boardWidth && y < boardHeight && y >= 0) {
-			Side position = getPosition(x, y);
-			
+
+		while (x >= 0 && x < boardWidth && y >= 0 && y < boardHeight) {
+			position = getPosition(x, y);
 			switch(position) {
 			case White:
 				if (lastPosition == Side.Black) {
@@ -222,18 +227,45 @@ public abstract class AbstractStonesInARow implements Game {
 				break;
 			}
 			
-			lastPosition = position;
-			
 			x += deltaX;
 			y += deltaY;
+
+			lastPosition = position;
 		}
-		
+
+		switch(position) {
+		case White:
+			if (lastPosition == Side.Black) {
+				leftOpen = false;
+			} else if (lastPosition == Side.None) {
+				leftOpen = true;
+			}
+			score -= calculateScore(blackCount, leftOpen, false);
+			whiteCount++;
+			score += calculateScore(whiteCount, leftOpen, true);
+			break;
+		case Black:
+			if (lastPosition == Side.White) {
+				leftOpen = false;
+			} else if (lastPosition == Side.None) {
+				leftOpen = true;
+			}
+			score += calculateScore(whiteCount, leftOpen, false);
+			blackCount++;
+			score -= calculateScore(blackCount, leftOpen, true);
+			break;
+		case None:
+			score -= calculateScore(blackCount, leftOpen, true);
+			score += calculateScore(whiteCount, leftOpen, true);
+			break;
+		}
+
 		return score;
 	}
 
 	private double calculateScore(int count, boolean leftOpen, boolean rightOpen) {
 		if (count >= winCount) {
-			return Double.POSITIVE_INFINITY;
+			return MAX_SCORE;
 		}
 		if (!leftOpen && !rightOpen) {
 			return 0;
