@@ -7,8 +7,8 @@ public abstract class AbstractStonesInARow implements Game {
 
 	protected static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's' }; 
 
-	private static final double[] SEMI_OPEN_SCORE = { 1E0, 1E6, 1E10, 1E14, 1E18};
-	private static final double[] FULL_OPEN_SCORE = { 1E4, 1E8, 1E12, 1E16, 1E20};
+	private static final double[] SEMI_OPEN_SCORE = { 1E0, 1E2, 1E4, 1E6, 1E8};
+	private static final double[] FULL_OPEN_SCORE = { 1E1, 1E3, 1E5, 1E7, 1E9};
 
 	protected final int boardWidth;
 	protected final int boardHeight;
