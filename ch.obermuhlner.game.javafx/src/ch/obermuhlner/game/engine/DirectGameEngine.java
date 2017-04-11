@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.chess.Chess;
+import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
@@ -18,28 +19,26 @@ public class DirectGameEngine implements GameEngine {
 	
 	@Override
 	public void setGame(String gameName) {
-		Game game;
+		Game game = createGame(gameName);
+		
+		engine = new MinMaxEngine<>(game, 5);
+	}
+
+	private Game createGame(String gameName) {
 		switch(gameName) {
 		case "tictactoe":
-			game = new TicTacToe();
-			break;
+			return new TicTacToe();
 		case "gomoku":
-			game = new Gomoku();
-			break;
+			return new Gomoku();
 		case "connectfour":
-			game = new ConnectFour();
-			break;
+			return new ConnectFour();
 		case "mill":
-			game = new Mill();
-			break;
+			return new Mill();
 		case "chess":
-			game = new Chess();
-			break;
+			return new Chess();
 		default:
-			throw new IllegalArgumentException("Unknown game: " + gameName);
 		}
-		
-		engine = new MonteCarloEngine<>(game);
+		throw new IllegalArgumentException("Unknown game: " + gameName);
 	}
 
 	@Override
