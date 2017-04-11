@@ -1,5 +1,6 @@
 package ch.obermuhlner.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -47,22 +48,26 @@ public class GameUtil {
 		return allEntitiesWithValue.get(0).getValue1();
 	}
 
-	public static <E> E findMax(List<Tuple2<E, Double>> allEntitiesWithValue) {
-		E best = null;
+	public static <E> E findMax(Random random, List<Tuple2<E, Double>> allEntitiesWithValue) {
 		double maxValue = Double.NEGATIVE_INFINITY;
+		List<E> best = new ArrayList<>();
 		
 		for (Tuple2<E, Double> entry : allEntitiesWithValue) {
-			if (entry.getValue2() > maxValue) {
+			double value = entry.getValue2();
+			if (value >= maxValue) {
 				maxValue = entry.getValue2();
-				best = entry.getValue1();
+				if (value > maxValue) {
+					best.clear();
+				}
+				best.add(entry.getValue1());
 			}
 		}
 
-		if (best == null) {
-			best = allEntitiesWithValue.get(0).getValue1();
+		if (best.isEmpty()) {
+			return allEntitiesWithValue.get(random.nextInt(allEntitiesWithValue.size())).getValue1();
 		}
 		
-		return best;
+		return best.get(random.nextInt(best.size()));
 	}
 
 	public static <E> void sort(List<Tuple2<E, Double>> allEntitiesWithValue) {

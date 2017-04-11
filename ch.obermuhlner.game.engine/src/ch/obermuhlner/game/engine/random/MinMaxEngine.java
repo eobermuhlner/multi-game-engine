@@ -49,7 +49,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		//GameUtil.sort(calculatedMoves);
 		System.out.println("MINMAXVALUES " + calculatedMoves);
 		//return GameUtil.pickRandom(random, calculatedMoves);
-		return GameUtil.findMax(calculatedMoves);
+		return GameUtil.findMax(random, calculatedMoves);
 	}
 
 	private Tuple2<String, Double> minimax(G game, String move) {

@@ -89,7 +89,7 @@ public class MonteCarloEngine<G extends Game> implements Engine<G> {
 						return Tuple2.of(playStatistic.move, value);
 					})
 					.collect(Collectors.toList());
-				return GameUtil.findMax(calculatedMoves);
+				return GameUtil.findMax(random, calculatedMoves);
 			}
 		};
 		
