@@ -55,10 +55,32 @@ public class GameUtil {
 		for (Tuple2<E, Double> entry : allEntitiesWithValue) {
 			double value = entry.getValue2();
 			if (value >= maxValue) {
-				maxValue = entry.getValue2();
 				if (value > maxValue) {
 					best.clear();
 				}
+				maxValue = entry.getValue2();
+				best.add(entry.getValue1());
+			}
+		}
+
+		if (best.isEmpty()) {
+			return allEntitiesWithValue.get(random.nextInt(allEntitiesWithValue.size())).getValue1();
+		}
+		
+		return best.get(random.nextInt(best.size()));
+	}
+
+	public static <E> E findMin(Random random, List<Tuple2<E, Double>> allEntitiesWithValue) {
+		double minValue = Double.POSITIVE_INFINITY;
+		List<E> best = new ArrayList<>();
+		
+		for (Tuple2<E, Double> entry : allEntitiesWithValue) {
+			double value = entry.getValue2();
+			if (value <= minValue) {
+				if (value < minValue) {
+					best.clear();
+				}
+				minValue = entry.getValue2();
 				best.add(entry.getValue1());
 			}
 		}
