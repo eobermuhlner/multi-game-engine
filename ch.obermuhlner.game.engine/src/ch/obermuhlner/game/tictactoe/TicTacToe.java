@@ -24,10 +24,10 @@ public class TicTacToe implements Game {
 	};
 	
 	private static final int[][] HEURISTIC_SCORE = {
-			{    0, -10, -100, -1000 },
+			{    0,  -1,  -10,  -100 },
+			{    1,   0,    0,     0 },
 			{   10,   0,    0,     0 },
-			{  100,   0,    0,     0 },
-			{ 1000,   0,    0,     0 }
+			{  100,   0,    0,     0 }
 	};
 	
 	private final Side[] board = new Side[9];
@@ -275,7 +275,7 @@ public class TicTacToe implements Game {
 
 	public static void main(String[] args) {
 		//Engine<TicTacToe> engine = new MonteCarloEngine<>(new TicTacToe());
-		Engine<TicTacToe> engine = new MinMaxEngine<>(new TicTacToe());
+		Engine<TicTacToe> engine = new MinMaxEngine<>(new TicTacToe(), 2);
 		GameCommandLine.playGame(engine);
 	}
 }
