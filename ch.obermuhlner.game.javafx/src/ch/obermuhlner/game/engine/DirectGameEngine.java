@@ -21,7 +21,7 @@ public class DirectGameEngine implements GameEngine {
 	public void setGame(String gameName) {
 		Game game = createGame(gameName);
 		
-		engine = new MinMaxEngine<>(game, 3);
+		engine = new MinMaxEngine<>(game);
 	}
 
 	private Game createGame(String gameName) {
