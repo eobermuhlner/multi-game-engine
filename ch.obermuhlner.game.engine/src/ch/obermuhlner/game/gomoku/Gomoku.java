@@ -57,8 +57,9 @@ public class Gomoku extends AbstractStonesInARow {
 			return;
 		}
 		
-		double value = 1.0;
-		allMoves.add(Tuple2.of(toMove(x, y), value));
+		String move = toMove(x, y);
+		double value = getScore(move);
+		allMoves.add(Tuple2.of(move, value));
 	}
 
 	private String toMove(int x, int y) {

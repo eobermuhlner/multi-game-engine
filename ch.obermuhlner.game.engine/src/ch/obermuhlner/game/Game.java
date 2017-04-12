@@ -31,6 +31,12 @@ public interface Game {
 				.collect(Collectors.toList());
 	}
 	
+	default double getScore(String move) {
+		Game local = cloneGame();
+		local.move(move);
+		return local.getScore();
+	}
+	
 	boolean isFinished();
 	
 	Side getWinner();
