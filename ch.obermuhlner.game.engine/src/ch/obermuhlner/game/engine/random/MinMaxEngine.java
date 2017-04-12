@@ -2,6 +2,7 @@ package ch.obermuhlner.game.engine.random;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ch.obermuhlner.game.Engine;
@@ -41,14 +42,15 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 	public String bestMove() {
 		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
 		
+		AtomicInteger nodeCount = new AtomicInteger();
 		boolean maximizePlayer = game.getSideToMove() == Side.White;
 		List<Tuple2<String, Double>> calculatedMoves = validMoves.stream()
-			.map(moveWithValue -> minimax(game, moveWithValue.getValue1(), maximizePlayer))
+			.map(moveWithValue -> minimax(game, moveWithValue.getValue1(), maximizePlayer, nodeCount))
 			.collect(Collectors.toList());
 
 		//System.out.println(game.getState());
 		//GameUtil.sort(calculatedMoves);
-		System.out.println("MINMAXVALUES " + calculatedMoves);
+		System.out.println("MINMAXVALUES " + nodeCount + " : " + calculatedMoves);
 
 		if (maximizePlayer) {
 			return GameUtil.findMax(random, calculatedMoves);
@@ -57,16 +59,17 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		}
 	}
 
-	private Tuple2<String, Double> minimax(G game, String move, boolean maximizePlayer) {
+	private Tuple2<String, Double> minimax(G game, String move, boolean maximizePlayer, AtomicInteger nodeCount) {
 		Game local = game.cloneGame();
 		local.move(move);
 		
-		double value = minimax(local, 1, targetDepth, MIN_VALUE, MAX_VALUE, !maximizePlayer);
+		nodeCount.incrementAndGet();
+		double value = minimax(local, 1, targetDepth, MIN_VALUE, MAX_VALUE, !maximizePlayer, nodeCount);
 		//System.out.println("MINMAX " + printLevel(0) + " " + move + " " + value + " " + (maximizePlayer?"max":"min"));
 		return Tuple2.of(move, value);
 	}
 	
-	private static <G extends Game> double minimax(G game, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer) {
+	private static <G extends Game> double minimax(G game, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer, AtomicInteger nodeCount) {
 		if (game.isFinished() || depth == targetDepth) {
 			double score = game.getScore();
 			return score;
@@ -75,14 +78,15 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		double bestValue = maximizePlayer ? MIN_VALUE : MAX_VALUE;
 
 		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
-		GameUtil.sort(validMoves);
+		GameUtil.sort(validMoves, maximizePlayer);
 		
 		for (Tuple2<String, Double> moveWithValue : validMoves) {
 			String move = moveWithValue.getValue1();
 
 			Game local = game.cloneGame();
 			local.move(move);
-			double value = minimax(local, depth + 1, targetDepth, alpha, beta, !maximizePlayer);
+			nodeCount.incrementAndGet();
+			double value = minimax(local, depth + 1, targetDepth, alpha, beta, !maximizePlayer, nodeCount);
 			//System.out.println("MINMAX " + printLevel(depth) + " " + move + " " + value + " " + (maximizePlayer?"max":"min"));
 			if (maximizePlayer) {
 				bestValue = Math.max(bestValue, value);
