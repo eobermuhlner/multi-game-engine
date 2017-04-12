@@ -40,17 +40,17 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 
 	@Override
 	public String bestMove() {
-		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
-		
 		AtomicInteger nodeCount = new AtomicInteger();
 		boolean maximizePlayer = game.getSideToMove() == Side.White;
+
+		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
+		
 		List<Tuple2<String, Double>> calculatedMoves = validMoves.stream()
 			.map(moveWithValue -> minimax(game, moveWithValue.getValue1(), maximizePlayer, nodeCount))
 			.collect(Collectors.toList());
 
-		//System.out.println(game.getState());
-		//GameUtil.sort(calculatedMoves);
-		System.out.println("MINMAXVALUES " + nodeCount + " : " + calculatedMoves);
+		//GameUtil.sort(calculatedMoves, maximizePlayer);
+		System.out.println("MINMAXVALUES " + nodeCount + " nodes : " + calculatedMoves);
 
 		if (maximizePlayer) {
 			return GameUtil.findMax(random, calculatedMoves);
