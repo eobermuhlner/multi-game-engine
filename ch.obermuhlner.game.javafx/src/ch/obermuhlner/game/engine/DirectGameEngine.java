@@ -21,7 +21,7 @@ public class DirectGameEngine implements GameEngine {
 	public void setGame(String gameName) {
 		Game game = createGame(gameName);
 		
-		engine = new MinMaxEngine<>(game, 5);
+		engine = new MinMaxEngine<>(game, 3);
 	}
 
 	private Game createGame(String gameName) {
@@ -47,6 +47,11 @@ public class DirectGameEngine implements GameEngine {
 	}
 
 	@Override
+	public Side getSideToMove() {
+		return convertSide(engine.getGame().getSideToMove());
+	}
+	
+	@Override
 	public List<String> getValidMoves() {
 		return engine.getGame().getValidMoves().stream()
 			.map(moveWithValue -> moveWithValue.getValue1())
@@ -70,8 +75,11 @@ public class DirectGameEngine implements GameEngine {
 
 	@Override
 	public Side getWinner() {
-		ch.obermuhlner.game.Side winner = engine.getGame().getWinner();
-		switch(winner) {
+		return convertSide(engine.getGame().getWinner());
+	}
+
+	private Side convertSide(ch.obermuhlner.game.Side side) {
+		switch(side) {
 		case White:
 			return Side.White;
 		case Black:
@@ -79,7 +87,7 @@ public class DirectGameEngine implements GameEngine {
 		case None:
 			return Side.None;
 		}
-		throw new IllegalArgumentException("Unknown side: " + winner);
+		throw new IllegalArgumentException("Unknown side: " + side);
 	}
 
 }

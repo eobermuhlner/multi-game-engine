@@ -31,6 +31,8 @@ public interface GameEngine {
 	
 	void setStartPosition();
 
+	Side getSideToMove();
+	
 	List<String> getValidMoves();
 	
 	void move(String move);

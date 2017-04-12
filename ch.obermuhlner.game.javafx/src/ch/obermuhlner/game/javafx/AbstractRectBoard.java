@@ -11,28 +11,21 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-public abstract class AbstractRectBoard {
+public abstract class AbstractRectBoard extends AbstractBoard {
 
 	protected final GameEngine gameEngine;
 	
 	protected final int boardWidth;
 	protected final int boardHeight;
 
-	protected final GridPane gridPane;
-
-	protected final Button[] buttonFields;
+	protected Button[] buttonFields;
 	
-	protected Side sideToMove = Side.White;
-
 	public AbstractRectBoard(int boardWidth, int boardHeight, String gameName) {
 		this.gameEngine = createGameEngine(gameName);
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
-		
-		gridPane = new GridPane();
-		buttonFields = new Button[boardWidth * boardHeight];
-		
-		setupBoard();
+
+		setupBoard(createBoard());
 	}
 
 	private GameEngine createGameEngine(String gameName) {
@@ -42,7 +35,11 @@ public abstract class AbstractRectBoard {
 		return gameEngine;
 	}
 
-	protected void setupBoard() {
+	protected Node createBoard() {
+		buttonFields = new Button[boardWidth * boardHeight];
+		
+		GridPane gridPane = new GridPane();
+
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardHeight; x++) {
 				Button buttonField = new Button(" ");
@@ -53,9 +50,9 @@ public abstract class AbstractRectBoard {
 				String move = toMove(x, y);
 				
 				buttonField.setOnAction(event -> {
+					Side sideToMove = gameEngine.getSideToMove();
 					buttonField.setText(toString(sideToMove));
 					gameEngine.move(move);
-					sideToMove = sideToMove.otherSide();
 					
 					opponentMove();
 					updateValidMoves();
@@ -64,6 +61,9 @@ public abstract class AbstractRectBoard {
 		}
 		
 		updateValidMoves();
+		updateGameInfo();
+
+		return gridPane;
 	}
 	
 	private void updateValidMoves() {
@@ -90,20 +90,28 @@ public abstract class AbstractRectBoard {
 	}
 
 	protected void opponentMove() {
+		updateGameInfo();
 		if (gameEngine.isFinished()) {
 			return;
 		}
 		
+		Side sideToMove = gameEngine.getSideToMove();
 		String opponentMove = gameEngine.bestMove();
 		gameEngine.move(opponentMove);
 		int moveIndex = moveToIndex(opponentMove);
 		buttonFields[moveIndex].setText(toString(sideToMove));
 		
-		sideToMove = sideToMove.otherSide();
+		updateGameInfo();
 	}
 
-	public Node getBoard() {
-		return gridPane;
+	private void updateGameInfo() {
+		boolean finished = gameEngine.isFinished();
+		if (finished) {
+			nextMoveProperty.set("");
+			winnerProperty.set(String.valueOf(gameEngine.getWinner()));
+		} else {
+			nextMoveProperty.set(String.valueOf(gameEngine.getSideToMove()));
+		}
 	}
 
 	protected static String toString(Side side) {

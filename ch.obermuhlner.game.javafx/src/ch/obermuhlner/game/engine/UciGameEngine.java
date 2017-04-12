@@ -17,6 +17,12 @@ public class UciGameEngine implements GameEngine {
 	}
 
 	@Override
+	public Side getSideToMove() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public List<String> getValidMoves() {
 		// TODO Auto-generated method stub
 		return null;
