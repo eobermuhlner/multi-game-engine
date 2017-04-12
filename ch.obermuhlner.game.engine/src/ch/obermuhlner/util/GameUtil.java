@@ -92,11 +92,12 @@ public class GameUtil {
 		return best.get(random.nextInt(best.size()));
 	}
 
-	public static <E> void sort(List<Tuple2<E, Double>> allEntitiesWithValue) {
+	public static <E> void sort(List<Tuple2<E, Double>> allEntitiesWithValue, boolean descending) {
+		final int sign = descending ? -1 : 1;
 		Collections.sort(allEntitiesWithValue, new Comparator<Tuple2<E, Double>>() {
 			@Override
 			public int compare(Tuple2<E, Double> o1, Tuple2<E, Double> o2) {
-				return -Double.compare(o1.getValue2(), o2.getValue2());
+				return sign * Double.compare(o1.getValue2(), o2.getValue2());
 			}
 		});
 	}
