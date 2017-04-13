@@ -1,15 +1,16 @@
 package ch.obermuhlner.game.app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
-import ch.obermuhlner.game.mill.Mill;
 import ch.obermuhlner.util.Tuple2;
 
 public class GameCommandLine {
@@ -84,7 +85,7 @@ public class GameCommandLine {
 		System.out.println("TOTAL");
 		for (int playerIndex = 0; playerIndex < n; playerIndex++) {
 			Tuple2<String, Engine<G>> player = players.get(playerIndex);
-			System.out.printf("%-10s : %2d wins, %2d losses, %2d draws\n", player.getValue1(), totalWins[playerIndex], totalLoss[playerIndex], totalDraw[playerIndex]);
+			System.out.printf("%-15s : %2d wins, %2d losses, %2d draws\n", player.getValue1(), totalWins[playerIndex], totalLoss[playerIndex], totalDraw[playerIndex]);
 		}
 		System.out.println();
 		
@@ -94,7 +95,7 @@ public class GameCommandLine {
 				Tuple2<String, Engine<G>> player2 = players.get(player2Index);
 				
 				if (player1Index != player2Index) {
-					System.out.printf("%-10s %-10s : %2d wins, %2d losses, %2d draws\n", player1.getValue1(), player2.getValue1(), playerWins[player1Index+player2Index*n], playerLoss[player1Index+player2Index*n], playerDraw[player1Index+player2Index*n]);
+					System.out.printf("%-15s %-15s : %2d wins, %2d losses, %2d draws\n", player1.getValue1(), player2.getValue1(), playerWins[player1Index+player2Index*n], playerLoss[player1Index+player2Index*n], playerDraw[player1Index+player2Index*n]);
 				}
 			}
 		}
@@ -140,7 +141,18 @@ public class GameCommandLine {
 	}
 
 	public static void main(String[] args) {
-		playTournament(10, new Mill(), 0, 10, 20);
+		Game game = new ConnectFour();
+		playTournament(10, Arrays.asList(
+				Tuple2.of("Random", new RandomEngine<>(game)),
+				Tuple2.of("MonteCarlo0", new MonteCarloEngine<>(game, 0)),
+				Tuple2.of("MonteCarlo10", new MonteCarloEngine<>(game, 10)),
+				Tuple2.of("MinMax3", new MinMaxEngine<>(game, 3)),
+				Tuple2.of("MinMax5", new MinMaxEngine<>(game, 5)),
+				Tuple2.of("MinMax7", new MinMaxEngine<>(game, 7))
+				));
+		
+		
+		//playTournament(10, new Mill(), 0, 10, 20);
 		//playTournament(10, new ConnectFour(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000);
 		//playTournament(10, new TicTacToe(), 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000);
 	}

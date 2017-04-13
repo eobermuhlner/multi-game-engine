@@ -26,9 +26,8 @@ public class ConnectFour extends AbstractStonesInARow {
 		for (int x = 0; x < boardWidth; x++) {
 			int y = findFreeY(x);
 			if (y >= 0) {
-				String move = toMove(x);
-				double value = getScore(move);
-				allMoves.add(Tuple2.of(move, value));
+				double value = 1.0;
+				allMoves.add(Tuple2.of(toMove(x), value));
 			}
 		}
 		
