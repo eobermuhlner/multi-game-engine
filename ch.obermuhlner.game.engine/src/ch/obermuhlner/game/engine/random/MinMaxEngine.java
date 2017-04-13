@@ -3,7 +3,6 @@ package ch.obermuhlner.game.engine.random;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
@@ -14,7 +13,7 @@ import ch.obermuhlner.util.Tuple2;
 
 public class MinMaxEngine<G extends Game> implements Engine<G> {
 
-	private static final double MAX_VALUE = 100000;
+	private static final double MAX_VALUE = 1E100;
 
 	private static final double MIN_VALUE = -MAX_VALUE;
 
@@ -43,64 +42,56 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		AtomicInteger nodeCount = new AtomicInteger();
 		boolean maximizePlayer = game.getSideToMove() == Side.White;
 
-		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
-		
-		List<Tuple2<String, Double>> calculatedMoves = validMoves.stream()
-			.map(moveWithValue -> minimax(game, moveWithValue.getValue1(), maximizePlayer, nodeCount))
-			.collect(Collectors.toList());
+		Tuple2<String, Double> moveWithValue = minimax(game, null, 0, targetDepth, MIN_VALUE, MAX_VALUE, maximizePlayer, nodeCount);
 
-		//GameUtil.sort(calculatedMoves, maximizePlayer);
-		System.out.println("MINMAXVALUES " + nodeCount + " nodes : " + calculatedMoves);
-
-		if (maximizePlayer) {
-			return GameUtil.findMax(random, calculatedMoves);
-		} else {
-			return GameUtil.findMin(random, calculatedMoves);
-		}
+		return moveWithValue.getValue1();
 	}
 
-	private Tuple2<String, Double> minimax(G game, String move, boolean maximizePlayer, AtomicInteger nodeCount) {
-		Game local = game.cloneGame();
-		local.move(move);
-		
-		nodeCount.incrementAndGet();
-		double value = minimax(local, 1, targetDepth, MIN_VALUE, MAX_VALUE, !maximizePlayer, nodeCount);
-		//System.out.println("MINMAX " + printLevel(0) + " " + move + " " + value + " " + (maximizePlayer?"max":"min"));
-		return Tuple2.of(move, value);
-	}
-	
-	private static <G extends Game> double minimax(G game, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer, AtomicInteger nodeCount) {
+	private static <G extends Game> Tuple2<String, Double> minimax(G game, String lastMove, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer, AtomicInteger nodeCount) {
 		if (game.isFinished() || depth == targetDepth) {
 			double score = game.getScore();
-			return score;
+			return Tuple2.of(lastMove, score);
 		}
-
-		double bestValue = maximizePlayer ? MIN_VALUE : MAX_VALUE;
 
 		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
 		GameUtil.sort(validMoves, maximizePlayer);
 		
-		for (Tuple2<String, Double> moveWithValue : validMoves) {
-			String move = moveWithValue.getValue1();
+		double bestValue = maximizePlayer ? MIN_VALUE : MAX_VALUE;
+		String bestMove = null;
+		
+		for (Tuple2<String, Double> moveWithSimpleValue : validMoves) {
+			String move = moveWithSimpleValue.getValue1();
 
 			Game local = game.cloneGame();
 			local.move(move);
 			nodeCount.incrementAndGet();
-			double value = minimax(local, depth + 1, targetDepth, alpha, beta, !maximizePlayer, nodeCount);
+			
+			Tuple2<String, Double> moveWithValue = minimax(local, move, depth + 1, targetDepth, alpha, beta, !maximizePlayer, nodeCount);
+			double value = moveWithValue.getValue2();
+			
 			//System.out.println("MINMAX " + printLevel(depth) + " " + move + " " + value + " " + (maximizePlayer?"max":"min"));
 			if (maximizePlayer) {
-				bestValue = Math.max(bestValue, value);
+				if (value > bestValue) {
+					bestValue = value;
+					bestMove = move;
+				}
 				alpha = Math.max(alpha, bestValue);
 			} else {
-				bestValue = Math.min(bestValue, value);
+				if (value < bestValue) {
+					bestValue = value;
+					bestMove = move;
+				}
 				beta = Math.min(beta, bestValue);
 			}
 			if (beta <= alpha) {
 				break;
 			}
 		}
+		if (depth == 0) {
+			System.out.printf("MINMAX depth=%2d nodes=%8d best=%-6s %15.1f %-15s : %s\n", depth, nodeCount.get(), bestMove, bestValue, game.getState(), validMoves);
+		}
 		
-		return bestValue;
+		return Tuple2.of(bestMove, bestValue);
 	}
 
 	private static String printLevel(int depth) {
