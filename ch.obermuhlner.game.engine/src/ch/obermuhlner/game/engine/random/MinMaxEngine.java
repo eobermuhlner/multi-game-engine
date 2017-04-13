@@ -54,7 +54,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 			return Tuple2.of(lastMove, score);
 		}
 
-		List<Tuple2<String, Double>> validMoves = game.getValidMoves();
+		List<Tuple2<String, Double>> validMoves = game.getValidMovesWithScore();
 		GameUtil.sort(validMoves, maximizePlayer);
 		
 		double bestValue = maximizePlayer ? MIN_VALUE : MAX_VALUE;
