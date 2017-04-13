@@ -6,7 +6,7 @@ import java.util.List;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.util.Tuple2;
 
 public class ConnectFour extends AbstractStonesInARow {
@@ -84,7 +84,8 @@ public class ConnectFour extends AbstractStonesInARow {
 	}
 
 	public static void main(String[] args) {
-		Engine<ConnectFour> engine = new MonteCarloEngine<>(new ConnectFour());
+		Engine<ConnectFour> engine = new MinMaxEngine<>(new ConnectFour(), 5);
+		//Engine<ConnectFour> engine = new MonteCarloEngine<>(new ConnectFour());
 		//Engine<ConnectFour> engine = new RandomEngine<>(new ConnectFour());
 		GameCommandLine.playGame(engine);
 	}

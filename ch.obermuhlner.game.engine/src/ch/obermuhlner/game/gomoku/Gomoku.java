@@ -6,7 +6,7 @@ import java.util.List;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.util.Tuple2;
 
 public class Gomoku extends AbstractStonesInARow {
@@ -103,7 +103,8 @@ public class Gomoku extends AbstractStonesInARow {
 	}
 
 	public static void main(String[] args) {
-		Engine<Gomoku> engine = new MonteCarloEngine<>(new Gomoku());
+		Engine<Gomoku> engine = new MinMaxEngine<>(new Gomoku(), 5);
+		//Engine<Gomoku> engine = new MonteCarloEngine<>(new Gomoku());
 		//Engine<Gomoku> engine = new RandomEngine<>(new Gomoku());
 		GameCommandLine.playGame(engine);
 	}
