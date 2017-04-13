@@ -92,6 +92,10 @@ public class GameUtil {
 		return best.get(random.nextInt(best.size()));
 	}
 
+	public static <E> E pickRandomElement(Random random, List<E> allEntities) {
+		return allEntities.get(random.nextInt(allEntities.size()));
+	}
+	
 	public static <E> void sort(List<Tuple2<E, Double>> allEntitiesWithValue, boolean descending) {
 		final int sign = descending ? -1 : 1;
 		Collections.sort(allEntitiesWithValue, new Comparator<Tuple2<E, Double>>() {

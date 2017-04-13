@@ -1,5 +1,6 @@
 package ch.obermuhlner.game.engine.random;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,7 +48,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		return moveWithValue.getValue1();
 	}
 
-	private static <G extends Game> Tuple2<String, Double> minimax(G game, String lastMove, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer, AtomicInteger nodeCount) {
+	private <G extends Game> Tuple2<String, Double> minimax(G game, String lastMove, int depth, int targetDepth, double alpha, double beta, boolean maximizePlayer, AtomicInteger nodeCount) {
 		if (game.isFinished() || depth == targetDepth) {
 			double score = game.getScore();
 			return Tuple2.of(lastMove, score);
@@ -57,7 +58,7 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 		GameUtil.sort(validMoves, maximizePlayer);
 		
 		double bestValue = maximizePlayer ? MIN_VALUE : MAX_VALUE;
-		String bestMove = null;
+		List<String> bestMoves = new ArrayList<String>();
 		
 		for (Tuple2<String, Double> moveWithSimpleValue : validMoves) {
 			String move = moveWithSimpleValue.getValue1();
@@ -71,15 +72,21 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 			
 			//System.out.println("MINMAX " + printLevel(depth) + " " + move + " " + value + " " + (maximizePlayer?"max":"min"));
 			if (maximizePlayer) {
-				if (value > bestValue) {
+				if (value >= bestValue) {
+					if (value > bestValue) {
+						bestMoves.clear();
+					}
 					bestValue = value;
-					bestMove = move;
+					bestMoves.add(move);
 				}
 				alpha = Math.max(alpha, bestValue);
 			} else {
-				if (value < bestValue) {
+				if (value <= bestValue) {
+					if (value < bestValue) {
+						bestMoves.clear();
+					}
 					bestValue = value;
-					bestMove = move;
+					bestMoves.add(move);
 				}
 				beta = Math.min(beta, bestValue);
 			}
@@ -87,6 +94,8 @@ public class MinMaxEngine<G extends Game> implements Engine<G> {
 				break;
 			}
 		}
+		
+		String bestMove = GameUtil.pickRandomElement(random, bestMoves);
 		if (depth == 0) {
 			System.out.printf("MINMAX depth=%2d nodes=%8d best=%-6s %15.1f %-15s : %s\n", depth, nodeCount.get(), bestMove, bestValue, game.getState(), validMoves);
 		}
