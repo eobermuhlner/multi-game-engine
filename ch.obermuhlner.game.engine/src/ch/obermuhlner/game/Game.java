@@ -30,7 +30,15 @@ public interface Game {
 				.filter(moveAndValue -> isValid(moveAndValue.getValue1()))
 				.collect(Collectors.toList());
 	}
-	
+
+	default List<Tuple2<String, Double>> getValidMovesWithScore() {
+		return getAllMoves().stream()
+				.filter(moveAndValue -> isValid(moveAndValue.getValue1()))
+				.map(moveAndValue -> moveAndValue.getValue1())
+				.map(move -> Tuple2.of(move, getScore(move)))
+				.collect(Collectors.toList());
+	}
+
 	default double getScore(String move) {
 		Game local = cloneGame();
 		local.move(move);
