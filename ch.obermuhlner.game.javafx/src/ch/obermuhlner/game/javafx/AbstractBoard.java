@@ -13,7 +13,8 @@ public abstract class AbstractBoard {
 
 	private BorderPane borderPane;
 	
-	protected StringProperty nextMoveProperty = new SimpleStringProperty();
+	protected StringProperty lastMoveProperty = new SimpleStringProperty();
+	protected StringProperty nextPlayerProperty = new SimpleStringProperty();
 	protected StringProperty winnerProperty = new SimpleStringProperty();
 
 	protected void setupBoard(Node board) {
@@ -26,10 +27,17 @@ public abstract class AbstractBoard {
 		
 		int rowIndex = 0;
 		{
-			dataPane.add(new Label("Next Move"), 0, rowIndex);
-			TextField textfieldNextMove = new TextField();
-			dataPane.add(textfieldNextMove, 1, rowIndex);
-			Bindings.bindBidirectional(textfieldNextMove.textProperty(), nextMoveProperty);
+			dataPane.add(new Label("Last Move"), 0, rowIndex);
+			TextField textfieldLastMove = new TextField();
+			dataPane.add(textfieldLastMove, 1, rowIndex);
+			Bindings.bindBidirectional(textfieldLastMove.textProperty(), lastMoveProperty);
+			rowIndex++;
+		}
+		{
+			dataPane.add(new Label("Player"), 0, rowIndex);
+			TextField textfieldNextPlayer = new TextField();
+			dataPane.add(textfieldNextPlayer, 1, rowIndex);
+			Bindings.bindBidirectional(textfieldNextPlayer.textProperty(), nextPlayerProperty);
 			rowIndex++;
 		}
 		{

@@ -3,10 +3,13 @@ package ch.obermuhlner.game.javafx;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import ch.obermuhlner.game.engine.DirectGameEngine;
 import ch.obermuhlner.game.engine.GameEngine;
 import ch.obermuhlner.game.engine.GameEngine.Side;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -19,6 +22,8 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 	protected final int boardHeight;
 
 	protected Button[] buttonFields;
+	
+	ExecutorService executor = Executors.newFixedThreadPool(1);
 	
 	public AbstractRectBoard(int boardWidth, int boardHeight, String gameName) {
 		this.gameEngine = createGameEngine(gameName);
@@ -52,10 +57,11 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 				buttonField.setOnAction(event -> {
 					Side sideToMove = gameEngine.getSideToMove();
 					buttonField.setText(toString(sideToMove));
+					lastMoveProperty.set(move);
 					gameEngine.move(move);
 					
+					invalidateAllMoves();
 					opponentMove();
-					updateValidMoves();
 				});
 			}
 		}
@@ -66,6 +72,14 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 		return gridPane;
 	}
 	
+	private void invalidateAllMoves() {
+		for (int index = 0; index < buttonFields.length; index++) {
+			if (buttonFields[index] != null) {
+				buttonFields[index].setDisable(true);
+			}
+		}
+	}
+
 	private void updateValidMoves() {
 		List<String> validMoves = gameEngine.getValidMoves();
 		Set<Integer> validMoveIndexes = new HashSet<>();
@@ -95,22 +109,28 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 			return;
 		}
 		
-		Side sideToMove = gameEngine.getSideToMove();
-		String opponentMove = gameEngine.bestMove();
-		gameEngine.move(opponentMove);
-		int moveIndex = moveToIndex(opponentMove);
-		buttonFields[moveIndex].setText(toString(sideToMove));
-		
-		updateGameInfo();
+		executor.submit(() -> {
+			Side sideToMove = gameEngine.getSideToMove();
+			String opponentMove = gameEngine.bestMove();
+			Platform.runLater(() -> {
+				lastMoveProperty.set(opponentMove);
+				gameEngine.move(opponentMove);
+				int moveIndex = moveToIndex(opponentMove);
+				buttonFields[moveIndex].setText(toString(sideToMove));
+
+				updateGameInfo();
+				updateValidMoves();
+			});
+		});
 	}
 
 	private void updateGameInfo() {
 		boolean finished = gameEngine.isFinished();
 		if (finished) {
-			nextMoveProperty.set("");
+			nextPlayerProperty.set("");
 			winnerProperty.set(String.valueOf(gameEngine.getWinner()));
 		} else {
-			nextMoveProperty.set(String.valueOf(gameEngine.getSideToMove()));
+			nextPlayerProperty.set(String.valueOf(gameEngine.getSideToMove()));
 		}
 	}
 
