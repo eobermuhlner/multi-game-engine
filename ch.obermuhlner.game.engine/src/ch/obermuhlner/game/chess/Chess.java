@@ -19,6 +19,8 @@ public class Chess implements Game {
 
 	private Side sideToMove = Side.White;
 
+	private final List<Position> castlePositions = new ArrayList<>();
+
 	private int halfMoveSinceCaptureOrPawnAdvanceNumber = 0;
 	private int moveNumber = 0;
 
@@ -68,26 +70,59 @@ public class Chess implements Game {
 		positions.add(new Position(Piece.Pawn, Side.Black, 5, 6));
 		positions.add(new Position(Piece.Pawn, Side.Black, 6, 6));
 		positions.add(new Position(Piece.Pawn, Side.Black, 7, 6));
-		
+	
+		castlePositions.add(getPosition(7, 0));
+		castlePositions.add(getPosition(0, 0));
+		castlePositions.add(getPosition(7, 7));
+		castlePositions.add(getPosition(0, 7));
+
 		invalidateAnalysis();
 	}
 
 	public void clear() {
 		positions.clear();
+		castlePositions.clear();
 		sideToMove = Side.White;
+		
+		halfMoveSinceCaptureOrPawnAdvanceNumber = 0;
+		moveNumber = 1;
 	}
 
 	@Override
 	public void setState(String state) {
 		String[] splitFen = state.split(" +");
 		
-		List<Position> fenPositions = toFenPositions(splitFen[0]);
+		clear();
+		positions.addAll(toFenPositions(splitFen[0]));
 		Side fenSide = Side.White;
+		
 		if (splitFen.length > 1) {
 			fenSide = splitFen[1].equals("w") ? Side.White : Side.Black;
 		}
 		if (splitFen.length > 2) {
-			// ignore castling info
+			for (char castleChar : splitFen[2].toCharArray()) {
+				switch(castleChar) {
+				case 'K':
+					castlePositions.add(getPosition(7, 0));
+					break;
+				case 'Q':
+					castlePositions.add(getPosition(0, 0));
+					break;
+				case 'k':
+					castlePositions.add(getPosition(7, 7));
+					break;
+				case 'q':
+					castlePositions.add(getPosition(0, 7));
+					break;
+				default:
+					if (castleChar >= 'A' && castleChar <= 'H') {
+						castlePositions.add(getPosition(letterToInt(Character.toLowerCase(castleChar)), 0));
+					}
+					if (castleChar >= 'a' && castleChar <= 'h') {
+						castlePositions.add(getPosition(letterToInt(castleChar), 7));
+					}
+				}
+			}
 		}
 		if (splitFen.length > 3) {
 			// ignore en passant info
@@ -99,8 +134,6 @@ public class Chess implements Game {
 		if (splitFen.length > 5) {
 			moveNumber = Integer.parseInt(splitFen[5]);
 		}
-		clear();
-		positions.addAll(fenPositions);
 		
 		setSideToMove(fenSide);
 		invalidateAnalysis();
@@ -136,7 +169,31 @@ public class Chess implements Game {
 
 		builder.append(toFenPositionString());
 		
-		builder.append(" - - 0 1"); // TODO real FEN string
+		builder.append(" ");
+		for(Position castle : castlePositions) {
+			char c;
+			switch(castle.getX()) {
+			case 0:
+				c = castle.getSide() == Side.White ? 'Q' : 'q';
+				break;
+			case 7:
+				c = castle.getSide() == Side.White ? 'K' : 'k';
+				break;
+			default:
+				c = LETTERS[castle.getX()];
+			}
+			builder.append(castle.getSide() == Side.White ? Character.toUpperCase(c) : c);
+		}
+		if (castlePositions.isEmpty()) {
+			builder.append("-");
+		}
+		
+		builder.append(" -"); // TODO en passant
+		
+		builder.append(" ");
+		builder.append(halfMoveSinceCaptureOrPawnAdvanceNumber);
+		builder.append(" ");
+		builder.append(moveNumber);
 		
 		return builder.toString();
 	}
@@ -346,6 +403,12 @@ public class Chess implements Game {
 	
 	public List<Position> getPositions() {
 		return positions;
+	}
+	
+	public Position getPosition(int x, int y) {
+		return positions.stream()
+			.filter(position -> position.getX() == x && position.getY() == y)
+			.findAny().orElse(null);
 	}
 
 	public void addPosition(String position) {
