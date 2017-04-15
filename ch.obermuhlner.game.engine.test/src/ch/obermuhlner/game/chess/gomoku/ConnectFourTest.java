@@ -88,7 +88,7 @@ public class ConnectFourTest {
 	}
 
 	@Test
-	public void testWinDiagonal() {
+	public void testWinDiagonalUpRight() {
 		ConnectFour connectFour = new ConnectFour();
 		connectFour.move("1");
 		connectFour.move("2");
@@ -101,8 +101,26 @@ public class ConnectFourTest {
 		connectFour.move("4");
 		connectFour.move("7");
 		connectFour.move("4");
-		System.out.println(connectFour.getDiagram());
 		assertEquals(true, connectFour.isFinished());
 		assertEquals(Side.Black, connectFour.getWinner());
+	}
+
+
+	@Test
+	public void testWinDiagonalDownRight() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.move("1");
+		connectFour.move("2");
+		connectFour.move("3");
+		connectFour.move("4");
+		connectFour.move("1");
+		connectFour.move("3");
+		connectFour.move("2");
+		connectFour.move("2");
+		connectFour.move("1");
+		connectFour.move("1");
+		System.out.println(connectFour.getDiagram());
+		assertEquals(true, connectFour.isFinished());
+		assertEquals(Side.White, connectFour.getWinner());
 	}
 }
