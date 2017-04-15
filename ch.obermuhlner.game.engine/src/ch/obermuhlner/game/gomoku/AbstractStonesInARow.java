@@ -429,6 +429,8 @@ public abstract class AbstractStonesInARow implements Game {
 			x += deltaX;
 			y += deltaY;
 		}
+		maxWhiteCount = Math.max(whiteCount, maxWhiteCount);
+		maxBlackCount = Math.max(blackCount, maxBlackCount);
 		
 		if (exactWin) {
 			if (maxWhiteCount == winCount) {
