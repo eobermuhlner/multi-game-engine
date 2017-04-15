@@ -348,6 +348,34 @@ public class Chess implements Game {
 		return positions;
 	}
 
+	public void addPosition(String position) {
+		char character = position.charAt(0);
+		
+		for (Piece piece : Piece.values()) {
+			if (piece.getWhiteCharacter() == character) {
+				addPosition(piece, Side.White, position.substring(1));
+				return;
+			}
+			if (piece.getBlackCharacter() == character) {
+				addPosition(piece, Side.Black, position.substring(1));
+				return;
+			}
+		}
+		
+		throw new IllegalArgumentException("Unknown position: " + position);
+	}
+	
+	private void addPosition(Piece piece, Side side, String position) {
+		int x = letterToInt(position.charAt(0));
+		int y = Character.getNumericValue(position.charAt(1)) - 1;
+		addPosition(piece, side, x, y);
+	}
+
+	private void addPosition(Piece piece, Side side, int x, int y) {
+		positions.add(new Position(piece, side, x, y));
+		invalidateAnalysis();
+	}
+
 	private void invalidateAnalysis() {
 		analysis = null;		
 	}
@@ -417,7 +445,7 @@ public class Chess implements Game {
 		return builder.toString();
 	}
 	
-	private void setSideToMove(Side sideToMove) {
+	public void setSideToMove(Side sideToMove) {
 		this.sideToMove = sideToMove;
 		invalidateAnalysis();
 	}
