@@ -7,7 +7,6 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.chess.Chess;
 import ch.obermuhlner.game.engine.random.MinMaxEngine;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.mill.Mill;
