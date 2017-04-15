@@ -30,18 +30,36 @@ public class MultiGameApp extends Application {
         TabPane currentGamesPane = new TabPane();
         borderPane.setCenter(currentGamesPane);
         
-		Button buttonTicTacToe = new Button("Tic Tac Toe");
-		startGamesPane.getChildren().add(buttonTicTacToe);
-		buttonTicTacToe.setOnAction(event -> {
-			addGame(currentGamesPane, "Tic Tac Toe", createTicTacToe());
-		});
+        {
+        	Button buttonTicTacToe = new Button("Tic Tac Toe");
+        	startGamesPane.getChildren().add(buttonTicTacToe);
+        	buttonTicTacToe.setOnAction(event -> {
+        		addGame(currentGamesPane, "Tic Tac Toe", createTicTacToe());
+        	});
+        }
 
-        Button buttonGomoku = new Button("Gomoku");
-		startGamesPane.getChildren().add(buttonGomoku);
-		buttonGomoku.setOnAction(event -> {
-			addGame(currentGamesPane, "Gomoku", createGomoku());
-		});
+        {
+        	Button buttonGomoku = new Button("Gomoku");
+        	startGamesPane.getChildren().add(buttonGomoku);
+        	buttonGomoku.setOnAction(event -> {
+        		addGame(currentGamesPane, "Gomoku", createGomoku());
+        	});
+        }
 
+        {
+        	Button buttonConnectFour = new Button("Connect Four");
+        	startGamesPane.getChildren().add(buttonConnectFour);
+        	buttonConnectFour.setOnAction(event -> {
+        		addGame(currentGamesPane, "Connect Four", createConnectFour());
+        	});
+        }
+}
+	
+	@Override
+	public void stop() throws Exception {
+		// TODO shutdown executor 
+		
+		super.stop();
 	}
 
 	private void addGame(TabPane currentGamesPane, String name, Node gameNode) {
@@ -56,6 +74,11 @@ public class MultiGameApp extends Application {
 	private Node createGomoku() {
 		Gomoku gomoku = new Gomoku();
 		return gomoku.getBoard();
+	}
+
+	private Node createConnectFour() {
+		ConnectFour connectFour = new ConnectFour();
+		return connectFour.getBoard();
 	}
 
 	public static void main(String[] args) {

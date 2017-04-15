@@ -46,7 +46,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 		GridPane gridPane = new GridPane();
 
 		for (int y = 0; y < boardHeight; y++) {
-			for (int x = 0; x < boardHeight; x++) {
+			for (int x = 0; x < boardWidth; x++) {
 				Button buttonField = new Button(" ");
 				buttonField.setPrefWidth(26);
 				buttonFields[toIndex(x, y)] = buttonField;
@@ -70,6 +70,11 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 		updateGameInfo();
 
 		return gridPane;
+	}
+	
+	protected Side getPosition(int x, int y) {
+		String text = buttonFields[toIndex(x, y)].getText();
+		return toSide(text);
 	}
 	
 	private void invalidateAllMoves() {
@@ -145,6 +150,16 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 		}
 		
 		throw new IllegalArgumentException("Unknown side: " + side);
+	}
+	
+	private static Side toSide(String text) {
+		switch(text) {
+		case "X":
+			return Side.White;
+		case "O":
+			return Side.Black;
+		}
+		return Side.None;
 	}
 
 }
