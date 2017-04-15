@@ -1,9 +1,9 @@
 package ch.obermuhlner.game.chess;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,14 +16,14 @@ import ch.obermuhlner.util.Tuple2;
 public class ChessTest {
 
 	@Test
-	public void testGetFenString() {
+	public void testGetState() {
 		Chess chess = new Chess();
 		chess.setStartPosition();
 		assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", chess.getState());
 	}
 
 	@Test
-	public void testSetFenString() {
+	public void testSetState() {
 		Chess chess = new Chess();
 
 		// positions only
