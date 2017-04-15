@@ -13,5 +13,8 @@ public class ConnectFourTest {
 		ConnectFour connectFour = new ConnectFour();
 		connectFour.setStartPosition();
 		assertEquals("7/7/7/7/7/7 b", connectFour.getState());
+		
+		connectFour.move("1");
+		assertEquals("7/7/7/7/7/b6 w", connectFour.getState());
 	}
 }

@@ -68,7 +68,7 @@ public abstract class AbstractStonesInARow implements Game {
 	public String getState() {
 		StringBuilder state = new StringBuilder();
 		
-		for (int y = 0; y < boardHeight; y++) {
+		for (int y = boardHeight - 1; y >= 0; y--) {
 			int emptyCount = 0;
 			for (int x = 0; x < boardWidth; x++) {
 				Side position = getPosition(x, y);
@@ -87,7 +87,7 @@ public abstract class AbstractStonesInARow implements Game {
 				state.append(emptyCount);
 			}
 			
-			if (y < boardHeight - 1) {
+			if (y > 0) {
 				state.append("/");
 			}
 		}
