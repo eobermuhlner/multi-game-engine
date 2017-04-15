@@ -341,8 +341,12 @@ public class Chess implements Game {
 			positions.add(newPosition);
 		}
 		
+		// TODO update castlePositions
+		
 		sideToMove = sideToMove.otherSide();
-		moveNumber++;
+		if (sideToMove == Side.White) {
+			moveNumber++;
+		}
 		
 		if (move.getKill() != null || source.getPiece() == Piece.Pawn) {
 			halfMoveSinceCaptureOrPawnAdvanceNumber = 0;

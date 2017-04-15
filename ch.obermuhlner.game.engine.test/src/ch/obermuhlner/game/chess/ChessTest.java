@@ -20,6 +20,9 @@ public class ChessTest {
 		Chess chess = new Chess();
 		chess.setStartPosition();
 		assertEquals("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", chess.getState());
+		
+		chess.move("e2e3");
+		assertEquals("rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR b KQkq - 0 1", chess.getState());
 	}
 
 	@Test
