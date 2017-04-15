@@ -23,8 +23,6 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 
 	protected Button[] buttonFields;
 	
-	ExecutorService executor = Executors.newFixedThreadPool(1);
-	
 	public AbstractRectBoard(int boardWidth, int boardHeight, String gameName) {
 		this.gameEngine = createGameEngine(gameName);
 		this.boardWidth = boardWidth;
@@ -114,7 +112,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 			return;
 		}
 		
-		executor.submit(() -> {
+		new Thread(() -> {
 			Side sideToMove = gameEngine.getSideToMove();
 			String opponentMove = gameEngine.bestMove();
 			Platform.runLater(() -> {
@@ -126,7 +124,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 				updateGameInfo();
 				updateValidMoves();
 			});
-		});
+		}).start();
 	}
 
 	private void updateGameInfo() {

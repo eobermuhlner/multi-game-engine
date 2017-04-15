@@ -55,13 +55,6 @@ public class MultiGameApp extends Application {
         }
 }
 	
-	@Override
-	public void stop() throws Exception {
-		// TODO shutdown executor 
-		
-		super.stop();
-	}
-
 	private void addGame(TabPane currentGamesPane, String name, Node gameNode) {
 		currentGamesPane.getTabs().add(new Tab(name, gameNode));
 	}
