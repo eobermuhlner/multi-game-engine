@@ -16,7 +16,7 @@ public class ConnectFour extends AbstractStonesInARow {
 	}
 
 	public ConnectFour(int boardWidth, int boardHeight) {
-		super(boardWidth, boardHeight, 4, true);
+		super(boardWidth, boardHeight, 4, false);
 	}
 
 	@Override
