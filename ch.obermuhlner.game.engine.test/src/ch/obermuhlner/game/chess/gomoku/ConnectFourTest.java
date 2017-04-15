@@ -17,4 +17,11 @@ public class ConnectFourTest {
 		connectFour.move("1");
 		assertEquals("7/7/7/7/7/b6 w", connectFour.getState());
 	}
+	
+	@Test
+	public void testSetState() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/7/7/b6 w");
+		assertEquals("7/7/7/7/7/b6 w", connectFour.getState());
+	}
 }

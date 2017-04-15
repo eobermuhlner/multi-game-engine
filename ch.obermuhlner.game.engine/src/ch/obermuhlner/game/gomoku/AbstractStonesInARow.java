@@ -49,12 +49,17 @@ public abstract class AbstractStonesInARow implements Game {
 		
 		String[] split = state.split(" +");
 		
-		int index = 0;
 		if (split.length > 0) {
+			int y = boardHeight - 1;
+			int x = 0;
 			for (int i = 0; i < split[0].length(); i++) {
 				char c = split[0].charAt(i);
-				if (c != '/') {
-					board[index++] = toSide(c);
+				if (c == '/') {
+					y--;
+					x = 0;
+				} else {
+					setPosition(x, y, toSide(c));
+					x++;
 				}
 			}
 		}
