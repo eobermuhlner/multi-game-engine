@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.StoppableCalculation;
+import ch.obermuhlner.game.impl.TrivialCalculation;
 import ch.obermuhlner.util.CheckArgument;
 import ch.obermuhlner.util.GameUtil;
 import ch.obermuhlner.util.Tuple2;

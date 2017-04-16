@@ -1,4 +1,4 @@
-package ch.obermuhlner.game.engine.random;
+package ch.obermuhlner.game.impl;
 
 import java.util.function.Supplier;
 

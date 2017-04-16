@@ -9,6 +9,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
+import ch.obermuhlner.game.impl.TimedCalculation;
 import ch.obermuhlner.util.CheckArgument;
 import ch.obermuhlner.util.GameUtil;
 import ch.obermuhlner.util.Tuple2;

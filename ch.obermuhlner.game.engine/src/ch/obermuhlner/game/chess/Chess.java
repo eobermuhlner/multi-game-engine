@@ -1,5 +1,6 @@
 package ch.obermuhlner.game.chess;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,7 +9,9 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.RandomEngine;
+import ch.obermuhlner.game.engine.lookup.FileLookupTable;
+import ch.obermuhlner.game.engine.lookup.LookupEngine;
+import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.util.Tuple2;
 
 public class Chess implements Game {
@@ -568,7 +571,13 @@ public class Chess implements Game {
 	}
 	
 	public static void main(String[] args) {
-		Engine<Chess> engine = new RandomEngine<>(new Chess());
+		//Engine<Chess> engine = new RandomEngine<>(new Chess());
+		LookupEngine<Chess> lookupEngine = new LookupEngine<>(new MinMaxEngine<Chess>(new Chess(), 3));
+		FileLookupTable<Chess> fileLookupTable = new FileLookupTable<>(() -> new Chess());
+		fileLookupTable.load(Paths.get("resources", "chess_openings.txt").toFile());
+		lookupEngine.addLookupTable(fileLookupTable);
+		Engine<Chess> engine = lookupEngine;
+		
 		GameCommandLine.playGame(engine);
 	}
 }
