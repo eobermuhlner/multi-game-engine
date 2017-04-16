@@ -9,6 +9,8 @@ import ch.obermuhlner.game.gomoku.ConnectFour;
 
 public class ConnectFourTest {
 
+	private static final double EPSILON = 0.001;
+
 	@Test
 	public void testGetState() {
 		ConnectFour connectFour = new ConnectFour();
@@ -119,8 +121,24 @@ public class ConnectFourTest {
 		connectFour.move("2");
 		connectFour.move("1");
 		connectFour.move("1");
-		System.out.println(connectFour.getDiagram());
 		assertEquals(true, connectFour.isFinished());
 		assertEquals(Side.White, connectFour.getWinner());
 	}
+
+	@Test
+	public void testScore1() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.move("1");
+		assertEquals(-3, connectFour.getScore(), EPSILON);
+	}
+	
+	@Test
+	public void testScore2() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.move("1");
+		connectFour.move("7");
+		System.out.println(connectFour.getDiagram());
+		assertEquals(0, connectFour.getScore(), EPSILON);
+	}
+	
 }

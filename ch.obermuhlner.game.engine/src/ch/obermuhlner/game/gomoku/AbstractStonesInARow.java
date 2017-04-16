@@ -181,12 +181,14 @@ public abstract class AbstractStonesInARow implements Game {
 		for (int y = 0; y < boardHeight; y++) {
 			// horizontal
 			score += getScore(0, y, 1, 0);
-			
-			// diagonal left side going down/right
-			score += getScore(0, y, 1, 1);
+	
+			if (y > 0) {
+				// diagonal left side going down/right
+				score += getScore(0, y, 1, 1);
 
-			// diagonal left side going up/right
-			score += getScore(0, y, 1, -1);
+				// diagonal left side going up/right
+				score += getScore(0, y, 1, -1);
+			}
 		}
 		
 		return score;
@@ -238,32 +240,8 @@ public abstract class AbstractStonesInARow implements Game {
 			lastPosition = position;
 		}
 
-		switch(position) {
-		case White:
-			if (lastPosition == Side.Black) {
-				leftOpen = false;
-			} else if (lastPosition == Side.None) {
-				leftOpen = true;
-			}
-			score -= calculateScore(blackCount, leftOpen, false);
-			whiteCount++;
-			score += calculateScore(whiteCount, leftOpen, true);
-			break;
-		case Black:
-			if (lastPosition == Side.White) {
-				leftOpen = false;
-			} else if (lastPosition == Side.None) {
-				leftOpen = true;
-			}
-			score += calculateScore(whiteCount, leftOpen, false);
-			blackCount++;
-			score -= calculateScore(blackCount, leftOpen, true);
-			break;
-		case None:
-			score -= calculateScore(blackCount, leftOpen, true);
-			score += calculateScore(whiteCount, leftOpen, true);
-			break;
-		}
+		score -= calculateScore(blackCount, leftOpen, false);
+		score += calculateScore(whiteCount, leftOpen, false);
 
 		return score;
 	}
