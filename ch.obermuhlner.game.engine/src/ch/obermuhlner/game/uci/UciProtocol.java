@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,10 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.StoppableCalculation;
 import ch.obermuhlner.game.chess.Chess;
+import ch.obermuhlner.game.chess.SyzygyRestLookupTable;
+import ch.obermuhlner.game.engine.lookup.FileLookupTable;
+import ch.obermuhlner.game.engine.lookup.LookupEngine;
+import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
@@ -145,7 +150,17 @@ public class UciProtocol {
 	}
 
 	private static Engine<Chess> createChessEngine() {
-		return new MonteCarloEngine<>(new Chess());
+		LookupEngine<Chess> lookupEngine = new LookupEngine<>(new MinMaxEngine<Chess>(new Chess(), 3));
+		
+		FileLookupTable<Chess> fileLookupTable = new FileLookupTable<>(() -> new Chess());
+		fileLookupTable.load(Paths.get("resources", "chess_openings.txt").toFile());
+		lookupEngine.addLookupTable(fileLookupTable);
+		
+		SyzygyRestLookupTable endgameLookupTable = new SyzygyRestLookupTable();
+		lookupEngine.addLookupTable(endgameLookupTable);
+		
+
+		return lookupEngine;
 	}
 
 	private static Engine<TicTacToe> createTicTacToeEngine() {
