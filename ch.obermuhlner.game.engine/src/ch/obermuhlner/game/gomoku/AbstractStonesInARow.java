@@ -54,12 +54,21 @@ public abstract class AbstractStonesInARow implements Game {
 			int x = 0;
 			for (int i = 0; i < split[0].length(); i++) {
 				char c = split[0].charAt(i);
-				if (c == '/') {
+				switch (c) {
+				case '/':
 					y--;
 					x = 0;
-				} else {
-					setPosition(x, y, toSide(c));
+					break;
+				case 'w':
+					setPosition(x, y, Side.White);
 					x++;
+					break;
+				case 'b':
+					setPosition(x, y, Side.Black);
+					x++;
+					break;
+				default:
+					x += Character.getNumericValue(c);
 				}
 			}
 		}

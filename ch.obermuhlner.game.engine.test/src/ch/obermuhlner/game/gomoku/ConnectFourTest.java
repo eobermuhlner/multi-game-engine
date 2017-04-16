@@ -26,6 +26,9 @@ public class ConnectFourTest {
 		ConnectFour connectFour = new ConnectFour();
 		connectFour.setState("7/7/7/7/7/b6 w");
 		assertEquals("7/7/7/7/7/b6 w", connectFour.getState());
+		
+		connectFour.setState("7/7/7/7/6w/6b b");
+		assertEquals("7/7/7/7/6w/6b b", connectFour.getState());
 	}
 	
 	@Test
@@ -137,8 +140,63 @@ public class ConnectFourTest {
 		ConnectFour connectFour = new ConnectFour();
 		connectFour.move("1");
 		connectFour.move("7");
-		System.out.println(connectFour.getDiagram());
 		assertEquals(0, connectFour.getScore(), EPSILON);
 	}
 	
+	@Test
+	public void testScore3() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.move("1");
+		connectFour.move("7");
+		connectFour.move("1");
+		assertEquals(-102, connectFour.getScore(), EPSILON);
+	}
+	
+	@Test
+	public void testScore4() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/7/b6/b6 b");
+		assertEquals(-105, connectFour.getScore(), EPSILON);
+	}
+
+	@Test
+	public void testScore5() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/7/7/bb5 b");
+		System.out.println(connectFour.getDiagram());
+		assertEquals(-105, connectFour.getScore(), EPSILON);
+	}
+
+	@Test
+	public void testScore6() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/7/7/1bb4 b");
+		assertEquals(-1006, connectFour.getScore(), EPSILON);
+	}
+
+	@Test
+	public void testScore7() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/7/1b5/1b5 b");
+		assertEquals(-142, connectFour.getScore(), EPSILON);
+	}
+
+	@Test
+	public void testScore8() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/7/6b/6b b");
+		System.out.println(connectFour.getState());
+		System.out.println(connectFour.getDiagram());
+		assertEquals(-105, connectFour.getScore(), EPSILON);
+	}
+
+
+	@Test
+	public void testScore9() {
+		ConnectFour connectFour = new ConnectFour();
+		connectFour.setState("7/7/7/6b/6b/6w b");
+		System.out.println(connectFour.getState());
+		System.out.println(connectFour.getDiagram());
+		assertEquals(-104, connectFour.getScore(), EPSILON);
+	}
 }
