@@ -1,4 +1,4 @@
-package ch.obermuhlner.game.chess.gomoku;
+package ch.obermuhlner.game.gomoku;
 
 import static org.junit.Assert.*;
 
