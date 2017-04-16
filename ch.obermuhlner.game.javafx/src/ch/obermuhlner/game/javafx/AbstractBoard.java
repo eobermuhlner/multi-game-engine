@@ -1,6 +1,10 @@
 package ch.obermuhlner.game.javafx;
 
+import java.text.DecimalFormat;
+
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
@@ -11,9 +15,12 @@ import javafx.scene.layout.GridPane;
 
 public abstract class AbstractBoard {
 
+	private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("##0.0");
+
 	private BorderPane borderPane;
 	
 	protected StringProperty lastMoveProperty = new SimpleStringProperty();
+	protected DoubleProperty scoreProperty = new SimpleDoubleProperty();
 	protected StringProperty nextPlayerProperty = new SimpleStringProperty();
 	protected StringProperty winnerProperty = new SimpleStringProperty();
 
@@ -31,6 +38,13 @@ public abstract class AbstractBoard {
 			TextField textfieldLastMove = new TextField();
 			dataPane.add(textfieldLastMove, 1, rowIndex);
 			Bindings.bindBidirectional(textfieldLastMove.textProperty(), lastMoveProperty);
+			rowIndex++;
+		}
+		{
+			dataPane.add(new Label("Score"), 0, rowIndex);
+			TextField textfieldScore = new TextField();
+			dataPane.add(textfieldScore, 1, rowIndex);
+			Bindings.bindBidirectional(textfieldScore.textProperty(), scoreProperty, DOUBLE_FORMAT);
 			rowIndex++;
 		}
 		{

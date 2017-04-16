@@ -68,6 +68,11 @@ public class DirectGameEngine implements GameEngine {
 	}
 
 	@Override
+	public double getScore() {
+		return engine.getGame().getScore();
+	}
+	
+	@Override
 	public boolean isFinished() {
 		return engine.getGame().isFinished();
 	}

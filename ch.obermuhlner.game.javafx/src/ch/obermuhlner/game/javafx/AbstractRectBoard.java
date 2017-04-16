@@ -3,8 +3,6 @@ package ch.obermuhlner.game.javafx;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import ch.obermuhlner.game.engine.DirectGameEngine;
 import ch.obermuhlner.game.engine.GameEngine;
@@ -57,6 +55,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 					buttonField.setText(toString(sideToMove));
 					lastMoveProperty.set(move);
 					gameEngine.move(move);
+					scoreProperty.set(gameEngine.getScore());
 					
 					invalidateAllMoves();
 					opponentMove();
@@ -118,6 +117,8 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 			Platform.runLater(() -> {
 				lastMoveProperty.set(opponentMove);
 				gameEngine.move(opponentMove);
+				scoreProperty.set(gameEngine.getScore());
+
 				int moveIndex = moveToIndex(opponentMove);
 				buttonFields[moveIndex].setText(toString(sideToMove));
 

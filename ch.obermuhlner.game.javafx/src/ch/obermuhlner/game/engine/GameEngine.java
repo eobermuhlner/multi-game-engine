@@ -39,6 +39,8 @@ public interface GameEngine {
 	
 	String bestMove();
 	
+	double getScore();
+	
 	boolean isFinished();
 	
 	Side getWinner();
