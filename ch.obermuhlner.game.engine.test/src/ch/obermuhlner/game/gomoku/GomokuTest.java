@@ -23,5 +23,8 @@ public class GomokuTest {
 		Gomoku gomoku = new Gomoku();
 		gomoku.setState("19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/b18 w");
 		assertEquals("19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/b18 w", gomoku.getState());
+
+		gomoku.setState("19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/18b w");
+		assertEquals("19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/19/18b w", gomoku.getState());
 	}
 }
