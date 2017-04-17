@@ -19,7 +19,7 @@ public class Chess implements Game {
 
 	private Side sideToMove = Side.White;
 
-	private final List<Position> castlePositions = new ArrayList<>();
+	private List<Position> castlePositions = new ArrayList<>();
 
 	private int halfMoveSinceCaptureOrPawnAdvanceNumber = 0;
 	private int moveNumber = 0;
@@ -307,10 +307,25 @@ public class Chess implements Game {
 				.filter(position -> position.getX() == sourceX && position.getY() == sourceY)
 				.findAny()
 				.get();
-		Position target = positions.stream()
-				.filter(position -> position.getX() == targetX && position.getY() == targetY)
+		Position target;
+		
+		if (source.getPiece() == Piece.King && Math.abs(targetX - sourceX) == 2) {
+			boolean kingDirectionRight = targetX > sourceX;
+			target = castlePositions.stream()
+				.filter(rook -> rook.getSide() == source.getSide())
+				.filter(rook -> kingDirectionRight == (rook.getX() > source.getX()))
 				.findAny()
-				.orElse(null);
+				.get();
+			castlePositions = castlePositions.stream()
+				.filter(rook -> rook.getSide() != source.getSide())
+				.collect(Collectors.toList());
+
+		} else {
+			target = positions.stream()
+					.filter(position -> position.getX() == targetX && position.getY() == targetY)
+					.findAny()
+					.orElse(null);
+		}
 
 		move(new Move(source, targetX, targetY, target, convert));
 	}

@@ -261,14 +261,24 @@ public class ChessTest {
 		assertEquals(true, chess.isFinished());
 		assertMoves(getValidMoves(chess)); // no moves
 	}	
-
+	
 	@Test
 	public void testKingsThreateningEachOther() {
 		Chess chess = newChess(Side.White, "Ka1", "kc1");
 		assertEquals(false, chess.isCheck(Side.White));
 		assertEquals(false, chess.isFinished());
 		assertMoves(getValidMoves(chess), "a1a2");
-	}	
+	}
+	
+	@Test
+	public void testCastle() {
+		Chess chess = new Chess();
+		chess.setState("r3kbnN/1pp2ppp/p1p1b3/8/5P2/2N5/Pq1P2PP/R2QK2R b KQq - 1 11");
+		chess.move("e8c8");
+		System.out.println(chess.getDiagram());
+		assertEquals("2kr1bnN/1pp2ppp/p1p1b3/8/5P2/2N5/Pq1P2PP/R2QK2R w KQ - 2 12", chess.getState());
+		// Note: Cutechess (stockfish?) resets the half move clock after castling. The FIDE rules do not!
+	}
 
 	private List<String> whiteToMove(String... positions) {
 		Chess chess = newChess(Side.White, positions);
