@@ -7,6 +7,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.chess.Chess;
 import ch.obermuhlner.game.engine.random.MinMaxEngine;
+import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.game.gomoku.Gomoku;
 import ch.obermuhlner.game.mill.Mill;
@@ -18,23 +19,21 @@ public class DirectGameEngine implements GameEngine {
 	
 	@Override
 	public void setGame(String gameName) {
-		Game game = createGame(gameName);
-		
-		engine = new MinMaxEngine<>(game);
+		engine = createEngine(gameName);
 	}
 
-	private Game createGame(String gameName) {
+	private Engine<?> createEngine(String gameName) {
 		switch(gameName) {
 		case "tictactoe":
-			return new TicTacToe();
+			return new MinMaxEngine<Game>(new TicTacToe(), 5);
 		case "gomoku":
-			return new Gomoku();
+			return new MinMaxEngine<Game>(new Gomoku(), 3);
 		case "connectfour":
-			return new ConnectFour();
+			return new MinMaxEngine<Game>(new ConnectFour(), 5);
 		case "mill":
-			return new Mill();
+			return new RandomEngine<Game>(new Mill());
 		case "chess":
-			return new Chess();
+			return new MinMaxEngine<Game>(new Chess(), 3);
 		default:
 		}
 		throw new IllegalArgumentException("Unknown game: " + gameName);
