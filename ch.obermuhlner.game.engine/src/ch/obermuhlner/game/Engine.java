@@ -17,7 +17,7 @@ public interface Engine<G extends Game> {
 	/**
 	 * Returns the best move after calculating for a default time or to a default depth.
 	 * 
-	 * @return the best move
+	 * @return the best move, or <code>null</code> if none
 	 */
 	String bestMove();
 
@@ -25,7 +25,7 @@ public interface Engine<G extends Game> {
 	 * Returns a {@link StoppableCalculation} that calculates the best move.
 	 * 
 	 * @param milliseconds the given time to calculate the best move 
-	 * @return the {@link StoppableCalculation} that will return the best move
+	 * @return the {@link StoppableCalculation} that will return the best move, or <code>null</code> if none
 	 */
 	StoppableCalculation<String> bestMove(long milliseconds);
 
