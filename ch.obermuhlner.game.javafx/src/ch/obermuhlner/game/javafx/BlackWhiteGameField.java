@@ -15,14 +15,13 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class BlackWhiteGameField extends GameField {
 	
-	private Shape background;
-	private Shape whiteStone;
-	private Shape blackStone;
-	private Shape greenGlow;
+	private Node background;
+	private Node whiteStone;
+	private Node blackStone;
+	private Node greenGlow;
 	
 	private ObjectProperty<Side> sideProperty = new SimpleObjectProperty<>(Side.None);
 
@@ -33,7 +32,7 @@ public class BlackWhiteGameField extends GameField {
 				new Circle(size * 0.4, Color.BLACK));
 	}
 
-	public BlackWhiteGameField(int size, Shape background, Shape whiteStone, Shape blackStone) {
+	public BlackWhiteGameField(int size, Node background, Node whiteStone, Node blackStone) {
 		this.background = background;
 		this.whiteStone = whiteStone;
 		this.blackStone = blackStone;
