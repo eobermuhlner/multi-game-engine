@@ -87,6 +87,11 @@ public class TicTacToe implements Game {
 	}
 	
 	@Override
+	public String getPositionState() {
+		return getState();
+	}
+	
+	@Override
 	public double getScore() {
 		// https://kartikkukreja.wordpress.com/2013/03/30/heuristic-function-for-tic-tac-toe/
 		double score = 0;

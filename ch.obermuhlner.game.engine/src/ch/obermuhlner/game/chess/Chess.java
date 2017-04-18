@@ -167,6 +167,20 @@ public class Chess implements Game {
 	public String getState() {
 		StringBuilder builder = new StringBuilder();
 
+		builder.append(getPositionState());
+		
+		builder.append(" ");
+		builder.append(halfMoveSinceCaptureOrPawnAdvanceNumber);
+		builder.append(" ");
+		builder.append(moveNumber);
+		
+		return builder.toString();
+	}
+
+	@Override
+	public String getPositionState() {
+		StringBuilder builder = new StringBuilder();
+
 		builder.append(toFenPositionString());
 		
 		builder.append(" ");
@@ -190,14 +204,9 @@ public class Chess implements Game {
 		
 		builder.append(" -"); // TODO en passant
 		
-		builder.append(" ");
-		builder.append(halfMoveSinceCaptureOrPawnAdvanceNumber);
-		builder.append(" ");
-		builder.append(moveNumber);
-		
 		return builder.toString();
 	}
-
+	
 	@Override
 	public double getScore() {
 		return getSideValue(Side.White) - getSideValue(Side.Black);

@@ -119,6 +119,11 @@ public abstract class AbstractStonesInARow implements Game {
 		return state.toString();
 	}
 
+	@Override
+	public String getPositionState() {
+		return getState();
+	}
+	
 	private Side toSide(char c) {
 		switch (c) {
 		case 'w':

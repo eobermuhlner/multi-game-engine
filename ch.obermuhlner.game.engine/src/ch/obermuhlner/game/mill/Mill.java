@@ -184,6 +184,11 @@ public class Mill implements Game {
 	}
 
 	@Override
+	public String getPositionState() {
+		return getState();
+	}
+	
+	@Override
 	public String getDiagram() {
 		StringBuilder diagram = new StringBuilder();
 		diagram.append(String.format("%s-----------%s-----------%s 7\n", toBoardString(A7), toBoardString(D7), toBoardString(G7)));

@@ -13,6 +13,8 @@ public interface Game {
 	
 	String getState();
 	
+	String getPositionState();
+	
 	String getDiagram();
 	
 	Side getSideToMove();
