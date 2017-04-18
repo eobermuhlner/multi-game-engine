@@ -9,17 +9,22 @@ import ch.obermuhlner.game.engine.GameEngine;
 import ch.obermuhlner.game.engine.GameEngine.Side;
 import javafx.application.Platform;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public abstract class AbstractRectBoard extends AbstractBoard {
+
+	private static final int SIZE = 30;
+
+	private static final Color LIGHT_BACKGROUND_COLOR = Color.rgb(181, 136, 99);
+	private static final Color DARK_BACKGROUND_COLOR = Color.rgb(240, 217, 181);
 
 	protected final GameEngine gameEngine;
 	
 	protected final int boardWidth;
 	protected final int boardHeight;
 
-	protected Button[] buttonFields;
+	protected BlackWhiteGameField fields[];
 	
 	public AbstractRectBoard(int boardWidth, int boardHeight, String gameName) {
 		this.gameEngine = createGameEngine(gameName);
@@ -37,22 +42,22 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 	}
 
 	protected Node createBoard() {
-		buttonFields = new Button[boardWidth * boardHeight];
+		fields = new BlackWhiteGameField[boardWidth * boardHeight];
 		
 		GridPane gridPane = new GridPane();
 
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
-				Button buttonField = new Button(" ");
-				buttonField.setPrefWidth(26);
-				buttonFields[toIndex(x, y)] = buttonField;
-				gridPane.add(buttonField, x, y);
+				Color beige = ((x+y) % 2 == 0) ? LIGHT_BACKGROUND_COLOR : DARK_BACKGROUND_COLOR;
+				BlackWhiteGameField field = new BlackWhiteGameField(SIZE, beige);
+				fields[toIndex(x, y)] = field;
+				gridPane.add(field, x, y);
 				
 				String move = toMove(x, y);
 				
-				buttonField.setOnAction(event -> {
+				field.setOnMouseClicked(event -> {
 					Side sideToMove = gameEngine.getSideToMove();
-					buttonField.setText(toString(sideToMove));
+					field.setSide(sideToMove);
 					lastMoveProperty.set(move);
 					gameEngine.move(move);
 					scoreProperty.set(gameEngine.getScore());
@@ -70,14 +75,13 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 	}
 	
 	protected Side getPosition(int x, int y) {
-		String text = buttonFields[toIndex(x, y)].getText();
-		return toSide(text);
+		return fields[toIndex(x, y)].getSide();
 	}
 	
 	private void invalidateAllMoves() {
-		for (int index = 0; index < buttonFields.length; index++) {
-			if (buttonFields[index] != null) {
-				buttonFields[index].setDisable(true);
+		for (int index = 0; index < fields.length; index++) {
+			if (fields[index] != null) {
+				fields[index].setDisable(true);
 			}
 		}
 	}
@@ -90,9 +94,9 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 			validMoveIndexes.add(index);
 		}
 		
-		for (int index = 0; index < buttonFields.length; index++) {
-			if (buttonFields[index] != null) {
-				buttonFields[index].setDisable(!validMoveIndexes.contains(index));
+		for (int index = 0; index < fields.length; index++) {
+			if (fields[index] != null) {
+				fields[index].setDisable(!validMoveIndexes.contains(index));
 			}
 		}
 	}
@@ -120,7 +124,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 				scoreProperty.set(gameEngine.getScore());
 
 				int moveIndex = moveToIndex(opponentMove);
-				buttonFields[moveIndex].setText(toString(sideToMove));
+				fields[moveIndex].setSide(sideToMove);
 
 				updateGameInfo();
 				updateValidMoves();
@@ -149,16 +153,6 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 		}
 		
 		throw new IllegalArgumentException("Unknown side: " + side);
-	}
-	
-	private static Side toSide(String text) {
-		switch(text) {
-		case "X":
-			return Side.White;
-		case "O":
-			return Side.Black;
-		}
-		return Side.None;
 	}
 
 }
