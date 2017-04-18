@@ -71,7 +71,7 @@ public class FileLookupTable<G extends Game> implements LookupTable<G> {
 					probability = Double.parseDouble(moves[++i]);
 				}
 				
-				String fen = game.getState();
+				String fen = game.getPositionState();
 				
 				List<Tuple2<String, Double>> recommendedMoves = fenToRecommendedMoves.computeIfAbsent(fen, (key) -> new ArrayList<>());
 				recommendedMoves.add(Tuple2.of(move, probability));
@@ -83,7 +83,7 @@ public class FileLookupTable<G extends Game> implements LookupTable<G> {
 
 	@Override
 	public String bestMove(G game) {
-		String fen = game.getState();
+		String fen = game.getPositionState();
 		
 		List<Tuple2<String, Double>> recommendedMoves = fenToRecommendedMoves.get(fen);
 		
