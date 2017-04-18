@@ -3,7 +3,7 @@ package ch.obermuhlner.game.javafx;
 public class Gomoku extends AbstractRectBoard {
 	
 	public Gomoku() {
-		super(19, 19, 30, "gomoku");
+		super("gomoku", 19, 19, 30);
 	}
 	
 	protected String toMove(int x, int y) {

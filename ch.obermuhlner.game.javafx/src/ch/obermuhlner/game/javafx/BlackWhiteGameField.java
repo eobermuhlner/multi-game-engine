@@ -15,26 +15,35 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class BlackWhiteGameField extends GameField {
 	
-	private Rectangle background;
-	private Circle whiteCircle;
-	private Circle blackCircle;
-	private Circle greenGlow;
+	private Shape background;
+	private Shape whiteStone;
+	private Shape blackStone;
+	private Shape greenGlow;
 	
 	private ObjectProperty<Side> sideProperty = new SimpleObjectProperty<>(Side.None);
 
 	public BlackWhiteGameField(int size, Paint backgroundPaint) {
-		background = new Rectangle(size, size, backgroundPaint);
-		whiteCircle = new Circle(size * 0.4, Color.WHITE);
-		blackCircle = new Circle(size * 0.4, Color.BLACK);
+		this(size, 
+				new Rectangle(size, size, backgroundPaint),
+				new Circle(size * 0.4, Color.WHITE),
+				new Circle(size * 0.4, Color.BLACK));
+	}
+
+	public BlackWhiteGameField(int size, Shape background, Shape whiteStone, Shape blackStone) {
+		this.background = background;
+		this.whiteStone = whiteStone;
+		this.blackStone = blackStone;
 		
 		RadialGradient greenGlowGradient = new RadialGradient(0.0, 0.0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
 				new Stop(0.0, Color.LIGHTGREEN), new Stop(1.0, Color.TRANSPARENT));
 		greenGlow = new Circle(size * 0.5, greenGlowGradient);
 		
 		setSkin(new SkinBase<BlackWhiteGameField>(this) {
+			// just an empty skin seems to be enough
 		});
 		
 		sideProperty.addListener((observable, oldValue, newValue) -> {
@@ -58,10 +67,10 @@ public class BlackWhiteGameField extends GameField {
 		
 		switch (side) {
 		case White:
-			nodes.add(whiteCircle);
+			nodes.add(whiteStone);
 			break;
 		case Black:
-			nodes.add(blackCircle);
+			nodes.add(blackStone);
 			break;
 		case None:
 			// nothing

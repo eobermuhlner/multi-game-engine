@@ -3,6 +3,7 @@ package ch.obermuhlner.game.javafx;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import ch.obermuhlner.game.engine.DirectGameEngine;
 import ch.obermuhlner.game.engine.GameEngine;
@@ -21,17 +22,23 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 	
 	protected final int boardWidth;
 	protected final int boardHeight;
-
-	private final int fieldSize;
+	
+	private BiFunction<Integer, Integer, BlackWhiteGameField> fieldCreator;
 
 	protected BlackWhiteGameField fields[];
 
+	public AbstractRectBoard(String gameName, int boardWidth, int boardHeight, int fieldSize) {
+		this(gameName, boardWidth, boardHeight, (x, y) -> {
+			Color backgroundColor = ((x+y) % 2 == 0) ? LIGHT_BACKGROUND_COLOR : DARK_BACKGROUND_COLOR;
+			return new BlackWhiteGameField(fieldSize, backgroundColor);
+		});
+	}
 	
-	public AbstractRectBoard(int boardWidth, int boardHeight, int fieldSize, String gameName) {
-		this.fieldSize = fieldSize;
+	public AbstractRectBoard(String gameName, int boardWidth, int boardHeight, BiFunction<Integer, Integer, BlackWhiteGameField> fieldCreator) {
 		this.gameEngine = createGameEngine(gameName);
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
+		this.fieldCreator = fieldCreator;
 
 		setupBoard(createBoard());
 	}
@@ -50,8 +57,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
-				Color beige = ((x+y) % 2 == 0) ? LIGHT_BACKGROUND_COLOR : DARK_BACKGROUND_COLOR;
-				BlackWhiteGameField field = new BlackWhiteGameField(fieldSize, beige);
+				BlackWhiteGameField field = fieldCreator.apply(x, y);
 				fields[toIndex(x, y)] = field;
 				gridPane.add(field, x, y);
 				

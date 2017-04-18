@@ -1,11 +1,23 @@
 package ch.obermuhlner.game.javafx;
 
+
 import ch.obermuhlner.game.engine.GameEngine.Side;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class ConnectFour extends AbstractRectBoard {
 	
 	public ConnectFour() {
-		super(7, 6, 50, "connectfour");
+		super("connectfour", 7, 6, (x, y) -> {
+			int size = 50;
+			Color backgroundColor = ((x+y) % 2 == 0) ? Color.DARKGREY : Color.GREY;
+			Shape background = new Rectangle(size, size, backgroundColor);
+			Circle whiteStone = new Circle(size * 0.4, Color.BLUE);
+			Circle blackStone = new Circle(size * 0.4, Color.RED);
+			return new BlackWhiteGameField(50, background, whiteStone, blackStone);
+		});
 	}
 	
 	protected String toMove(int x, int y) {
