@@ -5,7 +5,7 @@ import ch.obermuhlner.game.engine.GameEngine.Side;
 public class ConnectFour extends AbstractRectBoard {
 	
 	public ConnectFour() {
-		super(7, 6, "connectfour");
+		super(7, 6, 50, "connectfour");
 	}
 	
 	protected String toMove(int x, int y) {

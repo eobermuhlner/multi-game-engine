@@ -14,8 +14,6 @@ import javafx.scene.paint.Color;
 
 public abstract class AbstractRectBoard extends AbstractBoard {
 
-	private static final int SIZE = 30;
-
 	private static final Color LIGHT_BACKGROUND_COLOR = Color.rgb(181, 136, 99);
 	private static final Color DARK_BACKGROUND_COLOR = Color.rgb(240, 217, 181);
 
@@ -24,9 +22,13 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 	protected final int boardWidth;
 	protected final int boardHeight;
 
+	private final int fieldSize;
+
 	protected BlackWhiteGameField fields[];
+
 	
-	public AbstractRectBoard(int boardWidth, int boardHeight, String gameName) {
+	public AbstractRectBoard(int boardWidth, int boardHeight, int fieldSize, String gameName) {
+		this.fieldSize = fieldSize;
 		this.gameEngine = createGameEngine(gameName);
 		this.boardWidth = boardWidth;
 		this.boardHeight = boardHeight;
@@ -49,7 +51,7 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 		for (int y = 0; y < boardHeight; y++) {
 			for (int x = 0; x < boardWidth; x++) {
 				Color beige = ((x+y) % 2 == 0) ? LIGHT_BACKGROUND_COLOR : DARK_BACKGROUND_COLOR;
-				BlackWhiteGameField field = new BlackWhiteGameField(SIZE, beige);
+				BlackWhiteGameField field = new BlackWhiteGameField(fieldSize, beige);
 				fields[toIndex(x, y)] = field;
 				gridPane.add(field, x, y);
 				
