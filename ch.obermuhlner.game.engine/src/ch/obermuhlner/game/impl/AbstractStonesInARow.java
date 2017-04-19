@@ -1,4 +1,4 @@
-package ch.obermuhlner.game.gomoku;
+package ch.obermuhlner.game.impl;
 
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;

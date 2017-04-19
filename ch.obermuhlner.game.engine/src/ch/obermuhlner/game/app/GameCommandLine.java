@@ -7,10 +7,10 @@ import java.util.List;
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
+import ch.obermuhlner.game.connectfour.ConnectFour;
 import ch.obermuhlner.game.engine.random.MinMaxEngine;
 import ch.obermuhlner.game.engine.random.MonteCarloEngine;
 import ch.obermuhlner.game.engine.random.RandomEngine;
-import ch.obermuhlner.game.gomoku.ConnectFour;
 import ch.obermuhlner.util.Tuple2;
 
 public class GameCommandLine {

@@ -1,11 +1,11 @@
-package ch.obermuhlner.game.gomoku;
+package ch.obermuhlner.game.connectfour;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import ch.obermuhlner.game.Side;
-import ch.obermuhlner.game.gomoku.ConnectFour;
+import ch.obermuhlner.game.connectfour.ConnectFour;
 
 public class ConnectFourTest {
 

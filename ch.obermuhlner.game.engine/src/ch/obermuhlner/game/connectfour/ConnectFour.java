@@ -1,4 +1,4 @@
-package ch.obermuhlner.game.gomoku;
+package ch.obermuhlner.game.connectfour;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
 import ch.obermuhlner.game.engine.random.MinMaxEngine;
+import ch.obermuhlner.game.impl.AbstractStonesInARow;
 import ch.obermuhlner.util.Tuple2;
 
 public class ConnectFour extends AbstractStonesInARow {
