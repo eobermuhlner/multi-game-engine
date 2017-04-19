@@ -203,7 +203,7 @@ public abstract class AbstractStonesInARow implements Game {
 			// horizontal
 			score += getScore(0, y, 1, 0);
 	
-			if (y > 0) {
+			if (y > 0 && y < boardHeight - 1) {
 				// diagonal left side going down/right
 				score += getScore(0, y, 1, 1);
 
