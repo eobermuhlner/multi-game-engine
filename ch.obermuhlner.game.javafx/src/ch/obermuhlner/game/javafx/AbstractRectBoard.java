@@ -95,6 +95,9 @@ public abstract class AbstractRectBoard extends AbstractBoard {
 	}
 
 	private void updateValidMoves() {
+		if (gameEngine.isFinished()) {
+			return;
+		}
 		List<String> validMoves = gameEngine.getValidMoves();
 		Set<Integer> validMoveIndexes = new HashSet<>();
 		for (String move : validMoves) {
