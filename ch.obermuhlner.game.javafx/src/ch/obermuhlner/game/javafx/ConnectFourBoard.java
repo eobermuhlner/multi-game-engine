@@ -7,9 +7,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public class ConnectFour extends AbstractRectBoard {
+public class ConnectFourBoard extends AbstractRectBoard {
 	
-	public ConnectFour() {
+	public ConnectFourBoard() {
 		super("connectfour", 7, 6, (x, y) -> {
 			int size = 50;
 			Color backgroundColor = ((x+y) % 2 == 0) ? Color.DARKGREY : Color.GREY;

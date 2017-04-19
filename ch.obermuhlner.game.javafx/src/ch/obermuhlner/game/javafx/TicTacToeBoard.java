@@ -1,8 +1,8 @@
 package ch.obermuhlner.game.javafx;
 
-public class TicTacToe extends AbstractRectBoard {
+public class TicTacToeBoard extends AbstractRectBoard {
 
-	public TicTacToe() {
+	public TicTacToeBoard() {
 		super("tictactoe", 3, 3, 100);
 	}
 	

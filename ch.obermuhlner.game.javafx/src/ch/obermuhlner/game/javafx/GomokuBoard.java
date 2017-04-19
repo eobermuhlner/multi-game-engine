@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
-public class Gomoku extends AbstractRectBoard {
+public class GomokuBoard extends AbstractRectBoard {
 	
 	private static final int FIELD_SIZE = 30;
 	private static final double HALF_FIELD_SIZE = FIELD_SIZE / 2.0;
@@ -14,7 +14,7 @@ public class Gomoku extends AbstractRectBoard {
 
 	private static final Color BACKGROUND_COLOR = Color.rgb(181, 136, 99);
 
-	public Gomoku() {
+	public GomokuBoard() {
 		super("gomoku", 19, 19, (x, y) -> {
 			return new BlackWhiteGameField(FIELD_SIZE, Color.TRANSPARENT);
 		});
