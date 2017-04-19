@@ -34,7 +34,7 @@ public class MultiGameApp extends Application {
         	Button buttonTicTacToe = new Button("Tic Tac Toe");
         	startGamesPane.getChildren().add(buttonTicTacToe);
         	buttonTicTacToe.setOnAction(event -> {
-        		addGame(currentGamesPane, "Tic Tac Toe", createTicTacToe());
+        		addGame(currentGamesPane, "Tic Tac Toe", createTicTacToeBoard());
         	});
         }
 
@@ -42,7 +42,7 @@ public class MultiGameApp extends Application {
         	Button buttonGomoku = new Button("Gomoku");
         	startGamesPane.getChildren().add(buttonGomoku);
         	buttonGomoku.setOnAction(event -> {
-        		addGame(currentGamesPane, "Gomoku", createGomoku());
+        		addGame(currentGamesPane, "Gomoku", createGomokuBoard());
         	});
         }
 
@@ -50,7 +50,15 @@ public class MultiGameApp extends Application {
         	Button buttonConnectFour = new Button("Connect Four");
         	startGamesPane.getChildren().add(buttonConnectFour);
         	buttonConnectFour.setOnAction(event -> {
-        		addGame(currentGamesPane, "Connect Four", createConnectFour());
+        		addGame(currentGamesPane, "Connect Four", createConnectFourBoard());
+        	});
+        }
+
+        {
+        	Button buttonMill = new Button("Mill");
+        	startGamesPane.getChildren().add(buttonMill);
+        	buttonMill.setOnAction(event -> {
+        		addGame(currentGamesPane, "Mill", createMillBoard());
         	});
         }
 }
@@ -59,18 +67,23 @@ public class MultiGameApp extends Application {
 		currentGamesPane.getTabs().add(new Tab(name, gameNode));
 	}
 
-	private Node createTicTacToe() {
-		TicTacToe ticTacToe = new TicTacToe();
+	private Node createTicTacToeBoard() {
+		TicTacToeBoard ticTacToe = new TicTacToeBoard();
 		return ticTacToe.getBoard();
 	}
 
-	private Node createGomoku() {
-		Gomoku gomoku = new Gomoku();
+	private Node createGomokuBoard() {
+		GomokuBoard gomoku = new GomokuBoard();
 		return gomoku.getBoard();
 	}
 
-	private Node createConnectFour() {
-		ConnectFour connectFour = new ConnectFour();
+	private Node createConnectFourBoard() {
+		ConnectFourBoard connectFour = new ConnectFourBoard();
+		return connectFour.getBoard();
+	}
+
+	private Node createMillBoard() {
+		MillBoard connectFour = new MillBoard();
 		return connectFour.getBoard();
 	}
 
