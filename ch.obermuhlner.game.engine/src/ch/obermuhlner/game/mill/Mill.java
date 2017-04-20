@@ -1,7 +1,9 @@
 package ch.obermuhlner.game.mill;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
@@ -13,8 +15,6 @@ import ch.obermuhlner.util.Tuple2;
 
 public class Mill implements Game {
 
-	private static final char[] LETTERS = { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-	
 	private static final int A1 = 0;
 	private static final int D1 = 1;
 	private static final int G1 = 2;
@@ -48,41 +48,65 @@ public class Mill implements Game {
 
 	private static final int CELL_COUNT = 24;
 
-	private static final int[] GRID_TO_MOVES = new int[7*7];
+	private static final String[] CELL_TO_STRING = new String[CELL_COUNT];
 
+	private static final Map<String, Integer> STRING_TO_CELL = new HashMap<>();
+	
 	private static final int[][] VALID_MOVES = new int[CELL_COUNT][];
 
 	private static final int[][][] MILLS = new int[CELL_COUNT][][];
 
 	static {
-		for (int i = 0; i < GRID_TO_MOVES.length; i++) {
-			GRID_TO_MOVES[i] = -1;
-		}
-		GRID_TO_MOVES[toIndex("a7")] = A7;
-		GRID_TO_MOVES[toIndex("d7")] = D7;
-		GRID_TO_MOVES[toIndex("g7")] = G7;
-		GRID_TO_MOVES[toIndex("b6")] = B6;
-		GRID_TO_MOVES[toIndex("d6")] = D6;
-		GRID_TO_MOVES[toIndex("f6")] = F6;
-		GRID_TO_MOVES[toIndex("c5")] = C5;
-		GRID_TO_MOVES[toIndex("d5")] = D5;
-		GRID_TO_MOVES[toIndex("e5")] = E5;
-		GRID_TO_MOVES[toIndex("a4")] = A4;
-		GRID_TO_MOVES[toIndex("b4")] = B4;
-		GRID_TO_MOVES[toIndex("c4")] = C4;
-		GRID_TO_MOVES[toIndex("e4")] = E4;
-		GRID_TO_MOVES[toIndex("f4")] = F4;
-		GRID_TO_MOVES[toIndex("g4")] = G4;
-		GRID_TO_MOVES[toIndex("c3")] = C3;
-		GRID_TO_MOVES[toIndex("d3")] = D3;
-		GRID_TO_MOVES[toIndex("e3")] = E3;
-		GRID_TO_MOVES[toIndex("b2")] = B2;
-		GRID_TO_MOVES[toIndex("d2")] = D2;
-		GRID_TO_MOVES[toIndex("f2")] = F2;
-		GRID_TO_MOVES[toIndex("a1")] = A1;
-		GRID_TO_MOVES[toIndex("d1")] = D1;
-		GRID_TO_MOVES[toIndex("g1")] = G1;
+		CELL_TO_STRING[A1] = "a1";
+		CELL_TO_STRING[D1] = "d1";
+		CELL_TO_STRING[G1] = "g1";
+		CELL_TO_STRING[B2] = "b2";
+		CELL_TO_STRING[D2] = "d2";
+		CELL_TO_STRING[F2] = "f2";
+		CELL_TO_STRING[C3] = "c3";
+		CELL_TO_STRING[D3] = "d3";
+		CELL_TO_STRING[E3] = "e3";
+		CELL_TO_STRING[A4] = "a4";
+		CELL_TO_STRING[B4] = "b4";
+		CELL_TO_STRING[C4] = "c4";
+		CELL_TO_STRING[E4] = "e4";
+		CELL_TO_STRING[F4] = "f4";
+		CELL_TO_STRING[G4] = "g4";
+		CELL_TO_STRING[C5] = "c5";
+		CELL_TO_STRING[D5] = "d5";
+		CELL_TO_STRING[E5] = "e5";
+		CELL_TO_STRING[B6] = "b6";
+		CELL_TO_STRING[D6] = "d6";
+		CELL_TO_STRING[F6] = "f6";
+		CELL_TO_STRING[A7] = "a7";
+		CELL_TO_STRING[D7] = "d7";
+		CELL_TO_STRING[G7] = "g7";
 
+		STRING_TO_CELL.put("a1", A1);
+		STRING_TO_CELL.put("d1", D1);
+		STRING_TO_CELL.put("g1", G1);
+		STRING_TO_CELL.put("b2", B2);
+		STRING_TO_CELL.put("d2", D2);
+		STRING_TO_CELL.put("f2", F2);
+		STRING_TO_CELL.put("c3", C3);
+		STRING_TO_CELL.put("d3", D3);
+		STRING_TO_CELL.put("e3", E3);
+		STRING_TO_CELL.put("a4", A4);
+		STRING_TO_CELL.put("b4", B4);
+		STRING_TO_CELL.put("c4", C4);
+		STRING_TO_CELL.put("e4", E4);
+		STRING_TO_CELL.put("f4", F4);
+		STRING_TO_CELL.put("g4", G4);
+		STRING_TO_CELL.put("c5", C5);
+		STRING_TO_CELL.put("d5", D5);
+		STRING_TO_CELL.put("e5", E5);
+		STRING_TO_CELL.put("b6", B6);
+		STRING_TO_CELL.put("d6", D6);
+		STRING_TO_CELL.put("f6", F6);
+		STRING_TO_CELL.put("a7", A7);
+		STRING_TO_CELL.put("d7", D7);
+		STRING_TO_CELL.put("g7", G7);
+		
 		VALID_MOVES[A7] = new int[] { A4, D7 };
 		VALID_MOVES[D7] = new int[] { A7, G7, D6 };
 		VALID_MOVES[G7] = new int[] { D7, G4 };
@@ -257,7 +281,7 @@ public class Mill implements Game {
 
 	@Override
 	public void move(String move) {
-		int firstIndex = toIndex(move.charAt(0), move.charAt(1));
+		int firstIndex = toIndex(move.substring(0, 2));
 
 		int sourceIndex;
 		int targetIndex;
@@ -271,15 +295,15 @@ public class Mill implements Game {
 			if (move.charAt(2) == 'x') {
 				sourceIndex = -1;
 				targetIndex = firstIndex;
-				killIndex = toIndex(move.charAt(3), move.charAt(4));
+				killIndex = toIndex(move.substring(3, 5));
 			} else {
 				sourceIndex = firstIndex;
-				targetIndex = toIndex(move.charAt(2), move.charAt(3));
+				targetIndex = toIndex(move.substring(2, 4));
 				killIndex = -1;
 				
 				if (move.length() > 5) {
 					// charAt(4) should be 'x'
-					killIndex = toIndex(move.charAt(5), move.charAt(6));
+					killIndex = toIndex(move.substring(5, 7));
 				}
 			}
 		}
@@ -304,16 +328,6 @@ public class Mill implements Game {
 		
 		sideToMove = sideToMove.otherSide();
 		moveCount++;
-	}
-
-	private static int letterToInt(char letter) {
-		for (int i = 0; i < LETTERS.length; i++) {
-			if (letter == LETTERS[i]) {
-				return i;
-			}
-		}
-		
-		throw new IllegalArgumentException("Unknown position letter: " + letter);
 	}
 
 	@Override
@@ -448,9 +462,7 @@ public class Mill implements Game {
 		if (index < 0) {
 			return "-";
 		}
-		int x = index % 7;
-		int y = index / 7;
-		return String.valueOf(LETTERS[x]) + (y+1); 
+		return CELL_TO_STRING[index];
 	}
 
 	private String toKillingMove(int targetIndex, int killIndex) {
@@ -529,20 +541,13 @@ public class Mill implements Game {
 	}
 	
 	private static int toIndex(String xy) {
-		return toIndex(xy.charAt(0), xy.charAt(1));
+		Integer index = STRING_TO_CELL.get(xy);
+		if (index == null) {
+			throw new IllegalArgumentException("Invalid field: " + xy);
+		}
+		return index;
 	}
 	
-	private static int toIndex(char xChar, char yChar) {
-		int x = letterToInt(xChar);
-		int y = Character.getNumericValue(yChar) - 1;
-		
-		return toIndex(x, y);
-	}
-
-	private static int toIndex(int x, int y) {
-		return x + y * 7;
-	}
-
 	public static void main(String[] args) {
 		Engine<Mill> engine = new MonteCarloEngine<>(new Mill());
 		//Engine<Mill> engine = new RandomEngine<>(new Mill());
