@@ -208,13 +208,55 @@ public class MillBoard extends AbstractBoard {
 				gameEngine.move(opponentMove);
 				scoreProperty.set(gameEngine.getScore());
 
-				// TODO complex moves
-				fields.get(opponentMove).setSide(sideToMove);
+				executeMove(opponentMove, sideToMove);
 
 				updateGameInfo();
 				updateValidMoves();
 			});
 		}).start();
+	}
+
+	private void executeMove(String move, Side sideToMove) {
+		String first = move.substring(0, 2);
+		
+		String source;
+		String target;
+		String kill;
+		
+		if (move.length() <= 2) {
+			source = null;
+			target = first;
+			kill = null;
+		} else {
+			if (move.charAt(2) == 'x') {
+				source = null;
+				target = first;
+				kill = move.substring(3, 5);
+			} else {
+				source = first;
+				target = move.substring(2, 4);
+				kill = null;
+				
+				if (move.length() > 5) {
+					// charAt(4) should be 'x'
+					kill = move.substring(5, 7);
+				}
+			}
+		}
+		
+		executeMove(source, target, kill, sideToMove);
+	}
+	
+	private void executeMove(String source, String target, String kill, Side sideToMove) {
+		if (source != null) {
+			fields.get(source).setSide(Side.None);
+		}
+		
+		fields.get(target).setSide(sideToMove);
+		
+		if (kill != null) {
+			fields.get(kill).setSide(Side.None);
+		}
 	}
 
 	private void updateGameInfo() {
