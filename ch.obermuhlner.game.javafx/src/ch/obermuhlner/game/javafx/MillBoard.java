@@ -1,8 +1,10 @@
 package ch.obermuhlner.game.javafx;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import ch.obermuhlner.game.engine.DirectGameEngine;
 import ch.obermuhlner.game.engine.GameEngine;
@@ -48,8 +50,8 @@ public class MillBoard extends AbstractBoard {
 	private static final String D7 = "d7";
 	private static final String G7 = "g7";
 
-	private static final int FIELD_SIZE = 30;
-	private static final int FIELD_PLUS_MARGIN_SIZE = FIELD_SIZE + 10;
+	private static final int FIELD_SIZE = 50;
+	private static final int FIELD_PLUS_MARGIN_SIZE = FIELD_SIZE + 0;
 
 	private static final Color BACKGROUND_COLOR = Color.rgb(181, 136, 99);
 
@@ -57,6 +59,10 @@ public class MillBoard extends AbstractBoard {
 
 	private final Map<String, BlackWhiteGameField> fields = new HashMap<>();
 
+	private final Map<String, Set<String>> possibleTargets = new HashMap<>();
+	private final Set<String> possibleKillingTargets = new HashSet<>();
+	private final Set<String> possibleKills = new HashSet<>();
+	
 	public MillBoard() {
 		gameEngine = new DirectGameEngine();
 		gameEngine.setGame("mill");
@@ -157,23 +163,11 @@ public class MillBoard extends AbstractBoard {
 	}
 
 	private void addField(Group group, String fieldCoordinate, int x, int y) {
-		BlackWhiteGameField field = new BlackWhiteGameField(FIELD_SIZE, Color.TRANSPARENT);
+		BlackWhiteGameField field = new BlackWhiteGameField(FIELD_SIZE, Color.TRANSPARENT, 0.25);
 		group.getChildren().add(field);
 		
-		field.relocate(x * FIELD_PLUS_MARGIN_SIZE, y * FIELD_PLUS_MARGIN_SIZE);
+		field.relocate(x * FIELD_PLUS_MARGIN_SIZE, (7 - y) * FIELD_PLUS_MARGIN_SIZE);
 		fields.put(fieldCoordinate, field);
-		
-		field.setOnMouseClicked(event -> {
-			Side sideToMove = gameEngine.getSideToMove();
-			field.setSide(sideToMove);
-			// TODO complex moves
-			lastMoveProperty.set(fieldCoordinate);
-			gameEngine.move(fieldCoordinate);
-			scoreProperty.set(gameEngine.getScore());
-			
-			invalidateAllMoves();
-			opponentMove();
-		});
 	}
 
 	private void invalidateAllMoves() {
@@ -183,15 +177,146 @@ public class MillBoard extends AbstractBoard {
 	}
 
 	private void updateValidMoves() {
+		possibleKills.clear();
+		possibleTargets.clear();
+		possibleKillingTargets.clear();
+		
 		List<String> validMoves = gameEngine.getValidMoves();
+		System.out.println("VALID " + validMoves);
 		for (String move : validMoves) {
-			// TODO
+			prepareGuiMove(move);
+		}
+	}
+
+	private void prepareGuiMove(String move) {
+		String[] split = splitMove(move);
+		String source = split[0];
+		String target = split[1];
+		String kill = split[2];
+		
+		if (source != null) {
+			prepareGuiDragMove(source, target, kill);
+		} else {
+			prepareGuiSetMove(target, kill);
+		}
+	}
+
+	private void prepareGuiDragMove(String source, String target, String kill) {
+		BlackWhiteGameField sourceField = fields.get(source);
+		sourceField.setGlow(Color.BLUE);
+		sourceField.setDisable(false);
+		// TODO prepare drag to target
+		
+		possibleTargets.computeIfAbsent(source, key -> new HashSet<>()).add(target);
+		if (kill != null) {
+			possibleKillingTargets.add(target);
+			possibleKills.add(kill);
+		}
+
+		sourceField.setOnMouseClicked(event -> {
+			System.out.println("DRAG MOVE SOURCE " + source);
+			sourceField.setSide(Side.None);
+			invalidateAllMoves();
+
+			System.out.println("TARGETS " + possibleTargets);
+			for (String possibleTarget : possibleTargets.get(source)) {
+				prepareGuiDragMoveTarget(source, possibleTarget);
+			}
+		});
+	}
+
+	private void prepareGuiDragMoveTarget(String source, String target) {
+		BlackWhiteGameField targetField = fields.get(target);
+		targetField.setGlow(Color.GREEN);
+		targetField.setDisable(false);
+
+		if (possibleKillingTargets.contains(target)) {
+			targetField.setOnMouseClicked(event -> {
+				Side sideToMove = gameEngine.getSideToMove();
+				targetField.setSide(sideToMove);
+				
+				prepareGuiAllKillMoves(source, target);
+			});
+		} else {
+			targetField.setOnMouseClicked(event -> {
+				Side sideToMove = gameEngine.getSideToMove();
+				targetField.setSide(sideToMove);
+				String move = toMove(source, target, null);
+				lastMoveProperty.set(move);
+				gameEngine.move(move);
+				scoreProperty.set(gameEngine.getScore());
+				
+				invalidateAllMoves();
+				opponentMove();
+			});
+		}
+	}
+
+
+	private void prepareGuiSetMove(String target, String kill) {
+		BlackWhiteGameField targetField = fields.get(target);
+		targetField.setGlow(Color.GREEN);
+		targetField.setDisable(false);
+
+		if (kill == null) {
+			targetField.setOnMouseClicked(event -> {
+				Side sideToMove = gameEngine.getSideToMove();
+				targetField.setSide(sideToMove);
+				lastMoveProperty.set(target);
+				gameEngine.move(target);
+				scoreProperty.set(gameEngine.getScore());
+				
+				invalidateAllMoves();
+				opponentMove();
+			});
+		} else {
+			possibleKills.add(kill);
+
+			targetField.setOnMouseClicked(event -> {
+				Side sideToMove = gameEngine.getSideToMove();
+				targetField.setSide(sideToMove);
+				
+				prepareGuiAllKillMoves(null, target);
+			});
+		}
+	}
+
+	private void prepareGuiAllKillMoves(String source, String target) {
+		invalidateAllMoves();
+		
+		for (String kill : possibleKills) {
+			BlackWhiteGameField killField = fields.get(kill);
+			killField.setGlow(Color.RED);
+			killField.setDisable(false);
+			
+			killField.setOnMouseClicked(event -> {
+				killField.setSide(Side.None);
+				String move = toMove(source, target, kill);
+				lastMoveProperty.set(move);
+				gameEngine.move(move);
+				scoreProperty.set(gameEngine.getScore());
+				
+				invalidateAllMoves();
+				opponentMove();
+			});
+		}
+	}
+
+	private String toMove(String source, String target, String kill) {
+		String move = "";
+		
+		if (source != null) {
+			move += source;
 		}
 		
-		for (BlackWhiteGameField field : fields.values()) {
-			// TODO
-			field.setDisable(false);
+		move += target;
+		
+		if (kill != null) {
+			move += "x";
+			move += kill;
 		}
+		
+		return move;
 	}
 
 	protected void opponentMove() {
@@ -217,6 +342,11 @@ public class MillBoard extends AbstractBoard {
 	}
 
 	private void executeMove(String move, Side sideToMove) {
+		String[] split = splitMove(move);
+		executeMove(split[0], split[1], split[2], sideToMove);
+	}
+
+	private String[] splitMove(String move) {
 		String first = move.substring(0, 2);
 		
 		String source;
@@ -244,7 +374,7 @@ public class MillBoard extends AbstractBoard {
 			}
 		}
 		
-		executeMove(source, target, kill, sideToMove);
+		return new String[] { source, target, kill };
 	}
 	
 	private void executeMove(String source, String target, String kill, Side sideToMove) {
