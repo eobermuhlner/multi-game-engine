@@ -9,7 +9,7 @@ import ch.obermuhlner.game.Engine;
 import ch.obermuhlner.game.Game;
 import ch.obermuhlner.game.Side;
 import ch.obermuhlner.game.app.GameCommandLine;
-import ch.obermuhlner.game.engine.random.MonteCarloEngine;
+import ch.obermuhlner.game.engine.random.RandomEngine;
 import ch.obermuhlner.util.CheckArgument;
 import ch.obermuhlner.util.Tuple2;
 
@@ -509,10 +509,10 @@ public class Mill implements Game {
 		}
 
 		if (countWhite < 3) {
-			return Side.White;
+			return Side.Black;
 		}
 		if (countBlack < 3) {
-			return Side.Black;
+			return Side.White;
 		}
 		
 		if (getAllMoves().isEmpty()) {
@@ -549,8 +549,9 @@ public class Mill implements Game {
 	}
 	
 	public static void main(String[] args) {
-		Engine<Mill> engine = new MonteCarloEngine<>(new Mill());
-		//Engine<Mill> engine = new RandomEngine<>(new Mill());
+//		Engine<Mill> engine = new MonteCarloEngine<>(new Mill());
+		Engine<Mill> engine = new RandomEngine<>(new Mill());
+//		Engine<Mill> engine = new MinMaxEngine<>(new Mill());
 		GameCommandLine.playGame(engine);
 	}
 }
