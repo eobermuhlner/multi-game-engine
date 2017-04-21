@@ -18,28 +18,33 @@ import javafx.scene.shape.Rectangle;
 
 public class BlackWhiteGameField extends GameField {
 	
+	private int size;
+
 	private Node background;
 	private Node whiteStone;
 	private Node blackStone;
-	private Node greenGlow;
+	private Node glow;
 	
 	private ObjectProperty<Side> sideProperty = new SimpleObjectProperty<>(Side.None);
 
 	public BlackWhiteGameField(int size, Paint backgroundPaint) {
+		this(size, backgroundPaint, 0.45);
+	}
+	
+	public BlackWhiteGameField(int size, Paint backgroundPaint, double stoneRadius) {
 		this(size, 
 				new Rectangle(size, size, backgroundPaint),
-				new Circle(size * 0.4, Color.WHITE),
-				new Circle(size * 0.4, Color.BLACK));
+				new Circle(size * stoneRadius, Color.WHITE),
+				new Circle(size * stoneRadius, Color.BLACK));
 	}
 
 	public BlackWhiteGameField(int size, Node background, Node whiteStone, Node blackStone) {
+		this.size = size;
 		this.background = background;
 		this.whiteStone = whiteStone;
 		this.blackStone = blackStone;
-		
-		RadialGradient greenGlowGradient = new RadialGradient(0.0, 0.0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
-				new Stop(0.0, Color.LIGHTGREEN), new Stop(1.0, Color.TRANSPARENT));
-		greenGlow = new Circle(size * 0.5, greenGlowGradient);
+
+		setGlow(Color.GREEN);
 		
 		setSkin(new SkinBase<BlackWhiteGameField>(this) {
 			// just an empty skin seems to be enough
@@ -61,7 +66,7 @@ public class BlackWhiteGameField extends GameField {
 		nodes.add(background);
 		
 		if (enabled) {
-			nodes.add(greenGlow);
+			nodes.add(glow);
 		}
 		
 		switch (side) {
@@ -88,5 +93,11 @@ public class BlackWhiteGameField extends GameField {
 	
 	public ObjectProperty<Side> sideProperty() {
 		return sideProperty;
+	}
+
+	public void setGlow(Color color) {
+		RadialGradient glowGradient = new RadialGradient(0.0, 0.0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
+				new Stop(0.0, color), new Stop(1.0, Color.TRANSPARENT));
+		glow = new Circle(size * 0.5, glowGradient);		
 	}
 }
