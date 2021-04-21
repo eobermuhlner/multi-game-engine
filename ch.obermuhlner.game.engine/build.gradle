@@ -4,7 +4,8 @@ plugins {
 }
 
 version = '0.0.1'
-mainClassName = 'ch.obermuhlner.game.app.GameCommandLine'
+//mainClassName = 'ch.obermuhlner.game.app.GameCommandLine'
+mainClassName = 'ch.obermuhlner.game.uci.UciProtocol'
 applicationName = 'MultiGame'
 
 repositories {
@@ -16,3 +17,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
+compileJava   {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
