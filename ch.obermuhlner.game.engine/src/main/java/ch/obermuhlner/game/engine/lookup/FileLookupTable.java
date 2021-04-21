@@ -1,10 +1,6 @@
 package ch.obermuhlner.game.engine.lookup;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,15 +27,15 @@ public class FileLookupTable<G extends Game> implements LookupTable<G> {
 		this.gameSupplier = gameSupplier;
 	}
 	
-	public void load(File file) {
-		try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-			String line = reader.readLine();
+	public void load(Reader reader) {
+		try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+			String line = bufferedReader.readLine();
 			while (line != null) {
 				if (!line.isEmpty() && !line.startsWith("#")) {
 					parseLine(line);
 				}
 				
-				line = reader.readLine();
+				line = bufferedReader.readLine();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -90,7 +86,7 @@ public class FileLookupTable<G extends Game> implements LookupTable<G> {
 		if (recommendedMoves == null) {
 			return null;
 		}
-
+		System.out.println("info opening " + recommendedMoves);
 		return GameUtil.pickRandom(random, recommendedMoves);
 	}
 }

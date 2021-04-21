@@ -153,12 +153,12 @@ public class UciProtocol {
 		LookupEngine<Chess> lookupEngine = new LookupEngine<>(new MinMaxEngine<Chess>(new Chess(), 3));
 		
 		FileLookupTable<Chess> fileLookupTable = new FileLookupTable<>(() -> new Chess());
-		fileLookupTable.load(Paths.get("resources", "chess_openings.txt").toFile());
+
+		fileLookupTable.load(new InputStreamReader(UciProtocol.class.getResourceAsStream("/chess_openings.txt")));
 		lookupEngine.addLookupTable(fileLookupTable);
 		
-		SyzygyRestLookupTable endgameLookupTable = new SyzygyRestLookupTable();
-		lookupEngine.addLookupTable(endgameLookupTable);
-		
+//		SyzygyRestLookupTable endgameLookupTable = new SyzygyRestLookupTable();
+//		lookupEngine.addLookupTable(endgameLookupTable);
 
 		return lookupEngine;
 	}
