@@ -13,22 +13,28 @@ import java.util.regex.Pattern;
 
 import ch.obermuhlner.game.LookupTable;
 
-// https://syzygy-tables.info/api/v2?fen=4k1r1/8/8/8/8/8/3K4/2Q5%20b%20-%20-%200%201
+// https://github.com/niklasf/lila-tablebase#http-api
+// http://tablebase.lichess.ovh/standard?fen=4k3/6KP/8/8/8/8/7p/8_w_-_-_0_1
 public class SyzygyRestLookupTable implements LookupTable<Chess> {
 
-	private static final Pattern BEST_MOVE_PATTERN = Pattern.compile("\"bestmove\"\\s*:\\s*\"([a-h1-8nbrq]+)\""); 
+	private static final Pattern BEST_MOVE_PATTERN = Pattern.compile("\"uci\"\\s*:\\s*\"([a-h1-8nbrq]+)\"");
 	
 	@Override
 	public String bestMove(Chess chess) {
 		String fen = chess.getState();
-		String json = getHttp(escapeUrl("http://syzygy-tables.info/api/v2?fen=" + fen));
+
+		return bestMove(chess.getState());
+	}
+
+	public String bestMove(String fen) {
+		String json = getHttp(escapeUrl("http://tablebase.lichess.ovh/standard?fen=" + fen));
 		if (json == null) {
 			return null;
 		}
-		
-		//infoLogger.info("string syzygy json " + json.replace('\n', ' '));
+
+		//System.out.println("info syzygy json " + json.replace('\n', ' '));
 		String bestMove = getJsonBestMove(json);
-		//infoLogger.info("string syzygy best " + bestMove);
+		System.out.println("info syzygy best " + bestMove);
 		return bestMove;
 	}
 
@@ -59,21 +65,7 @@ public class SyzygyRestLookupTable implements LookupTable<Chess> {
 	}
 
 	/*
-{
-  "bestmove": "e8d7",
-  "dtm": -52,
-  "dtz": -44,
-  "moves": {
-    "e8d7": {
-      "dtm": 51,
-      "dtz": 43,
-      "wdl": 2
-    },
-    "e8d8": {
-      "dtm": 49,
-      "dtz": 37,
-      "wdl": 2
-    },
+{"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":17,"moves":[{"uci":"h7h8q","san":"h8=Q+","zeroing":true,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":-2,"dtz":-2,"dtm":-16},{"uci":"h7h8r","san":"h8=R+","zeroing":true,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":-2,"dtz":-2,"dtm":-26},{"uci":"g7g8","san":"Kg8","zeroing":false,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":0,"dtz":0,"dtm":0},{"uci":"g7f6","san":"Kf6","zeroing":false,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":19},{"uci":"g7g6","san":"Kg6","zeroing":false,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":19},{"uci":"g7h6","san":"Kh6","zeroing":false,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":19},{"uci":"g7h8","san":"Kh8","zeroing":false,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":19},{"uci":"h7h8n","san":"h8=N","zeroing":true,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":19},{"uci":"h7h8b","san":"h8=B","zeroing":true,"checkmate":false,"stalemate":false,"variant_win":false,"variant_loss":false,"insufficient_material":false,"wdl":2,"dtz":1,"dtm":15}]}
 	 */
 	private String getJsonBestMove(String json) {
 		try (BufferedReader reader = new BufferedReader(new StringReader(json))) {
