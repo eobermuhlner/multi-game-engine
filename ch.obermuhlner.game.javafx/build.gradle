@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.9'
+}
+
+version = '0.0.1'
+mainClassName = 'ch.obermuhlner.game.javafx.MultiGameApp'
+applicationName = 'Multi Game'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+javafx {
+    version = "15.0.1"
+    modules = [ 'javafx.controls' ]
+}
+
+dependencies {
+    implementation project(':ch.obermuhlner.game.engine')
+
+    testImplementation 'junit:junit:4.12'
+}
+

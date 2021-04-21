@@ -1,0 +1,3 @@
+
+include 'ch.obermuhlner.game.engine'
+include 'ch.obermuhlner.game.javafx'

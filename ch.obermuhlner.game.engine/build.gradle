@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+version = '0.0.1'
+mainClassName = 'ch.obermuhlner.game.app.GameCommandLine'
+applicationName = 'MultiGame'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
+
